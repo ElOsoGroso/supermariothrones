@@ -1,0 +1,61 @@
+/**
+* @Author: Justin Hershberger
+* @Date:   24-03-2017
+* @Filename: main.css
+* @Last modified by:   Justin Hershberger
+* @Last modified time: 11-04-2017
+*/
+
+
+
+.panel {
+  background-color: #1a1a1a;
+}
+
+body {
+  background-color: #1a1a1a;
+}
+
+.viewport {
+  position: absolute;
+  top: 1%;
+  left: 3%;
+  width: 1280px;
+  height: 576px;
+
+}
+
+#canvas-main {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+
+#mapCanvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+}
+
+#title-page {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+}
+
+#menuSprite {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+}
+
+#controlsSprite {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 4;
+}

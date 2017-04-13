@@ -1,0 +1,11 @@
+{
+  "name": "final",
+  "version": "1.0.0",
+  "description": "this is the final project for game dev",
+  "main": "game.js",
+  "scripts": {
+    "test": "final"
+  },
+  "author": "justin hershberger",
+  "license": "ISC"
+}
