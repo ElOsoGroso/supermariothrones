@@ -23,14 +23,14 @@ let Map = (function() {
     for (let i=0; i < lowPlatforms; i++) {
 
       let howfarin = i*5;
-      let howfarup = 3;
+      let howfarup = 4;
 
         map[toreturn.map_rows - howfarup][howfarin] = 'dirtleft';
         map[toreturn.map_rows - howfarup][howfarin + 1] = 'dirt';
         map[toreturn.map_rows - howfarup][howfarin + 2] = 'dirtright';
-        // map[toreturn.map_rows - (howfarup-2)][howfarin+2] = 'dirtleft';
-        // map[toreturn.map_rows - (howfarup-2)][howfarin + 3] = 'dirt';
-        // map[toreturn.map_rows - (howfarup-2)][howfarin + 4] = 'dirtright';
+        map[toreturn.map_rows - 6][howfarin+2] = 'dirtleft';
+        map[toreturn.map_rows - 6][howfarin + 3] = 'dirt';
+        map[toreturn.map_rows - 6][howfarin + 4] = 'dirtright';
 
     }
 //draw the ground, we'll put holes in it later
