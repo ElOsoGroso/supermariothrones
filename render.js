@@ -39,7 +39,7 @@ let Graphics = (function(){
     return toreturn;
   };
 
-
+  //this camera method was borrowed
   toreturn.camera = function(xView, yView, canvas_width, canvas_height, widthofmap, heightofmap) {
     let toreturn = {};
 
@@ -67,7 +67,7 @@ let Graphics = (function(){
       toreturn.viewport = Graphics.rectangle(toreturn.xView, toreturn.yView, canvas.width, canvas.height);
 
       if (!toreturn.viewport.withinRectangle(toreturn.mapRect)) {
-
+        //set the borders of the viewport
         if(toreturn.viewport.left < toreturn.mapRect.left){
           toreturn.xView = toreturn.mapRect.left;
         }
@@ -179,7 +179,9 @@ let Graphics = (function(){
         }
       }
       if(goLeft){
-        context.drawImage(left_animations[display_count], toreturn.pos.x - xView, toreturn.pos.y - yView, tileswide, tileshigh);}
+        //our left facing animations
+      context.drawImage(left_animations[display_count], toreturn.pos.x - xView, toreturn.pos.y - yView, tileswide, tileshigh);}
+        //our right facing animations
       else{
       context.drawImage(plr_animations[display_count], toreturn.pos.x - xView, toreturn.pos.y - yView, tileswide, tileshigh);}
 
@@ -340,14 +342,9 @@ let Graphics = (function(){
         toreturn.velocity_y = 0.0;
         toreturn.pos.y = canvas.height - 128;
       }
-
     }
-
-
-
     return toreturn;
   }
-
 
   toreturn.map = function() {
     let dimension =64;
@@ -394,10 +391,10 @@ let Graphics = (function(){
 			if(toreturn.map_view.width - ourViewX < ourViewWidth){
 				ourViewWidth = toreturn.map_view.width - ourViewX;
 			}
-			if(toreturn.map_view.height - ourViewY < ourViewHeight){
-				ourViewHeight = toreturn.map_view.height - ourViewY;
-			}
-
+      //for going up
+			// if(toreturn.map_view.height - ourViewY < ourViewHeight){
+			// 	ourViewHeight = toreturn.map_view.height - ourViewY;
+			// }
 			context.drawImage(toreturn.map_view, ourViewX, ourViewY, ourViewWidth, ourViewHeight, 0, 0, ourViewWidth, ourViewHeight);
 
       canvas = $('#canvas-main').get(0);
