@@ -124,25 +124,32 @@ let TitlePage = (function () {
     console.log(mousePos);
       // console.log(mousePos);
       if (isInside(mousePos,recthoverhigh)) {
+        console.log("controls");
         if(!newonce){
         playSound('hover');
         newonce =true;
         new2once = false;
       }
+
         drawnormal = false;
         drawopt2 = true;
+        drawopt1 = false;
 
 
       }
 
       else if (isInside(mousePos,rectplay)) {
         if(!new2once){
+          console.log("hover");
         playSound('hover');
         new2once =true;
         newonce = false;
       }
+
         drawnormal = false;
         drawopt1 =true;
+        drawopt2 = false;
+
 
       }
 
