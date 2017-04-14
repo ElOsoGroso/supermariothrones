@@ -48,23 +48,23 @@ let Game = (function() {
       previousYView = toreturn.camera.viewYCoord;
 
       toreturn.player.yVelocity += toreturn.player.gravity;
-      toreturn.player.pos.y += toreturn.player.yVelocity;
+      toreturn.player.location.y += toreturn.player.yVelocity;
       // toreturn.player.isOnGround();
       // console.log(toreturn.player.onGround);
       // console.log(toreturn.player.jumpPressed);
       // if (toreturn.player.onGround && !toreturn.player.jumpPressed) {
       //   toreturn.player.yVelocity = 0.0;
-      //   toreturn.player.pos.y = canvas.height - 128;
+      //   toreturn.player.location.y = canvas.height - 128;
       // }
-      if (toreturn.player.pos.y >= canvas.height - dimension*2 && toreturn.onPlat == false) {
+      if (toreturn.player.location.y >= canvas.height - dimension*2 && toreturn.onPlat == false) {
         toreturn.player.onGround = true;
         toreturn.player.yVelocity = 0.0;
-        toreturn.player.pos.y = canvas.height - dimension*2;
+        toreturn.player.location.y = canvas.height - dimension*2;
       }
-      if (toreturn.enemy.pos.y >= canvas.height - dimension*2 && toreturn.onPlat == false) {
+      if (toreturn.enemy.location.y >= canvas.height - dimension*2 && toreturn.onPlat == false) {
         toreturn.enemy.onGround = true;
         toreturn.enemy.yVelocity = 0.0;
-        toreturn.enemy.pos.y = canvas.height - dimension*2;
+        toreturn.enemy.location.y = canvas.height - dimension*2;
       }
 
       toreturn.enemy.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
@@ -115,7 +115,7 @@ let Game = (function() {
     canvas2.style.zIndex = 0;
     canvas1.style.zIndex = 2;
      toreturn.player = Graphics.player();
-     toreturn.enemy = Graphics.enemy({walkertime: walkertime, pos: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}});
+     toreturn.enemy = Graphics.enemy({walkertime: walkertime, location: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}});
      toreturn.map = Graphics.map();
      toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 17000, canvas.height);
     context.clearRect(0,0,canvas.width, canvas.height);
