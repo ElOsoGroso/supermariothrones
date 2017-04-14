@@ -23,6 +23,10 @@ let Game = (function() {
   let elapsedTime = 0;
   let canvas = $('#canvas-main').get(0);
   let context = canvas.getContext('2d');
+  let deltaXView = 0;
+  let previousXView = 0;
+  let deltaYView = 0;
+  let previousYView = 0;
 
   toreturn.high_scores_active = false;
   toreturn.game_active = false;
@@ -38,6 +42,12 @@ let Game = (function() {
         toreturn.camera.update();
       }
 
+      deltaXView = toreturn.camera.xView - previousXView;
+      deltaYView = toreturn.camera.yView - previousYView;
+
+      previousXView = toreturn.camera.xView;
+      previousYView = toreturn.camera.yView;
+
       toreturn.plr.velocity_y += toreturn.plr.gravity;
       toreturn.plr.pos.y += toreturn.plr.velocity_y;
 
@@ -47,7 +57,7 @@ let Game = (function() {
         toreturn.plr.pos.y = canvas.height - 128;
       }
 
-      toreturn.enemy.update(elapsedTime);
+      toreturn.enemy.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.xView, toreturn.camera.yView);
     }
 
     function render(elapsedTime) {

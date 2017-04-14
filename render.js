@@ -246,7 +246,7 @@ let Graphics = (function(){
     toreturn.pos = {x: spec.pos.x, y: spec.pos.y};
     let walk_count = 0;
     let areaToMoveInside = {minX: spec.range.minX, maxX: spec.range.maxX, minY: spec.range.minY, maxY: spec.range.maxY};
-    let direction = 'right';
+    let direction = 'left';
     let walkertime = spec.walkertime;
 
     let jump_dy = 2;
@@ -312,17 +312,19 @@ let Graphics = (function(){
       }
     };
 
-    toreturn.update = function(elapsedTime) {
+    toreturn.update = function(elapsedTime, deltaXView, deltaYView, xView, yView) {
       // console.log(walkertime);
       walkertime++;
       toreturn.velocity_y += toreturn.gravity;
       toreturn.pos.y += toreturn.velocity_y;
+      toreturn.pos.x -= deltaXView;
+      toreturn.pos.y -= deltaYView;
       toreturn.isOnPlatform();
 
-      if (toreturn.pos.x > areaToMoveInside.maxX) {
+      if (toreturn.pos.x + xView > 16000) {
         direction = 'left';
       }
-      if ( toreturn.pos.x < areaToMoveInside.minX) {
+      if ( toreturn.pos.x + xView <= 0) {
         direction = 'right';
       }
 
