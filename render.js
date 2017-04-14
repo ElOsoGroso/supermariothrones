@@ -4,17 +4,17 @@ let Graphics = (function(){
   let canvas = $('#canvas-main')[0];
   console.log("Hola");
   let context = canvas.getContext('2d');
-  let container = $('.ourView');
-  toreturn.initial_container_width = container.width();
-  toreturn.container_width = $('.ourView').width();
-  let tileswide = Images.tile_width;
-  let tileshigh = Images.tile_height;
+  // let container = $('.ourView');
+  // toreturn.initial_container_width = container.width();
+  // toreturn.container_width = $('.ourView').width();
+  let tilesize = Images.tilesize;
+
 //this stuff is all from justins explanation of the camera
 
   let padding = 600;
   toreturn.map_width = 16000;
   toreturn.map_height = canvas.height;
-  toreturn.xView = 0;
+  toreturn.viewXCoord = 0;
   let map = Map.map();
 
   toreturn.rectangle = function(left, top, width, height) {
@@ -29,7 +29,7 @@ let Graphics = (function(){
 
 
     toreturn.withinRectangle = function(rect) {
-      if (rect.left <= toreturn.left && rect.right >= toreturn.right && rect.top <= toreturn.top && rect.bottom >= toreturn.bottom){
+      if (rect.top <= toreturn.top &&  rect.bottom >= toreturn.bottom &&rect.left <= toreturn.left && rect.right >= toreturn.right ){
         return true;
       } else {
         return false;
@@ -40,48 +40,48 @@ let Graphics = (function(){
   };
 
   //this camera method was borrowed
-  toreturn.camera = function(xView, yView, canvas_width, canvas_height, widthofmap, heightofmap) {
+  toreturn.camera = function(viewXCoord, viewYCoord, canvas_width, canvas_height, widthofmap, heightofmap) {
     let toreturn = {};
 
-    toreturn.xView = xView;
-    toreturn.yView = yView;
+    toreturn.viewXCoord = viewXCoord;
+    toreturn.viewYCoord = viewYCoord;
 
-    toreturn.xPad = padding;
+    toreturn.viewPadding = padding;
 
-    toreturn.wView = canvas_width;
-    toreturn.hView = canvas_height;
+    toreturn.widthOfView = canvas_width;
+    toreturn.heightOfView = canvas_height;
 
-    toreturn.track = Game.plr;
+    toreturn.track = Game.player;
 
-    toreturn.viewport = Graphics.rectangle(toreturn.xView, toreturn.yView, toreturn.wView, toreturn.hView);
+    toreturn.viewport = Graphics.rectangle(toreturn.viewXCoord, toreturn.viewYCoord, toreturn.widthOfView, toreturn.heightOfView);
     toreturn.mapRect = Graphics.rectangle(0, 0, widthofmap, heightofmap);
 
     toreturn.update = function(){
-      if(Game.plr.pos.x - toreturn.xView + toreturn.xPad > toreturn.wView) {
-        toreturn.xView = Game.plr.pos.x - (toreturn.wView - toreturn.xPad);
-      } else if (Game.plr.pos.x - toreturn.xPad < toreturn.xView) {
-        toreturn.xView = Game.plr.pos.x - toreturn.xPad;
+      if(Game.player.pos.x - toreturn.viewXCoord + toreturn.viewPadding > toreturn.widthOfView) {
+        toreturn.viewXCoord = Game.player.pos.x - (toreturn.widthOfView - toreturn.viewPadding);
+      } else if (Game.player.pos.x - toreturn.viewPadding < toreturn.viewXCoord) {
+        toreturn.viewXCoord = Game.player.pos.x - toreturn.viewPadding;
       }
 
 
-      toreturn.viewport = Graphics.rectangle(toreturn.xView, toreturn.yView, canvas.width, canvas.height);
+      toreturn.viewport = Graphics.rectangle(toreturn.viewXCoord, toreturn.viewYCoord, canvas.width, canvas.height);
 
       if (!toreturn.viewport.withinRectangle(toreturn.mapRect)) {
         //set the borders of the viewport
         if(toreturn.viewport.left < toreturn.mapRect.left){
-          toreturn.xView = toreturn.mapRect.left;
+          toreturn.viewXCoord = toreturn.mapRect.left;
         }
 
 				if(toreturn.viewport.top < toreturn.mapRect.top) {
-          toreturn.yView = toreturn.mapRect.top;
+          toreturn.viewYCoord = toreturn.mapRect.top;
         }
 
 				if(toreturn.viewport.right > toreturn.mapRect.right) {
-          toreturn.xView = toreturn.mapRect.right - canvas.width;
+          toreturn.viewXCoord = toreturn.mapRect.right - canvas.width;
         }
 
 				if(toreturn.viewport.bottom > toreturn.mapRect.bottom){
-          toreturn.yView = toreturn.mapRect.bottom - toreturn.hView;
+          toreturn.viewYCoord = toreturn.mapRect.bottom - toreturn.heightOfView;
         }
 
       }
@@ -100,95 +100,113 @@ let Graphics = (function(){
     let toreturn = {};
     let speed = 5;
 
-    toreturn.pos = {x: tileswide, y: canvas.height-tileshigh*2};
+    toreturn.pos = {x: tilesize, y: canvas.height-tilesize*2};
     let goLeft = false;
     let goRight = false;
-    let keyUp = false;
-    let walk_count = 0;
-    let jump_dy = 2;
+    toreturn.jumpPressed = false;
+    let animationCounter = 0;
     let jump_y = toreturn.pos.y;
     let display_count = 0;
-    toreturn.on_ground = true;
+    toreturn.onGround = true;
     toreturn.gravity = 0.5;
-    toreturn.velocity_y = 0.0;
+    toreturn.yVelocity = 0.0;
 
-    let plr_animations = [];
-    let left_animations = [];
+    let animatePlayerArray = [];
+    let animatePlayerLeft = [];
 
-    plr_animations.push(Images.johnsnow1);
-    plr_animations.push(Images.johnsnow2);
-    plr_animations.push(Images.johnsnow3);
-    plr_animations.push(Images.johnsnow4);
-    left_animations.push(Images.johnsnow5);
-    left_animations.push(Images.johnsnow6);
-    left_animations.push(Images.johnsnow7);
-    left_animations.push(Images.johnsnow8);
+    animatePlayerArray.push(Images.johnsnow1);
+    animatePlayerArray.push(Images.johnsnow2);
+    animatePlayerArray.push(Images.johnsnow3);
+    animatePlayerArray.push(Images.johnsnow4);
+    animatePlayerLeft.push(Images.johnsnow5);
+    animatePlayerLeft.push(Images.johnsnow6);
+    animatePlayerLeft.push(Images.johnsnow7);
+    animatePlayerLeft.push(Images.johnsnow8);
 
+/* controls for the player*/
     $(document).keydown(function(e) {
       if (e.keyCode == Controls.left) {
         goLeft = true;
       } else if (e.keyCode == Controls.right) {
         goRight = true;
       } else if (e.keyCode == Controls.jump) {
-        keyUp = true;
+        toreturn.jumpPressed = true;
       }
 
     }).keyup(function(e) {
       if (e.keyCode == Controls.left) {
         goLeft = false;
-        walk_count = 0;
+        animationCounter = 0;
       } else if (e.keyCode == Controls.right) {
         goRight = false;
-        walk_count = 0;
+        animationCounter = 0;
       } else if (e.keyCode == Controls.jump) {
-        keyUp = false;
+        toreturn.jumpPressed = false;
       }
     })
 
-    toreturn.drawPlayer = function(xView, yView) {
+    toreturn.renderPlayer = function(viewXCoord, viewYCoord) {
       context.save();
-      context.clearRect(xView,yView,canvas.width,canvas.height);
+      context.clearRect(viewXCoord,viewYCoord,canvas.width,canvas.height);
 
       if(goLeft) {
-        toreturn.moveLeft();
+        toreturn.goLeft();
+
+        //if we have displayed all the animations
         if (display_count + 1 > 3) {
           display_count = 0;
-        } else {
-          if(walk_count>=10){walk_count=0;display_count++;}
-          walk_count += 1;
+        }
+        else {
+          if(animationCounter>=10){animationCounter=0;display_count++;}
+          animationCounter += 1;
         }
       }
       if(goRight) {
-        toreturn.moveRight();
+        toreturn.goRight();
+
+
+        //if we have displayed all the animations
         if (display_count + 1 > 3) {
           display_count = 0;
-        } else {
-          if(walk_count>=10){walk_count = 0;display_count++;}
-          walk_count += 1;
+        }
+        else {
+          if(animationCounter>=10){animationCounter = 0;display_count++;}
+          animationCounter += 1;
         }
       }
 
-      Game.on_platform = false;
+      toreturn.onPlat = false;
       toreturn.isOnPlatform();
+      // toreturn.isOnGround();
 
-      if(keyUp) {
-        toreturn.jump();
+      if(toreturn.jumpPressed) {
+        toreturn.jumping();
       } else {
-        if (toreturn.velocity_y < -6.0) {
-          toreturn.velocity_y = -6.0;
+        if (toreturn.yVelocity < -5.0) {
+          toreturn.yVelocity = -5.0;
         }
       }
       if(goLeft){
         //our left facing animations
-      context.drawImage(left_animations[display_count], toreturn.pos.x - xView, toreturn.pos.y - yView, tileswide, tileshigh);}
+      context.drawImage(animatePlayerLeft[display_count], toreturn.pos.x - viewXCoord, toreturn.pos.y - viewYCoord, tilesize, tilesize);}
         //our right facing animations
       else{
-      context.drawImage(plr_animations[display_count], toreturn.pos.x - xView, toreturn.pos.y - yView, tileswide, tileshigh);}
+      context.drawImage(animatePlayerArray[display_count], toreturn.pos.x - viewXCoord, toreturn.pos.y - viewYCoord, tilesize, tilesize);}
 
       context.restore();
     };
 
-    toreturn.moveLeft = function(elapsedTime) {
+
+
+    toreturn.goRight = function(elapsedTime) {
+      if (toreturn.pos.x + (friction * speed) >= Graphics.map_width - tilesize) {
+        toreturn.pos.x = Graphics.map_width - tilesize;
+      } else {
+        toreturn.pos.x += (friction * speed);
+      }
+
+    };
+    toreturn.goLeft = function(elapsedTime) {
       if (toreturn.pos.x - (friction * speed) >= 0) {
 
         toreturn.pos.x -= (friction * speed);
@@ -196,38 +214,21 @@ let Graphics = (function(){
         toreturn.pos.x = 0;
       }
     };
-
-    toreturn.moveRight = function(elapsedTime) {
-      if (toreturn.pos.x + (friction * speed) >= Graphics.map_width - tileswide) {
-        toreturn.pos.x = Graphics.map_width - tileswide;
-      } else {
-        toreturn.pos.x += (friction * speed);
-      }
-
-    };
-
-    toreturn.jump = function() {
-      if (toreturn.on_ground || Game.on_platform) {
-        playSound('jump');
-        toreturn.velocity_y = -15;
-        Game.on_platform = false;
-        toreturn.on_ground = false;
-      }
-    };
-
     toreturn.isOnPlatform = function(){
-      for (let i=0; i < Map.map_rows; i++){
-        for (let j=0; j < Map.map_cols; j++){
-          if (Game.on_platform == false && map[i][j] == 'dirtleft' ) {
-            if(toreturn.pos.x > j*dimension - 30 && toreturn.pos.x < (j*dimension + (3*dimension) - 20)&& toreturn.pos.y > i*dimension - dimension && toreturn.pos.y < i*dimension - 50) {
-              Game.on_platform = true;
-              toreturn.on_ground = true;
-              toreturn.velocity_y = 0.0;
-              toreturn.gravity = 0.0;
 
+      for (let i=0; i < Map.levelrows; i++){
+        for (let j=0; j < Map.levelcolumns; j++){
+
+          if (toreturn.onPlat == false && map[i][j] == 'dirtleft' ) {
+            if(toreturn.pos.x > j*dimension - 30 && toreturn.pos.x < (j*dimension + (3*dimension) - 20)&& toreturn.pos.y > i*dimension - dimension && toreturn.pos.y < i*dimension - 50) {
+
+              toreturn.onPlat = true;
+              toreturn.yVelocity = 0.0;
+              toreturn.gravity = 0.0;
               toreturn.pos.y = i*dimension - dimension;
+
             } else {
-              Game.on_platform = false;
+              toreturn.onPlat = false;
               toreturn.gravity = 0.5;
             }
           }
@@ -235,6 +236,38 @@ let Graphics = (function(){
       }
 
     };
+    toreturn.jumping = function() {
+
+      if (toreturn.onPlat || toreturn.onGround) {
+
+        playSound('jump');
+
+          toreturn.yVelocity = -16;
+          toreturn.onGround = false;
+          toreturn.onPlat = false;
+
+      }
+    };
+    // toreturn.isOnGround = function(){
+    //   for (let i=0; i < Map.levelrows; i++){
+    //     for (let j=0; j < Map.levelcolumns; j++){
+    //       if (map[i][j]!= 'stone' && toreturn.onGround) {
+    //
+    //         if(toreturn.pos.x > j*dimension - 30 && toreturn.pos.x < (j*dimension + (3*dimension) - 20)&& toreturn.pos.y > (i+1)*dimension - dimension && toreturn.pos.y < (i+1)*dimension - 50) {
+    //           toreturn.onGround = false;
+    //           toreturn.gravity = 0.5;
+    //         } else {
+    //           toreturn.onGround = true;
+    //           toreturn.yVelocity = 0.0;
+    //           toreturn.gravity = 0.0;
+    //
+    //           toreturn.pos.y = i*dimension - dimension;
+    //         }
+    //       }
+    //     }
+    //   }
+    // };
+
 
     return toreturn;
   }
@@ -246,25 +279,24 @@ let Graphics = (function(){
     let speed = 3;
     let friction = 0.98;
     toreturn.pos = {x: spec.pos.x, y: spec.pos.y};
-    let walk_count = 0;
+    let animationCounter = 0;
     let areaToMoveInside = {minX: spec.range.minX, maxX: spec.range.maxX, minY: spec.range.minY, maxY: spec.range.maxY};
     let direction = 'left';
     let walkertime = spec.walkertime;
 
-    let jump_dy = 2;
     let jump_y = toreturn.pos.y;
     let display_count = 0;
     let display_walker_count  = 0;
-    toreturn.on_ground = true;
+    toreturn.onGround = true;
     toreturn.gravity = 0.5;
-    toreturn.velocity_y = 0.0;
+    toreturn.yVelocity = 0.0;
 
     let enemy_animation = [];
 
     enemy_animation.push(Images.icewalk);
     enemy_animation.push(Images.icewalk2);
 
-    toreturn.drawEnemy = function(xView, yView) {
+    toreturn.renderEnemy = function(viewXCoord, viewYCoord) {
       // console.log(walkertime);
       if(walkertime>10){
         display_walker_count++;
@@ -274,12 +306,19 @@ let Graphics = (function(){
         display_walker_count = 0;
       }
       context.save();
-      context.drawImage(enemy_animation[display_walker_count], toreturn.pos.x, toreturn.pos.y, tileswide, tileshigh);
+      context.drawImage(enemy_animation[display_walker_count], toreturn.pos.x, toreturn.pos.y, tilesize, tilesize);
       context.restore();
 
     };
+    toreturn.goRight = function(elapsedTime) {
+      if (toreturn.pos.x + (friction * speed) >= Graphics.map_width - tilesize) {
+        toreturn.pos.x = Graphics.map_width - tilesize;
+      } else {
+        toreturn.pos.x += (friction * speed);
+      }
 
-    toreturn.moveLeft = function(elapsedTime) {
+    };
+    toreturn.goLeft = function(elapsedTime) {
       if (toreturn.pos.x - (friction * speed) >= 0) {
 
         toreturn.pos.x -= (friction * speed);
@@ -288,59 +327,50 @@ let Graphics = (function(){
       }
     };
 
-    toreturn.moveRight = function(elapsedTime) {
-      if (toreturn.pos.x + (friction * speed) >= Graphics.map_width - tileswide) {
-        toreturn.pos.x = Graphics.map_width - tileswide;
-      } else {
-        toreturn.pos.x += (friction * speed);
-      }
 
-    };
 
     toreturn.isOnPlatform = function(){
-      for (let i=0; i < Map.map_rows; i++){
-        for (let j=0; j < Map.map_cols; j++){
-          if (map[i][j] == 'dirtleft') {
+      for (let i=0; i < Map.levelrows; i++){
+        for (let j=0; j < Map.levelcolumns; j++){
+          if (toreturn.onPlat == false && map[i][j] == 'dirtleft' ) {
             if(toreturn.pos.x > j*dimension - 30 && toreturn.pos.x < (j*dimension + (3*dimension) - 20)&& toreturn.pos.y > i*dimension - dimension && toreturn.pos.y < i*dimension - 50) {
-              toreturn.on_ground = true;
-              toreturn.velocity_y = 0.0;
+              toreturn.onPlat = true;
+              toreturn.yVelocity = 0.0;
               toreturn.gravity = 0.0;
+
               toreturn.pos.y = i*dimension - dimension;
             } else {
+              toreturn.onPlat = false;
               toreturn.gravity = 0.5;
             }
           }
         }
       }
+
     };
 
-    toreturn.update = function(elapsedTime, deltaXView, deltaYView, xView, yView) {
+    toreturn.update = function(elapsedTime, deltaXView, deltaYView, viewXCoord, viewYCoord) {
       // console.log(walkertime);
+      console.log(toreturn.onGround);
       walkertime++;
-      toreturn.velocity_y += toreturn.gravity;
-      toreturn.pos.y += toreturn.velocity_y;
+      toreturn.yVelocity += toreturn.gravity;
+      toreturn.pos.y += toreturn.yVelocity;
       toreturn.pos.x -= deltaXView;
       toreturn.pos.y -= deltaYView;
       toreturn.isOnPlatform();
 
-      if (toreturn.pos.x + xView > 16000) {
+      if (toreturn.pos.x + viewXCoord > 16000) {
         direction = 'left';
       }
-      if ( toreturn.pos.x + xView <= 0) {
+      if ( toreturn.pos.x + viewXCoord <= 0) {
         direction = 'right';
       }
 
       if ( direction == 'right') {
-        toreturn.moveRight(elapsedTime);
+        toreturn.goRight(elapsedTime);
       }
       else {
-        toreturn.moveLeft(elapsedTime);
-      }
-
-      if (toreturn.pos.y >= canvas.height - 128) {
-        toreturn.on_ground = true;
-        toreturn.velocity_y = 0.0;
-        toreturn.pos.y = canvas.height - 128;
+        toreturn.goLeft(elapsedTime);
       }
     }
     return toreturn;
@@ -357,45 +387,47 @@ let Graphics = (function(){
 	  contextForMap.save();
     contextForMap.drawImage(Images.bg, 0,0, contextForMap.canvas.width, contextForMap.canvas.height);
 
-    for(let i=0; i < Map.map_rows; i++ ){
-      for (let j=0; j < Map.map_cols; j++){
-        if (map[i][j] == "stone"){
-          contextForMap.drawImage(Images.stone_whole, j * dimension, i*dimension , tileswide, tileshigh);
-        }
+    for(let i=0; i < Map.levelrows; i++ ){
+      for (let j=0; j < Map.levelcolumns; j++){
         if (map[i][j] == 'dirtleft') {
-          contextForMap.drawImage(Images.dirtleft, j*dimension, i*dimension, tileswide, tileshigh);
+          contextForMap.drawImage(Images.dirtleft, j*dimension, i*dimension, tilesize, tilesize);
         }
         if (map[i][j] == 'dirt') {
-          contextForMap.drawImage(Images.dirt, j*dimension, i*dimension, tileswide, tileshigh);
+          contextForMap.drawImage(Images.dirt, j*dimension, i*dimension, tilesize, tilesize);
         }
         if (map[i][j] == 'dirtright') {
-          contextForMap.drawImage(Images.dirtright, j*dimension, i*dimension, tileswide, tileshigh);
+          contextForMap.drawImage(Images.dirtright, j*dimension, i*dimension, tilesize, tilesize);
         }
+        if (map[i][j] == "stone"){
+          contextForMap.drawImage(Images.stone_whole, j * dimension, i*dimension , tilesize, tilesize);
+        }
+
       }
     }
 		contextForMap.restore();
 
-		toreturn.map_view = new Image();
-		toreturn.map_view.src = contextForMap.canvas.toDataURL("image/png");
+//to get a width of the contextmap
+		toreturn.canvasAsPng = new Image();
+		toreturn.canvasAsPng.src = contextForMap.canvas.toDataURL("image/png");
 		contextForMap = null;
 
-    toreturn.drawMap = function(xView, yView) {
-      canvas = $('#map-canvas').get(0);
+    toreturn.renderMap = function(viewXCoord, viewYCoord) {
+      canvas = $('#canvas-for-view').get(0);
       context = canvas.getContext('2d');
 
-      let ourViewX = xView;
-      let ourViewY = yView;
+      let ourViewX = viewXCoord;
+      let ourViewY = viewYCoord;
       let ourViewWidth = canvas.width;
       let ourViewHeight = canvas.height;
 
-			if(toreturn.map_view.width - ourViewX < ourViewWidth){
-				ourViewWidth = toreturn.map_view.width - ourViewX;
+			if(toreturn.canvasAsPng.width - ourViewX < ourViewWidth){
+				ourViewWidth = toreturn.canvasAsPng.width - ourViewX;
 			}
       //for going up
-			// if(toreturn.map_view.height - ourViewY < ourViewHeight){
-			// 	ourViewHeight = toreturn.map_view.height - ourViewY;
+			// if(toreturn.canvasAsPng.height - ourViewY < ourViewHeight){
+			// 	ourViewHeight = toreturn.canvasAsPng.height - ourViewY;
 			// }
-			context.drawImage(toreturn.map_view, ourViewX, ourViewY, ourViewWidth, ourViewHeight, 0, 0, ourViewWidth, ourViewHeight);
+			context.drawImage(toreturn.canvasAsPng, ourViewX, ourViewY, ourViewWidth, ourViewHeight, 0, 0, ourViewWidth, ourViewHeight);
 
       canvas = $('#canvas-main').get(0);
       context = canvas.getContext('2d');

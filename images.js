@@ -1,8 +1,7 @@
 
 let Images = (function () {
   let that = {};
-  that.tile_width = 64;
-  that.tile_height = 64;
+  that.tilesize = 64;
   that.player_height = 73;
   that.player_width = 67;
 

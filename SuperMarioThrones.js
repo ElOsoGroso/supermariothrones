@@ -19,7 +19,7 @@ function playSound(which){
 let Game = (function() {
   let toreturn = {};
   let inputDispatch = {};
-  let previousTime = performance.now();
+  let lastTime = performance.now();
   let elapsedTime = 0;
   let canvas = $('#canvas-main').get(0);
   let context = canvas.getContext('2d');
@@ -27,57 +27,66 @@ let Game = (function() {
   let previousXView = 0;
   let deltaYView = 0;
   let previousYView = 0;
+  let dimension = 64;
 
-  toreturn.high_scores_active = false;
-  toreturn.game_active = false;
-  toreturn.plr = null;
+  toreturn.player = null;
   toreturn.enemy = null;
   toreturn.map = null;
   toreturn.camera = null;
-  toreturn.on_platform =false;
+  toreturn.onPlat =false;
+  toreturn.onGround = true;
 
   function update(elapsedTime) {
       if (toreturn.camera){
-
         toreturn.camera.update();
       }
 
-      deltaXView = toreturn.camera.xView - previousXView;
-      deltaYView = toreturn.camera.yView - previousYView;
+      deltaXView = toreturn.camera.viewXCoord - previousXView;
+      deltaYView = toreturn.camera.viewYCoord - previousYView;
 
-      previousXView = toreturn.camera.xView;
-      previousYView = toreturn.camera.yView;
+      previousXView = toreturn.camera.viewXCoord;
+      previousYView = toreturn.camera.viewYCoord;
 
-      toreturn.plr.velocity_y += toreturn.plr.gravity;
-      toreturn.plr.pos.y += toreturn.plr.velocity_y;
-
-      if (toreturn.plr.pos.y >= canvas.height - 128 && toreturn.on_platform == false) {
-        toreturn.plr.on_ground = true;
-        toreturn.plr.velocity_y = 0.0;
-        toreturn.plr.pos.y = canvas.height - 128;
+      toreturn.player.yVelocity += toreturn.player.gravity;
+      toreturn.player.pos.y += toreturn.player.yVelocity;
+      // toreturn.player.isOnGround();
+      // console.log(toreturn.player.onGround);
+      // console.log(toreturn.player.jumpPressed);
+      // if (toreturn.player.onGround && !toreturn.player.jumpPressed) {
+      //   toreturn.player.yVelocity = 0.0;
+      //   toreturn.player.pos.y = canvas.height - 128;
+      // }
+      if (toreturn.player.pos.y >= canvas.height - dimension*2 && toreturn.onPlat == false) {
+        toreturn.player.onGround = true;
+        toreturn.player.yVelocity = 0.0;
+        toreturn.player.pos.y = canvas.height - dimension*2;
+      }
+      if (toreturn.enemy.pos.y >= canvas.height - dimension*2 && toreturn.onPlat == false) {
+        toreturn.enemy.onGround = true;
+        toreturn.enemy.yVelocity = 0.0;
+        toreturn.enemy.pos.y = canvas.height - dimension*2;
       }
 
-      toreturn.enemy.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.xView, toreturn.camera.yView);
+      toreturn.enemy.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
     }
 
     function render(elapsedTime) {
 
         if (toreturn.game_active && toreturn.camera) {
           context.clearRect(0,0,canvas.width, canvas.height);
-          toreturn.map.drawMap(toreturn.camera.xView, toreturn.camera.yView);
-          toreturn.plr.drawPlayer(toreturn.camera.xView, toreturn.camera.yView);
-          toreturn.enemy.drawEnemy(toreturn.camera.xView, toreturn.camera.yView);
+          toreturn.map.renderMap(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
+          toreturn.player.renderPlayer(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
+          toreturn.enemy.renderEnemy(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
         }
 
       }
       function gameLoop(time) {
-        elapsedTime = time - previousTime;
+        elapsedTime = time - lastTime;
 
-        previousTime = time;
+        lastTime = time;
 
         update(elapsedTime);
         render(elapsedTime);
-
         requestAnimationFrame(gameLoop);
       }
 
@@ -105,16 +114,15 @@ let Game = (function() {
     canvas2.style.display="none";
     canvas2.style.zIndex = 0;
     canvas1.style.zIndex = 2;
-
-       toreturn.plr = Graphics.player();
-       toreturn.enemy = Graphics.enemy({walkertime: walkertime, pos: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}});
-       toreturn.map = Graphics.map();
-       toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 100048, canvas.height);
-      context.clearRect(0,0,canvas.width, canvas.height);
-      Game.game_active= true;
-        Game.map.drawMap();
-        $('.ourView').scrollLeft = 0;
-       requestAnimationFrame(gameLoop);
+     toreturn.player = Graphics.player();
+     toreturn.enemy = Graphics.enemy({walkertime: walkertime, pos: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}});
+     toreturn.map = Graphics.map();
+     toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 17000, canvas.height);
+    context.clearRect(0,0,canvas.width, canvas.height);
+    Game.game_active= true;
+      Game.map.renderMap();
+      $('.ourView').scrollLeft = 0;
+     requestAnimationFrame(gameLoop);
      }
 
 
