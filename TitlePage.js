@@ -97,19 +97,6 @@ let TitlePage = (function () {
       height:152
   };
 
-  // var rectopt = {
-  //     x:300,
-  //     y:300,
-  //     width:900,
-  //     height:900
-  // };
-  // var rectcred = {
-  //     x:300,
-  //     y:300,
-  //     width:900,
-  //     height:900
-  // };
-  //Binding the click event on the canvas
   canvas1.addEventListener('click', function(evt) {
       var mousePos = getMousePos(canvas1, evt);
 
@@ -127,8 +114,11 @@ let TitlePage = (function () {
       else if (isInside(mousePos,recthoverhigh)) {
         playSound('click');
         console.log("trying to open highscores");
-        HighScores.initialize();
-        HighScores.renderStart();
+        controls_active = true;
+        Controls.initialize();
+        // Controls.drawControls();
+        // HighScores.initialize();
+        // HighScores.renderStart();
         // SuperMarioThrones.init();
 
       }

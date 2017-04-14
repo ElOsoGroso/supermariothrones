@@ -43,7 +43,6 @@ let HighScores = (function(){
   }
 
   that.initialize = function() {
-    // $('#menuSprite').addClass('hidden');
 
 
     Game.menu_active = false;

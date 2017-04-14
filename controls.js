@@ -1,17 +1,46 @@
 
 let Controls = (function(){
   let that = {};
-  let canvas = $('#canvas-main')[0];
+  let canvas = $('#controls')[0];
   let context = canvas.getContext('2d');
-  let bg = new Image();
-  let bg_ready = false;
+  let backgroundcontrols = new Image();
+  let bgc_ready = false;
+  let opt2 = new Image();
+  let opt2_ready = false;
+  opt2.onload = () => {
+      opt2_ready = true;
+  };
+  opt2.src = "got1.png";
+  let opt3 = new Image();
+  let opt3_ready = false;
+  opt3.onload = () => {
+      opt3_ready = true;
+  };
+  opt3.src = "got2.png";
+  let opt4 = new Image();
+  let opt4_ready = false;
+  opt4.onload = () => {
+      opt4_ready = true;
+  };
+  opt4.src = "got3.png";
+  let opt5 = new Image();
+  let opt5_ready = false;
+  opt5.onload = () => {
+      opt5_ready = true;
+  };
+  opt5.src = "got4.png";
   let x = 250;
   let y = 200;
-  let left_active = false;
-  let right_active = false;
-  let jump_active = false;
-  let crouch_active = false;
-  that.enter_active = 0;
+  let changeLeft = false;
+  let changeRight = false;
+  let changeJump = false;
+  let fireball = false;
+  let drawnormal = true;
+  let drawopt1 = false;
+  let drawopt2 = false;
+  let drawopt3 = false;
+  let drawopt4 = false;
+  that.enter_active = false;
 
   //determine the controls based on if the user has entered a preference
   if (localStorage.getItem('control_left')) {
@@ -49,56 +78,193 @@ let Controls = (function(){
   let menu_count = 0;
   let arrow = new Image();
   let arrow_ready = false;
+  function getMousePos(canvas, event) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+    };
+}
 
+//Function to check whether a point is inside a rectangle
+function isInside(pos, rect){
+    return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
+}
   arrow.onload = () => {
       arrow_ready = true;
   };
 
   arrow.src = 'Images/arrow.png';
 
-  bg.onload = () => {
-    bg_ready = true;
+  backgroundcontrols.onload = () =>{
+    bgc_ready = true;
   };
 
-  bg.src = 'Images/background/bg.png';
+  backgroundcontrols.src = 'got.png';
+  var a = {
+      x:388,
+      y:547,
+      width:227,
+      height:200
+  };
+  var w = {
+      x:726,
+      y:537,
+      width:227,
+      height:200
+  };
+  var d= {
+      x:1064,
+      y:537,
+      width:227,
+      height:200
+  };
+  var s = {
+      x:1402,
+      y:537,
+      width:227,
+      height:200
+  };
+  canvas.addEventListener('click', function(evt) {
+      var mousePos = getMousePos(canvas, evt);
 
+      if (isInside(mousePos,a)) {
+
+        playSound('click');
+        that.enter_active= true;
+        changeLeft = true;
+        changeRight = false;
+        changeJump = false;
+        fireball = false;
+
+      }
+      else if (isInside(mousePos,w)) {
+        playSound('click');
+        that.enter_active= true;
+        changeLeft = false;
+        changeRight = false;
+        changeJump = true;
+        fireball = false;
+      }
+      else if (isInside(mousePos,s)){
+        that.enter_active= true;
+        changeLeft = false;
+        changeRight = false;
+        changeJump = false;
+        fireball = true;
+      }
+      else if (isInside(mousePos,d)){
+        that.enter_active= true;
+        changeLeft = false;
+        changeRight = true;
+        changeJump = false;
+        fireball = false;
+      }
+      else{
+          console.log("nope");
+      }
+  }, false);
+  canvas.addEventListener('mousemove', function(evt) {
+    // console.log("hello")
+    var mousePos = getMousePos(canvas, evt);
+    console.log(mousePos);
+      // console.log(mousePos);
+      if (isInside(mousePos,w)) {
+        if(!newonce){
+        playSound('hover');
+        newonce =true;
+        new2once = false;
+      }
+        drawnormal = false;
+        drawopt1 = false;
+        drawopt2 = true;
+        drawopt3 = false;
+        drawopt4 = false;
+      }
+      else if (isInside(mousePos,d)) {
+        if(!new2once){
+        playSound('hover');
+        new2once =true;
+        newonce = false;
+      }
+        drawnormal = false;
+        drawopt3 =true;
+        drawopt1 = false;
+        drawopt2 = false;
+        drawopt4 = false;
+      }
+      else if (isInside(mousePos,s)) {
+        if(!new2once){
+        playSound('hover');
+        new2once =true;
+        newonce = false;
+      }
+        drawnormal = false;
+        drawopt4 =true;
+        drawopt1 = false;
+        drawopt2 = false;
+        drawopt3 = false;
+      }
+
+      else if (isInside(mousePos,a)) {
+        if(!new2once){
+        playSound('hover');
+        new2once =true;
+        newonce = false;
+      }
+        drawnormal = false;
+        drawopt1 =true;
+        drawopt2 = false;
+        drawopt3 = false;
+        drawopt4 = false;
+      }
+      else{
+        drawopt1 = false;
+        drawnormal = true;
+        drawopt2 = false;
+        drawopt3 = false;
+        drawopt4 = false;
+      }
+
+
+  }, false);
   //add the player's event listener
   $(document).keydown(function(e) {
     //dont allow multiple assignments of one key
-    if (left_active && that.enter_active > 1) {
+    if (changeLeft && that.enter_active) {
       if (e.keyCode != that.right && e.keyCode != that.jump && e.keyCode != that.crouch ) {
 
         that.left = e.keyCode;
         localStorage.setItem('control_left', that.left);
-        left_active = false;
-        that.enter_active = 1;
+        changeLeft = false;
+        that.enter_active = false;
       }
-    } else if (right_active && that.enter_active > 1) {
+    } else if (changeRight && that.enter_active) {
       //dont allow multiple assignments of one key
       if (e.keyCode != that.left && e.keyCode != that.jump && e.keyCode != that.crouch ) {
 
         that.right = e.keyCode;
-        right_active = false;
+        changeRight = false;
         localStorage.setItem('control_right', that.right);
-        that.enter_active = 1;
+        that.enter_active = false;
       }
-    } else if (jump_active && that.enter_active > 1) {
+    } else if (changeJump && that.enter_active) {
       //dont allow multiple assignments of one key
       if (e.keyCode != that.right && e.keyCode != that.left && e.keyCode != that.crouch ) {
 
         that.jump = e.keyCode;
-        jump_active = false;
+        changeJump = false;
         localStorage.setItem('control_jump', that.jump);
-        that.enter_active = 1;
+        that.enter_active = false;
       }
-    } else if (crouch_active && that.enter_active > 1) {
+    } else if (fireball && that.enter_active) {
       //dont allow multiple assignments of one key
       if (e.keyCode != that.right && e.keyCode != that.jump && e.keyCode != that.left ) {
 
         that.crouch = e.keyCode;
         localStorage.setItem('control_crouch', that.crouch);
-        crouch_active = false;
-        that.enter_active = 1;
+        fireball = false;
+        that.enter_active = false;
       }
     } else {
 
@@ -114,11 +280,28 @@ let Controls = (function(){
 
   })
 
+function checkClicked(){
 
-  that.drawControls = function() {
-      if(bg_ready) {
+}
+  function drawcontrols(){
+      if(bgc_ready && opt2_ready) {
         context.clearRect(0,0,canvas.width,canvas.height);
-        context.drawImage(bg,0,0, canvas.width, canvas.height);
+        // console.log(drawopt1);
+        if(drawnormal){
+        context.drawImage(backgroundcontrols,0,0, canvas.width, canvas.height);}
+        else if(drawopt1){
+          // console.log("butts");
+          context.drawImage(opt2,0,0, canvas.width, canvas.height);
+        }
+        else if (drawopt2){
+          context.drawImage(opt3,0,0, canvas.width, canvas.height);
+        }
+        else if(drawopt3){
+
+        context.drawImage(opt4,0,0, canvas.width, canvas.height);}
+        else if (drawopt4){
+            context.drawImage(opt5,0,0, canvas.width, canvas.height);
+        }
 
         context.textAlign = 'center';
         context.fillStyle = '#b3b3b3';
@@ -127,244 +310,122 @@ let Controls = (function(){
         context.shadowBlur = 7;
         context.lineWidth = 5;
 
-        context.font = "80px Calibri"
-
-        context.strokeText('In Game Controls:', 640, 100);
-        context.fillText("In Game Controls:", 640,  100);
-
-        context.font = '50px Calibri';
+        context.font = '200px Calibri';
 
         //left highlight
-        if (left_active && that.enter_active > 1) {
-          context.font = '70px Calibri';
+        if (changeLeft && that.enter_active) {
+          context.font = '200px Calibri';
 
-          context.strokeText(String.fromCharCode(that.left), 250, 200);
-          context.fillText(String.fromCharCode(that.left), 250, 200);
+          context.strokeText(String.fromCharCode(that.left), 500, 700);
+          context.fillText(String.fromCharCode(that.left), 500, 700);
 
-          context.font = '40px Calibri';
-          context.strokeText('Press the key you wish to assign', 640, 450);
-          context.fillText("Press the key you wish to assign", 640,  450);
-          context.font = '50px Calibri';
+          context.font = '90px Calibri';
+          context.strokeText('Push any key you freaking want', 1040, 950);
+          context.fillText("Push any key you freaking want", 1040,  950);
+          context.font = '200px Calibri';
 
         } else {
-          context.strokeText(String.fromCharCode(that.left), 250, 200);
-          context.fillText(String.fromCharCode(that.left), 250, 200);
+          context.strokeText(String.fromCharCode(that.left), 500, 700);
+          context.fillText(String.fromCharCode(that.left), 500, 700);
         }
 
         //jump highlight
-        if (jump_active && that.enter_active > 1) {
-          context.font = '70px Calibri';
+        if (changeJump && that.enter_active) {
+          context.font = '200px Calibri';
 
-          context.strokeText(String.fromCharCode(that.jump), 500, 200);
-          context.fillText(String.fromCharCode(that.jump), 500, 200);
+          context.strokeText(String.fromCharCode(that.jump), 833, 700);
+          context.fillText(String.fromCharCode(that.jump), 833, 700);
 
-          context.font = '40px Calibri';
-          context.strokeText('Press the key you wish to assign', 640, 450);
-          context.fillText("Press the key you wish to assign", 640,  450);
+          context.font = '90px Calibri';
+          context.strokeText('Push any key you freaking want', 1040, 950);
+          context.fillText("Push any key you freaking want", 1040,  950);
 
-          context.font = '50px Calibri';
+          context.font = '200px Calibri';
         } else {
-          context.strokeText(String.fromCharCode(that.jump), 500, 200);
-          context.fillText(String.fromCharCode(that.jump), 500, 200);
+          context.strokeText(String.fromCharCode(that.jump), 833, 700);
+          context.fillText(String.fromCharCode(that.jump), 833, 700);
         }
-
-        //crouch highlight
-        if (crouch_active && that.enter_active > 1) {
-          context.font = '70px Calibri';
-
-          context.strokeText(String.fromCharCode(that.crouch), 750, 200);
-          context.fillText(String.fromCharCode(that.crouch), 750, 200);
-
-          context.font = '40px Calibri';
-          context.strokeText('Press the key you wish to assign', 640, 450);
-          context.fillText("Press the key you wish to assign", 640,  450);
-
-          context.font = '50px Calibri';
-        } else {
-
-          context.strokeText(String.fromCharCode(that.crouch), 750, 200);
-          context.fillText(String.fromCharCode(that.crouch), 750, 200);
-        }
-
         //right highlight
-        if (right_active && that.enter_active > 1) {
-          context.font = '80px Calibri';
+        if (changeRight && that.enter_active) {
+          context.font = '200px Calibri';
 
-          context.strokeText(String.fromCharCode(that.right), 1000, 200);
-          context.fillText(String.fromCharCode(that.right), 1000, 200);
+          context.strokeText(String.fromCharCode(that.right), 1166, 700);
+          context.fillText(String.fromCharCode(that.right), 1166, 700);
 
-          context.font = '40px Calibri';
-          context.strokeText('Press the key you wish to assign', 640, 450);
-          context.fillText("Press the key you wish to assign", 640,  450);
+          context.font = '90px Calibri';
+          context.strokeText('Push any key you freaking want', 1040, 950);
+          context.fillText("Push any key you freaking want", 1040,  950);
 
-          context.font = '50px Calibri';
+          context.font = '200px Calibri';
         } else {
-          context.strokeText(String.fromCharCode(that.right), 1000, 200);
-          context.fillText(String.fromCharCode(that.right), 1000, 200);
+          context.strokeText(String.fromCharCode(that.right), 1166, 700);
+          context.fillText(String.fromCharCode(that.right), 1166, 700);
+        }
+        //crouch highlight
+        if (fireball && that.enter_active) {
+          context.font = '200px Calibri';
+
+          context.strokeText(String.fromCharCode(that.crouch), 1500, 700);
+          context.fillText(String.fromCharCode(that.crouch), 1500, 700);
+
+          context.font = '90px Calibri';
+          context.strokeText('Push any key you freaking want', 1040, 950);
+          context.fillText("Push any key you freaking want", 1040,  950);
+
+          context.font = '200px Calibri';
+        } else {
+
+          context.strokeText(String.fromCharCode(that.crouch), 1500, 700);
+          context.fillText(String.fromCharCode(that.crouch), 1500, 700);
         }
 
 
-        context.font = '30px Calibri';
 
-        context.strokeText('Left', 250, 300);
-        context.fillText('Left', 250, 300);
 
-        context.strokeText('Jump', 500, 300);
-        context.fillText('Jump', 500, 300);
+        context.font = '100px Calibri';
 
-        context.strokeText('Crouch', 750, 300);
-        context.fillText('Crouch', 750, 300);
+        context.strokeText('Left', 500, 500);
+        context.fillText('Left', 500, 500);
 
-        context.strokeText('Right', 1000, 300);
-        context.fillText('Right', 1000, 300);
+        context.strokeText('Jump', 833, 500);
+        context.fillText('Jump', 833, 500);
+
+        context.strokeText('Right', 1166, 500);
+        context.fillText('Right', 1166, 500);
+
+        context.strokeText('Weapon', 1500, 500);
+        context.fillText('Weapon', 1500, 500);
 
         context.font = '20px Calibri';
 
-        context.strokeText('Press ENTER To Select Control To Edit', 440, 550);
-        context.fillText("Press ENTER To Select Control To Edit", 440,  550);
+        context.strokeText('Click one of the controls to change it', 1000, 800);
+        context.fillText("Click one of the controls to change it", 1000,  800);
 
-        context.strokeText('Press ESC To Exit Controls', 840, 550);
-        context.fillText("Press ESC To Exit Controls", 840,  550);
-
-        highlightOption(x,y);
       }
 
   };
 
 
-  //this function displays which option the user is currently on
-  function highlightOption(x,y) {
-    canvas = $('#controlsSprite')[0];
-    context = canvas.getContext('2d');
-    context.clearRect(0,0,canvas.width,canvas.height);
-
-    switch (x) {
-      case 250:
-        context.save();
-        context.drawImage(arrow, 170, 240, 50, 100);
-        context.restore();
-        break;
-      case 500:
-        context.save();
-        context.drawImage(arrow, 400, 240, 50, 100);
-        context.restore();
-        break;
-      case 750:
-        context.save();
-        context.drawImage(arrow, 650, 240, 50, 100);
-        context.restore();
-        break;
-      case 1000:
-        context.save();
-        context.drawImage(arrow, 900, 240, 50, 100);
-        context.restore();
-        break;
-
-    }
-
-    canvas = $('#menuCanvas')[0];
-    context = canvas.getContext('2d');
-  }
-
-  that.selectOption = function() {
-    switch (menu_count) {
-      case 0: //left
-        // menu_count = 0;
-        left_active = true;
-        right_active = false;
-        jump_active = false;
-        crouch_active = false;
-        break;
-      case 1: //jump
-        // menu_count = 0;
-        jump_active = true;
-        left_active = false;
-        right_active = false;
-        crouch_active = false;
-        break;
-      case 2: //crouch
-        // menu_count = 0;
-        crouch_active = true;
-        left_active = false;
-        jump_active = false;
-        right_active = false;
-        break;
-      case 3: //right
-        // menu_count = 0;
-        left_active = false;
-        jump_active = false;
-        crouch_active = false;
-        right_active = true;
-        break;
-    }
-  };
-
-  //this is the down arrow highlight function, it will increment the options as
-  //the user goes down the list
-  that.right_hlt = function() {
-    //toggle the options arrow
-    if (menu_count >= 3) {
-      menu_count = 0;
-    } else {
-      menu_count += 1;
-    }
-
-    switch (menu_count) {
-      case 0:
-        highlightOption(250,200);
-        x = 250;
-        break;
-      case 1:
-        highlightOption(500,200);
-        x = 500;
-        break;
-      case 2:
-        highlightOption(750,200);
-        x = 750;
-        break;
-      case 3:
-        highlightOption(1000,200);
-        x = 1000;
-        break;
-    }
-
-
-  };
-
-
-  //This is the up highlight function, it will decrement as the user goes up
-  that.left_hlt = function() {
-    //toggle the options arrow
-    if (menu_count < 0) {
-      menu_count = 3;
-    } else {
-      menu_count -= 1;
-    }
-
-    switch (menu_count) {
-      case 0:
-        highlightOption(250,200);
-        x = 250;
-        break;
-      case 1:
-        highlightOption(500,200);
-        x = 500;
-        break;
-      case 2:
-        highlightOption(750,200);
-        x = 750;
-        break;
-      case 3:
-        highlightOption(1000,200);
-        x = 1000;
-        break;
-    }
-  };
 
   that.initialize = function() {
+    let canvas1 = document.getElementById('controls');
+    let context1 = canvas1.getContext('2d');
+    let canvas2 = document.getElementById('title-page');
+    let  context2 = canvas1.getContext('2d');
+    var frames = 30;
+    var timerId = 0;
+    timerId = setInterval(updatecontrols,1000/frames);
+    function updatecontrols(){
+      // console.log(changeLeft);
+      // checkClicked();
+      drawcontrols();
 
+    }
+    canvas2.style.display="none";
+    canvas2.style.zIndex = 0;
+    canvas1.style.zIndex = 2;
     Game.menu_active = false;
-    drawControls();
+
   };
 
   return that;

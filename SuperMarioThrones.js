@@ -26,7 +26,7 @@ let Game = (function() {
   let elapsedTime = 0;
   let canvas = $('#canvas-main').get(0);
   let context = canvas.getContext('2d');
-  toreturn.controls_active = false;
+
   toreturn.high_scores_active = false;
   toreturn.game_active = false;
   toreturn.plr = null;
@@ -56,13 +56,10 @@ let Game = (function() {
     function render(elapsedTime) {
 
 
-        if (toreturn.controls_active) {
-
+        if (controls_active) {
           Controls.drawControls();
           // inputDispatch[13] = Controls.selectOption();
-          if (Controls.enter_active) {
-            Controls.selectOption();
-          }
+
         }
 
         if (toreturn.high_scores_active) {
@@ -131,7 +128,7 @@ let Game = (function() {
        // console.log(toreturn.plr.pos.x);
         context.clearRect(0,0,canvas.width, canvas.height);
         // Game.map = Map.map();
-        if (!Game.controls_active && !Game.high_scores_active){
+        if (!controls_active && !Game.high_scores_active){
 
           Game.game_active = true;
           // $('#menuSprite').addClass('hidden');
