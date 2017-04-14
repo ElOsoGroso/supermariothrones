@@ -274,8 +274,6 @@ let Graphics = (function(){
         display_walker_count = 0;
       }
       context.save();
-      //context.clearRect(xView,yView,canvas.width,canvas.height);
-      // console.log(enemy_animation[display_walker_count].src)
       context.drawImage(enemy_animation[display_walker_count], toreturn.pos.x, toreturn.pos.y, tileswide, tileshigh);
       context.restore();
 
@@ -307,8 +305,6 @@ let Graphics = (function(){
               toreturn.on_ground = true;
               toreturn.velocity_y = 0.0;
               toreturn.gravity = 0.0;
-
-              //place the player on the platform
               toreturn.pos.y = i*dimension - dimension;
             } else {
               toreturn.gravity = 0.5;
@@ -357,19 +353,13 @@ let Graphics = (function(){
     let dimension =64;
     let toreturn = {};
     Map.initialize();
-
-
-    //this will create the overall map and draw it to a new canvas of the map's size
     let contextForMap = document.createElement('canvas').getContext('2d');
-		contextForMap.canvas.width = 16000; //pixels
-		contextForMap.canvas.height = 1152; //pixels
+		contextForMap.canvas.width = 16000;
+		contextForMap.canvas.height = 1152;
 
 	  contextForMap.save();
-
-    //draw the background
     contextForMap.drawImage(Images.bg, 0,0, contextForMap.canvas.width, contextForMap.canvas.height);
 
-    //draw the grass floor
     for(let i=0; i < Map.map_rows; i++ ){
       for (let j=0; j < Map.map_cols; j++){
         if (map[i][j] == "stone"){
