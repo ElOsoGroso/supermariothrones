@@ -1,7 +1,7 @@
 
 let Controls = (function(){
   let toreturn = {};
-  let canvas = $('#controls')[0];
+  let canvas = $('#controls').get(0);
   let context = canvas.getContext('2d');
   let backgroundcontrols = new Image();
   let bgc_ready = false;
@@ -29,8 +29,6 @@ let Controls = (function(){
       opt5_ready = true;
   };
   opt5.src = "got4.png";
-  let x = 250;
-  let y = 200;
   let changeLeft = false;
   let changeRight = false;
   let changeJump = false;

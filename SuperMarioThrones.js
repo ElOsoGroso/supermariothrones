@@ -7,9 +7,6 @@ Sounds['click'] = loadSound('Audio/click.ogg');
 Sounds['hover'] = loadSound('Audio/hover.mp3');
 Sounds['jump'] = loadSound('Audio/jump.mp3');
 
-
-
-
 }
 function loadSound(source) {
   let sound = new Audio();
@@ -73,14 +70,6 @@ let Game = (function() {
           toreturn.plr.drawPlayer(toreturn.camera.xView, toreturn.camera.yView);
           toreturn.enemy.drawEnemy(toreturn.camera.xView, toreturn.camera.yView);
 
-          //on down arrow
-          inputDispatch[40] = 0;
-
-          //on up arrow
-          // inputDispatch[38] = 0;
-
-          //on enter
-          inputDispatch[13] = 0;
 
         }
 
@@ -125,26 +114,12 @@ let Game = (function() {
        toreturn.enemy = Graphics.enemy({walkertime: walkertime, pos: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}});
        toreturn.map = Graphics.map();
        toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 100048, canvas.height);
-       // console.log(toreturn.plr.pos.x);
         context.clearRect(0,0,canvas.width, canvas.height);
-        // Game.map = Map.map();
         if (!controls_active && !Game.high_scores_active){
-
           Game.game_active = true;
-          // $('#menuSprite').addClass('hidden');
-          // $('#controlsSprite').addClass('hidden');
         }
         Game.map.drawMap();
         $('.ourView').scrollLeft = 0;
-        // console.log(Game.map);
-
-
-
-
-
-       // toreturn.map.drawMap();
-
-       // Map.initialize();
        requestAnimationFrame(gameLoop);
      }
 
