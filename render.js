@@ -39,7 +39,7 @@ let Graphics = (function(){
     return toreturn;
   };
 
-  //this camera method was borrowed
+  //this camera method was borrowed from another student
   toreturn.camera = function(viewXCoord, viewYCoord, canvas_width, canvas_height, widthofmap, heightofmap) {
     let toreturn = {};
 
