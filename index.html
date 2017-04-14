@@ -3,7 +3,7 @@
 <head><link rel="stylesheet" href="Styles\main.css">
   <meta charset = "UTF-8">
   <meta name="ourView" content="width=device-width, initial-scale=1">
-  <title> SuperMarioThrones Game Credit - TerikBrunson Matt Morris</title>
+  <title> SuperMarioThrones Game Credit - Terik Brunson Matt Morris</title>
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type='text/javascript' >
@@ -20,6 +20,7 @@
   var erroronce = false;
   let scrollwidth = -1500;
   let controls_active =false;
+  let high_scores_active = false;
   let walkertime = 0;
 </script>
 
@@ -30,12 +31,14 @@
     <canvas id = "canvas-main" width = "2000" height = "1152" style = "z-index: 1; left:0px; top:0px;float:left;position:absolute;"></canvas>
     <canvas id = "title-page" width = "2000" height = "1152" style = "z-index: 2; left:0px; top:0px;float:left;position:absolute;"></canvas>
     <canvas id = "controls" width = "2000" height = "1152" style = "z-index: 0; left:0px; top:0px;float:left;position:absolute;"></canvas>
+    <canvas id = "highscores" width = "2000" height = "1152" style = "z-index: 0; left:0px; top:0px;float:left;position:absolute;"></canvas>
     <canvas id="canvas-for-view" width="2000" height="1152 style="border:1px solid #000000;"></canvas>
     <div style = "float:left;">
     <input id="clickMe" type="button" value="Restart" onclick="restart()" style = "position:absolute; margin-top: 1210px;width: 300px; 100px; display:inline-Rank;" />
     </div>
     <script type="text/javaScript" src="images.js"></script>
     <script type="text/javaScript" src="map.js"></script>
+    <script type="text/javaScript" src="highscores.js"></script>
     <script type="text/javaScript" src="controlspage.js"></script>
     <script type="text/javaScript" src = "TitlePage.js"></script>
     <script type="text/javaScript" src="render.js"></script>

@@ -1,11 +1,11 @@
 {
   "name": "final",
   "version": "1.0.0",
-  "description": "this is the final project for game dev",
+  "description": "for game dev",
   "main": "game.js",
   "scripts": {
     "test": "final"
   },
-  "author": "justin hershberger",
+  "author": "terik brunson, matthew morris",
   "license": "ISC"
 }

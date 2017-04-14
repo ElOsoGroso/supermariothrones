@@ -79,6 +79,13 @@ let TitlePage = (function () {
       height:152
   };
 
+  var rectHoverHighScores = {
+    x: 650,
+    y: 725,
+    width:720,
+    height: 152
+  }
+
   canvas1.addEventListener('click', function(evt) {
       var mousePos = getMousePos(canvas1, evt);
 
@@ -95,9 +102,16 @@ let TitlePage = (function () {
       }
       else if (isInside(mousePos,recthoverhigh)) {
         playSound('click');
-        console.log("trying to open highscores");
+        //console.log("trying to open controls");
         controls_active = true;
         Controls.initialize();
+
+      }
+      else if (isInside(mousePos,rectHoverHighScores)) {
+        playSound('click');
+        //console.log("trying to open high scores");
+        high_scores_active = true;
+        HighScores.initialize();
 
       }
       else{
@@ -131,12 +145,6 @@ let TitlePage = (function () {
         drawopt1 =true;
 
       }
-      else{
-        // console.log("it unhappened!")
-        drawopt1 = false;
-        drawnormal = true;
-      }
-
 
   }, false);
 
