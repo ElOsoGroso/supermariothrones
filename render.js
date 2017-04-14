@@ -4,9 +4,9 @@ let Graphics = (function(){
   let canvas = $('#canvas-main')[0];
   console.log("Hola");
   let context = canvas.getContext('2d');
-  let cont = $('.ourView');
-  toreturn.initial_cont_width = cont.width();
-  toreturn.cont_width = $('.ourView').width();
+  let container = $('.ourView');
+  toreturn.initial_container_width = container.width();
+  toreturn.container_width = $('.ourView').width();
   let tileswide = Images.tile_width;
   let tileshigh = Images.tile_height;
 //this stuff is all from justins explanation of the camera
@@ -105,7 +105,6 @@ let Graphics = (function(){
     let goRight = false;
     let keyUp = false;
     let walk_count = 0;
-    let scroll_count = 1;
     let jump_dy = 2;
     let jump_y = toreturn.pos.y;
     let display_count = 0;
@@ -246,7 +245,6 @@ let Graphics = (function(){
     let friction = 0.98;
     toreturn.pos = {x: spec.pos.x, y: spec.pos.y};
     let walk_count = 0;
-    let scroll_count = 1;
     let areaToMoveInside = {minX: spec.range.minX, maxX: spec.range.maxX, minY: spec.range.minY, maxY: spec.range.maxY};
     let direction = 'right';
     let walkertime = spec.walkertime;
@@ -376,8 +374,6 @@ let Graphics = (function(){
         }
       }
     }
-
-
 		contextForMap.restore();
 
 		toreturn.map_view = new Image();
@@ -385,7 +381,7 @@ let Graphics = (function(){
 		contextForMap = null;
 
     toreturn.drawMap = function(xView, yView) {
-      canvas = $('#map-canvas')[0];
+      canvas = $('#map-canvas').get(0);
       context = canvas.getContext('2d');
 
       let ourViewX = xView;

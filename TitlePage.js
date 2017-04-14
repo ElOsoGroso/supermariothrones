@@ -25,11 +25,6 @@ let TitlePage = (function () {
     console.log("Begin title page init: " + startgame);
     canvas1 = document.getElementById('title-page');
     context1 = canvas1.getContext('2d');
-    let canvas2 = document.getElementById('high-score');
-    // context2 = canvas1.getContext('2d');
-    // canvas2.style.display="none";
-    // canvas2.style.zIndex = 0;
-    // canvas1.style.zIndex = 2;
     var frames = 30;
     var timerId = 0;
     timerId = setInterval(update,1000/frames);
@@ -66,24 +61,11 @@ let TitlePage = (function () {
           y: event.clientY - rect.top
       };
   }
-  // function render(){
-  //   TitlePage.renderStart();
-  // }
-  //Function to check whether a point is inside a rectangle
+
   function isInside(pos, rect){
       return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
   }
-  // function isInsideHigh(pos, recthigh){
-  //     return pos.x > recthigh.x && pos.x < recthigh.x+recthigh.width && pos.y < recthigh.y+recthigh.height && pos.y > recthigh.y
-  // }
-  // function isInsideOpt(pos, rectopt){
-  //     return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
-  // }
-  // function isInsideCred(pos, rectcred){
-  //     return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
-  // }
 
-  //The rectangle should have x,y,width,height properties
   var rectplay = {
       x:652,
       y:352,
@@ -116,14 +98,10 @@ let TitlePage = (function () {
         console.log("trying to open highscores");
         controls_active = true;
         Controls.initialize();
-        // Controls.drawControls();
-        // HighScores.initialize();
-        // HighScores.renderStart();
-        // SuperMarioThrones.init();
 
       }
       else{
-          alert('clicked outside rect');
+        console.log("ohno");
       }
   }, false);
   canvas1.addEventListener('mousemove', function(evt) {

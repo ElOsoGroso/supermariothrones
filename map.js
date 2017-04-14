@@ -16,36 +16,24 @@ let Map = (function() {
     map[i] = new Array(toreturn.map_cols);
   }
 
-
-  function checkIfOk(howfarup,howfarin){
-    if(map[toreturn.map_rows - howfarup][howfarin - 1]){return false;}
-    if(map[toreturn.map_rows - howfarup][howfarin + 3]){return false;}
-    if(map[toreturn.map_rows - howfarup + 1][howfarin + 3]){return false;}
-    if(map[toreturn.map_rows - howfarup - 1][howfarin + 3]){return false;}
-    if(map[toreturn.map_rows - howfarup + 1][howfarin - 1]){return false;}
-    if(map[toreturn.map_rows - howfarup - 1][howfarin - 1]){return false;}
-    return true;
-  }
   function populateMap() {
-    //random number of platfroms
     let lowPlatforms = 20;
     let highPlatforms = 20;
 
-    //loop through and draw platforms
     for (let i=0; i < lowPlatforms; i++) {
 
       let howfarin = i*5;
       let howfarup = 3;
 
-
-      if(checkIfOk(howfarup,howfarin)) {
         map[toreturn.map_rows - howfarup][howfarin] = 'dirtleft';
         map[toreturn.map_rows - howfarup][howfarin + 1] = 'dirt';
         map[toreturn.map_rows - howfarup][howfarin + 2] = 'dirtright';
+        // map[toreturn.map_rows - (howfarup-2)][howfarin+2] = 'dirtleft';
+        // map[toreturn.map_rows - (howfarup-2)][howfarin + 3] = 'dirt';
+        // map[toreturn.map_rows - (howfarup-2)][howfarin + 4] = 'dirtright';
 
-      }
     }
-
+//draw the ground, we'll put holes in it later
     for (let i=0; i < toreturn.map_cols; i++) {
       map[toreturn.map_rows-1][i] = "stone";
     }

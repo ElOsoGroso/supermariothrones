@@ -5,20 +5,14 @@ let Images = (function () {
   that.tile_height = 64;
   that.player_height = 73;
   that.player_width = 67;
-  that.en_width = 32;
-  that.en_height = 32;
 
   that.bg = new Image();
   that.bg_ready = false;
-
   that.bg.onload = () => {
       bg_ready = true;
-      // console.log('hello');
   };
 
   that.bg.src = "Images/background/bg.png";
-
-
   that.dirtleft = new Image();
   that.dl_ready = false;
 

@@ -2,7 +2,7 @@
 let Sounds = {}
 function loadAudio() {
 
-  Sounds['theme'] = loadSound('Audio/opentheme.mp3');
+Sounds['theme'] = loadSound('Audio/opentheme.mp3');
 Sounds['click'] = loadSound('Audio/click.ogg');
 Sounds['hover'] = loadSound('Audio/hover.mp3');
 Sounds['jump'] = loadSound('Audio/jump.mp3');
@@ -52,25 +52,11 @@ let Game = (function() {
 
     function render(elapsedTime) {
 
-
-        if (controls_active) {
-          Controls.drawControls();
-          // inputDispatch[13] = Controls.selectOption();
-
-        }
-
-        if (toreturn.high_scores_active) {
-
-          HighScores.drawHighScores();
-        }
-
         if (toreturn.game_active && toreturn.camera) {
           context.clearRect(0,0,canvas.width, canvas.height);
           toreturn.map.drawMap(toreturn.camera.xView, toreturn.camera.yView);
           toreturn.plr.drawPlayer(toreturn.camera.xView, toreturn.camera.yView);
           toreturn.enemy.drawEnemy(toreturn.camera.xView, toreturn.camera.yView);
-
-
         }
 
       }
@@ -114,10 +100,8 @@ let Game = (function() {
        toreturn.enemy = Graphics.enemy({walkertime: walkertime, pos: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}});
        toreturn.map = Graphics.map();
        toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 100048, canvas.height);
-        context.clearRect(0,0,canvas.width, canvas.height);
-        if (!controls_active && !Game.high_scores_active){
-          Game.game_active = true;
-        }
+      context.clearRect(0,0,canvas.width, canvas.height);
+      Game.game_active= true;
         Game.map.drawMap();
         $('.ourView').scrollLeft = 0;
        requestAnimationFrame(gameLoop);

@@ -38,6 +38,7 @@ let Controls = (function(){
   let drawopt2 = false;
   let drawopt3 = false;
   let drawopt4 = false;
+  let already = false;
   toreturn.turnOnListener = false;
 
   if (localStorage.getItem('goLeft')) {
@@ -114,7 +115,7 @@ function isInside(pos, rect){
       var mousePos = getMousePos(canvas, evt);
 
       if (isInside(mousePos,a)) {
-
+        already=false;
         playSound('click');
         toreturn.turnOnListener= true;
         changeLeft = true;
@@ -125,6 +126,7 @@ function isInside(pos, rect){
       }
       else if (isInside(mousePos,w)) {
         playSound('click');
+        already=false;
         toreturn.turnOnListener= true;
         changeLeft = false;
         changeRight = false;
@@ -132,6 +134,7 @@ function isInside(pos, rect){
         fireball = false;
       }
       else if (isInside(mousePos,s)){
+        already =false;
         toreturn.turnOnListener= true;
         changeLeft = false;
         changeRight = false;
@@ -140,6 +143,7 @@ function isInside(pos, rect){
       }
       else if (isInside(mousePos,d)){
         toreturn.turnOnListener= true;
+        already = false;
         changeLeft = false;
         changeRight = true;
         changeJump = false;
@@ -217,35 +221,44 @@ function isInside(pos, rect){
 
     if (changeLeft && toreturn.turnOnListener) {
       if (e.keyCode != toreturn.right && e.keyCode != toreturn.jump && e.keyCode != toreturn.crouch ) {
+        changeLeft = false;
         toreturn.left = e.keyCode;
         localStorage.setItem('goLeft', toreturn.left);
-        changeLeft = false;
         toreturn.turnOnListener = false;
+      }
+      else{
+        already = true;
       }
     } else if (changeRight && toreturn.turnOnListener) {
 
       if (e.keyCode != toreturn.left && e.keyCode != toreturn.jump && e.keyCode != toreturn.crouch ) {
-
-        toreturn.right = e.keyCode;
         changeRight = false;
+        toreturn.right = e.keyCode;
         localStorage.setItem('goRight', toreturn.right);
         toreturn.turnOnListener = false;
       }
+      else{
+        already = true;
+      }
     } else if (changeJump && toreturn.turnOnListener) {
       if (e.keyCode != toreturn.right && e.keyCode != toreturn.left && e.keyCode != toreturn.crouch ) {
-
-        toreturn.jump = e.keyCode;
         changeJump = false;
+        toreturn.jump = e.keyCode;
         localStorage.setItem('jumpCharacter', toreturn.jump);
         toreturn.turnOnListener = false;
       }
+      else{
+        already = true;
+      }
     } else if (fireball && toreturn.turnOnListener) {
       if (e.keyCode != toreturn.right && e.keyCode != toreturn.jump && e.keyCode != toreturn.left ) {
-
+        fireball = false;
         toreturn.crouch = e.keyCode;
         localStorage.setItem('shootFire', toreturn.crouch);
-        fireball = false;
         toreturn.turnOnListener = false;
+      }
+      else{
+        already = true;
       }
     }
 
@@ -273,8 +286,7 @@ function isInside(pos, rect){
         }
 
         context.textAlign = 'center';
-        context.fillStyle = '#b3b3b3';
-
+        context.fillStyle = '#f8f8ff';
         context.shadowColor = 'black';
         context.lineWidth = 4;
         context.shadowBlur = 10;
@@ -282,7 +294,6 @@ function isInside(pos, rect){
 
         context.font = '200px Arial';
 
-        //left highlight
         if (changeLeft && toreturn.turnOnListener) {
           context.font = '200px Arial';
 
@@ -290,8 +301,13 @@ function isInside(pos, rect){
           context.fillText(String.fromCharCode(toreturn.left), 500, 710);
 
           context.font = '90px Arial';
+          if(already){
+            context.strokeText('You already have a key set to that', 1015, 950);
+            context.fillText("You already have a key set to that", 1015,  950);
+          }
+          else{
           context.strokeText('Push any key you freaking want', 1015, 950);
-          context.fillText("Push any key you freaking want", 1015,  950);
+          context.fillText("Push any key you freaking want", 1015,  950);}
           context.font = '200px Arial';
 
         } else {
@@ -306,9 +322,14 @@ function isInside(pos, rect){
           context.fillText(String.fromCharCode(toreturn.jump), 833, 710);
 
           context.font = '90px Arial';
+          if(already){
+            context.strokeText('You already have akey set to that', 1015, 950);
+            context.fillText("You already have a key set to that", 1015,  950);
+          }
+          else{
           context.strokeText('Push any key you freaking want', 1015, 950);
           context.fillText("Push any key you freaking want", 1015,  950);
-
+}
           context.font = '200px Arial';
         } else {
           context.strokeText(String.fromCharCode(toreturn.jump), 833, 710);
@@ -321,8 +342,14 @@ function isInside(pos, rect){
           context.fillText(String.fromCharCode(toreturn.right), 1170, 710);
 
           context.font = '90px Arial';
+          if(already){
+            context.strokeText('You already have akey set to that', 1015, 950);
+            context.fillText("You already have a key set to that", 1015,  950);
+          }
+          else{
           context.strokeText('Push any key you freaking want', 1015, 950);
           context.fillText("Push any key you freaking want", 1015,  950);
+        }
 
           context.font = '200px Arial';
         } else {
@@ -336,8 +363,13 @@ function isInside(pos, rect){
           context.fillText(String.fromCharCode(toreturn.crouch), 1510, 710);
 
           context.font = '90px Arial';
+          if(already){
+            context.strokeText('You already have akey set to that', 1015, 950);
+            context.fillText("You already have a key set to that", 1015,  950);
+          }
+          else{
           context.strokeText('Push any key you freaking want', 1015, 950);
-          context.fillText("Push any key you freaking want", 1015,  950);
+          context.fillText("Push any key you freaking want", 1015,  950);}
 
           // context.font = '200px Arial';
         } else {
