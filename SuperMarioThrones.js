@@ -30,6 +30,7 @@ let Game = (function() {
   toreturn.high_scores_active = false;
   toreturn.game_active = false;
   toreturn.plr = null;
+  toreturn.enemy = null;
   toreturn.map = null;
   toreturn.camera = null;
   toreturn.on_platform =false;
@@ -48,6 +49,8 @@ let Game = (function() {
         toreturn.plr.velocity_y = 0.0;
         toreturn.plr.pos.y = canvas.height - 128;
       }
+
+      toreturn.enemy.update(elapsedTime);
     }
 
     function render(elapsedTime) {
@@ -71,6 +74,7 @@ let Game = (function() {
           context.clearRect(0,0,canvas.width, canvas.height);
           toreturn.map.drawMap(toreturn.camera.xView, toreturn.camera.yView);
           toreturn.plr.drawPlayer(toreturn.camera.xView, toreturn.camera.yView);
+          toreturn.enemy.drawEnemy(toreturn.camera.xView, toreturn.camera.yView);
 
           //on down arrow
           inputDispatch[40] = 0;
@@ -121,6 +125,7 @@ let Game = (function() {
     canvas1.style.zIndex = 2;
 
        toreturn.plr = Graphics.player();
+       toreturn.enemy = Graphics.enemy({pos: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}});
        toreturn.map = Graphics.map();
        toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 100048, canvas.height);
        // console.log(toreturn.plr.pos.x);

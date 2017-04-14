@@ -265,6 +265,147 @@ let Graphics = (function(){
     return that;
   }
 
+  /* ####################################################
+            Enemy rendering
+  #################################################### */
+  that.enemy = function(spec) {
+    let that = {};
+    let speed = 3;
+    let friction = 0.98;
+    that.pos = {x: spec.pos.x, y: spec.pos.y};
+    let walk_count = 0;
+    let scroll_count = 1;
+    let areaToMoveInside = {minX: spec.range.minX, maxX: spec.range.maxX, minY: spec.range.minY, maxY: spec.range.maxY};
+    let direction = 'right';
+
+    //jump animation
+    let max_jump = 20; //pixels
+    let jump_dy = 2; //pixels per second;
+    let jump_y = that.pos.y;
+    let jump_desc = false;
+    let display_count = 0;
+    that.on_ground = true;
+    that.gravity = 0.5;
+    that.velocity_y = 0.0;
+
+    let enemy_animation = [];
+
+    enemy_animation.push(Images.slimeWalk1);
+
+    that.drawEnemy = function(xView, yView) {
+      context.save();
+      //context.clearRect(xView,yView,canvas.width,canvas.height);
+
+      context.drawImage(enemy_animation[0], that.pos.x, that.pos.y, tw, th);
+      context.restore();
+
+    };
+
+    that.moveLeft = function(elapsedTime) {
+      if (that.pos.x - (speed * friction) >= 0) {
+
+        that.pos.x -= (speed * friction);
+      } else {
+        that.pos.x = 0;
+      }
+    };
+
+    that.moveRight = function(elapsedTime) {
+      if (that.pos.x + (speed * friction) >= Graphics.map_width - tw) {
+        that.pos.x = Graphics.map_width - tw;
+      } else {
+        that.pos.x += (speed * friction);
+      }
+
+    };
+
+    that.detectPlatform = function(){
+      for (let i=0; i < Map.map_rows; i++){
+        for (let j=0; j < Map.map_cols; j++){
+          if (map[i][j] == 'dirtleft') {
+            if(that.pos.x > j*64 - 30 && that.pos.x < (j*64 + (3*64) - 20)&& that.pos.y > i*64 - 64 && that.pos.y < i*64 - 50) {
+              that.on_ground = true;
+              that.velocity_y = 0.0;
+              that.gravity = 0.0;
+
+              //place the player on the platform
+              that.pos.y = i*64 - 64;
+            } else {
+              that.gravity = 0.5;
+            }
+          }
+        }
+      }
+    };
+
+    that.update = function(elapsedTime) {
+      that.velocity_y += that.gravity;
+      that.pos.y += that.velocity_y;
+      that.detectPlatform();
+
+      if (that.pos.x > areaToMoveInside.maxX) {
+        direction = 'left';
+      }
+      if ( that.pos.x < areaToMoveInside.minX) {
+        direction = 'right';
+      }
+
+      if ( direction == 'right') {
+        that.moveRight(elapsedTime);
+      }
+      else {
+        that.moveLeft(elapsedTime);
+      }
+
+      if (that.pos.y >= canvas.height - 128) {
+        that.on_ground = true;
+        that.velocity_y = 0.0;
+        that.pos.y = canvas.height - 128;
+      }
+
+    }
+
+
+
+    /*
+    that.jump = function() {
+      if (that.on_ground || Game.on_platform) {
+
+        that.velocity_y = -15;
+        Game.on_platform = false;
+        that.on_ground = false;
+      }
+    };
+    */
+
+    /*
+    that.detectPlatform = function(){
+      for (let i=0; i < Map.map_rows; i++){
+        for (let j=0; j < Map.map_cols; j++){
+          if (map[i][j] == 'dirtleft' && Game.on_platform == false) {
+            if(that.pos.x > j*64 - 30 && that.pos.x < (j*64 + (3*64) - 20)&& that.pos.y > i*64 - 64 && that.pos.y < i*64 - 50) {
+              Game.on_platform = true;
+              that.on_ground = true;
+              that.velocity_y = 0.0;
+              that.gravity = 0.0;
+
+              //place the player on the platform
+              that.pos.y = i*64 - 64;
+            } else {
+              Game.on_platform = false;
+              that.gravity = 0.5;
+            }
+          }
+        }
+      }
+
+
+    };
+    */
+
+    return that;
+  }
+
 
   /* ####################################################
             Map rendering

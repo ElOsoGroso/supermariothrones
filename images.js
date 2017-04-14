@@ -185,7 +185,14 @@ let Images = (function () {
 
   that.plr_walk8.src = "Images/player/jonsnowwalk8.png";
 
+  that.slimeWalk1 = new Image();
+  that.slimeWalk1_ready = false;
 
+  that.slimeWalk1.onload = () => {
+    slimeWalk1_ready = true;
+  };
+
+  that.slimeWalk1.src = "Images/enemies/slimeWalk1.png";
 
   return that;
 }())
