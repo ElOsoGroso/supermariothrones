@@ -8,62 +8,29 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type='text/javascript' >
   var startgame = false;
-  var releaseball =false;
-  var countdowntime = 3100;
-  var lives = 3;
-  var restartball = false;
-  var score = 0;
-  var onecount = 0;
-  var twocount = 0;
-  var threecount = 0;
-  var fourcount = 0;
-  var fivecount = 0;
-  var sixcount = 0;
-  var sevencount = 0;
-  var eightcount = 0;
-  var shrinkpaddle =false;
   var number =2 ;
-  var bricksremoved =0;
-  var twoballs = false;
-  var newballscore = 0;
-  var ball2dead = false;
-  var countballs = 1;
   var secondchance = true;
-  let balls = [];
   var stop = false;
-  var particles = [];
   var once = true;
   var otheronce = true;
-  var totalbricksremoved=0;
   var newonce =false
   var new2once = false;
   var new3once = false;
   var new4once = false;
   var erroronce = false;
-  let counttimeinupdate=0;
-  var killit = false;
   let scrollwidth = -1500;
   let controls_active =false;
+  let walkertime = 0;
 </script>
-
-
-
-
-
 
   <body onload = "Game.inittitle();">
     <script type = "text/javascript">
     if (startgame == true){SuperMarioThrones.init();}
    </script>
-
-
-
-
-    <canvas id = "canvas-main" width = "2000" height = "1152" style = "z-index: 1;position:absolute; left:0px; top:0px;float:left;"></canvas>
-    <canvas id = "title-page" width = "2000" height = "1152" style = "z-index: 2;position:absolute; left:0px; top:0px;float:left;"></canvas>
-    <canvas id = "high-score" width = "2000" height = "1152" style = "z-index: 0;position:absolute; left:0px; top:0px;float:left;"></canvas>
-    <canvas id = "controls" width = "2000" height = "1152" style = "z-index: 0;position:absolute; left:0px; top:0px;float:left;"></canvas>
-    <!-- <canvas id="controlsSprite" class="hidden" width="2000" height="1152" style="border:1px solid #000000;"></canvas> -->
+    <canvas id = "canvas-main" width = "2000" height = "1152" style = "z-index: 1; left:0px; top:0px;float:left;position:absolute;"></canvas>
+    <canvas id = "title-page" width = "2000" height = "1152" style = "z-index: 2; left:0px; top:0px;float:left;position:absolute;"></canvas>
+    <canvas id = "high-score" width = "2000" height = "1152" style = "z-index: 0; left:0px; top:0px;float:left;position:absolute;"></canvas>
+    <canvas id = "controls" width = "2000" height = "1152" style = "z-index: 0; left:0px; top:0px;float:left;position:absolute;"></canvas>
     <canvas id="map-canvas" width="2000" height="1152 style="border:1px solid #000000;"></canvas>
     <div style = "float:left;">
     <input id="clickMe" type="button" value="Restart" onclick="restart()" style = "position:absolute; margin-top: 1210px;width: 300px; 100px; display:inline-Rank;" />

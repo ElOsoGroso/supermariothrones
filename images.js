@@ -1,12 +1,3 @@
-/**
-* @Author: Justin Hershberger
-* @Date:   25-03-2017
-* @Filename: images.js
-* @Last modified by:   Justin Hershberger
-* @Last modified time: 26-03-2017
-*/
-
-
 
 let Images = (function () {
   let that = {};
@@ -17,9 +8,6 @@ let Images = (function () {
   that.en_width = 32;
   that.en_height = 32;
 
-/* #############################################################
-        main background image
-############################################################# */
   that.bg = new Image();
   that.bg_ready = false;
 
@@ -30,9 +18,7 @@ let Images = (function () {
 
   that.bg.src = "Images/background/bg.png";
 
-  /* #############################################################
-          grass tiles
-  ############################################################# */
+
   that.dirtleft = new Image();
   that.dl_ready = false;
 
@@ -71,10 +57,6 @@ let Images = (function () {
 
 
 
-
-  /* #############################################################
-          half grass tiles
-  ############################################################# */
   that.grass_half_left = new Image();
   that.ghl_ready = false;
 
@@ -103,9 +85,6 @@ let Images = (function () {
   that.grass_half_right.src = "Images/tiles/grassHalfRight.png";
 
 
-  /* #############################################################
-          player tiles
-  ############################################################# */
   that.plr_front = new Image();
   that.plrf_ready = false;
 
@@ -188,14 +167,21 @@ let Images = (function () {
 
   that.plr_walk8.src = "Images/player/jonsnowwalk8.png";
 
-  that.slimeWalk1 = new Image();
-  that.slimeWalk1_ready = false;
+  that.icewalk = new Image();
+  that.icewalk_ready = false;
 
-  that.slimeWalk1.onload = () => {
-    slimeWalk1_ready = true;
+  that.icewalk.onload = () => {
+    icewalk_ready = true;
   };
 
-  that.slimeWalk1.src = "Images/enemies/slimeWalk1.png";
+  that.icewalk.src = "Images/enemies/icewalk.png";
+  that.icewalk2 = new Image();
+  that.icewalk2_ready = false;
 
+  that.icewalk2.onload = () => {
+    icewalk2_ready = true;
+  };
+
+  that.icewalk2.src = "Images/enemies/icewalk2.png";
   return that;
 }())

@@ -1,12 +1,3 @@
-/**
-* @Author: Justin Hershberger
-* @Date:   24-03-2017
-* @Filename: render.js
-* @Last modified by:   Justin Hershberger
-* @Last modified time: 11-04-2017
-*/
-
-
 
 let Graphics = (function(){
   let that = {};
@@ -58,17 +49,16 @@ let Graphics = (function(){
   that.camera = function(xView, yView, canvas_width, canvas_height, tot_width, tot_height) {
     let that = {};
 
-    //the xView and yView are the position of the camera
     that.xView = xView;
     that.yView = yView;
 
-    //the padding is how close the player can get to the width to start scrolling
+
     that.xPad = pad_x;
 
     that.wView = canvas_width;
     that.hView = canvas_height;
 
-    //the track is the focus of the camera, our player
+
     that.track = Game.plr;
 
     that.viewport = Graphics.rectangle(that.xView, that.yView, that.wView, that.hView);
@@ -76,16 +66,14 @@ let Graphics = (function(){
 
     that.update = function(){
       if(Game.plr.pos.x - that.xView + that.xPad > that.wView) {
-        //update the xView by scrolling
         that.xView = Game.plr.pos.x - (that.wView - that.xPad);
       } else if (Game.plr.pos.x - that.xPad < that.xView) {
         that.xView = Game.plr.pos.x - that.xPad;
       }
 
-      //update the viewport
+
       that.viewport = Graphics.rectangle(that.xView, that.yView, canvas.width, canvas.height);
 
-      //check to make sure the camera only shows views within the map
       if (!that.viewport.within(that.mapRect)) {
         if(that.viewport.left < that.mapRect.left){
 
@@ -110,9 +98,7 @@ let Graphics = (function(){
     return that;
   }
 
-  /* ####################################################
-            Player rendering
-  #################################################### */
+
   that.player = function() {
     let dimension = 64;
     let that = {};
@@ -266,9 +252,7 @@ let Graphics = (function(){
     return that;
   }
 
-  /* ####################################################
-            Enemy rendering
-  #################################################### */
+
   that.enemy = function(spec) {
     let dimension = 64;
     let that = {};
@@ -279,6 +263,7 @@ let Graphics = (function(){
     let scroll_count = 1;
     let areaToMoveInside = {minX: spec.range.minX, maxX: spec.range.maxX, minY: spec.range.minY, maxY: spec.range.maxY};
     let direction = 'right';
+    let walkertime = spec.walkertime;
 
     //jump animation
     let max_jump = 20; //pixels
@@ -286,19 +271,29 @@ let Graphics = (function(){
     let jump_y = that.pos.y;
     let jump_desc = false;
     let display_count = 0;
+    let display_walker_count  = 0;
     that.on_ground = true;
     that.gravity = 0.5;
     that.velocity_y = 0.0;
 
     let enemy_animation = [];
 
-    enemy_animation.push(Images.slimeWalk1);
+    enemy_animation.push(Images.icewalk);
+    enemy_animation.push(Images.icewalk2);
 
     that.drawEnemy = function(xView, yView) {
+      // console.log(walkertime);
+      if(walkertime>10){
+        display_walker_count++;
+        walkertime = 0;
+      }
+      if(display_walker_count>1){
+        display_walker_count = 0;
+      }
       context.save();
       //context.clearRect(xView,yView,canvas.width,canvas.height);
-
-      context.drawImage(enemy_animation[0], that.pos.x, that.pos.y, tw, th);
+      // console.log(enemy_animation[display_walker_count].src)
+      context.drawImage(enemy_animation[display_walker_count], that.pos.x, that.pos.y, tw, th);
       context.restore();
 
     };
@@ -341,6 +336,8 @@ let Graphics = (function(){
     };
 
     that.update = function(elapsedTime) {
+      // console.log(walkertime);
+      walkertime++;
       that.velocity_y += that.gravity;
       that.pos.y += that.velocity_y;
       that.detectPlatform();
@@ -369,49 +366,10 @@ let Graphics = (function(){
 
 
 
-    /*
-    that.jump = function() {
-      if (that.on_ground || Game.on_platform) {
-
-        that.velocity_y = -15;
-        Game.on_platform = false;
-        that.on_ground = false;
-      }
-    };
-    */
-
-    /*
-    that.detectPlatform = function(){
-      for (let i=0; i < Map.map_rows; i++){
-        for (let j=0; j < Map.map_cols; j++){
-          if (map[i][j] == 'dirtleft' && Game.on_platform == false) {
-            if(that.pos.x > j*dimension - 30 && that.pos.x < (j*dimension + (3*dimension) - 20)&& that.pos.y > i*dimension - dimension && that.pos.y < i*dimension - 50) {
-              Game.on_platform = true;
-              that.on_ground = true;
-              that.velocity_y = 0.0;
-              that.gravity = 0.0;
-
-              //place the player on the platform
-              that.pos.y = i*dimension - dimension;
-            } else {
-              Game.on_platform = false;
-              that.gravity = 0.5;
-            }
-          }
-        }
-      }
-
-
-    };
-    */
-
     return that;
   }
 
 
-  /* ####################################################
-            Map rendering
-  #################################################### */
   that.map = function() {
     let dimension =64;
     let that = {};

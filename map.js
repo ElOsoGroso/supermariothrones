@@ -1,12 +1,3 @@
-/**
-* @Author: Justin Hershberger
-* @Date:   24-03-2017
-* @Filename: map.js
-* @Last modified by:   Justin Hershberger
-* @Last modified time: 03-04-2017
-*/
-
-
 
 let Map = (function() {
   let toreturn = {};

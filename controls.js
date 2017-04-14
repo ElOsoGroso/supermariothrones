@@ -1,6 +1,6 @@
 
 let Controls = (function(){
-  let that = {};
+  let toreturn = {};
   let canvas = $('#controls')[0];
   let context = canvas.getContext('2d');
   let backgroundcontrols = new Image();
@@ -40,44 +40,36 @@ let Controls = (function(){
   let drawopt2 = false;
   let drawopt3 = false;
   let drawopt4 = false;
-  that.enter_active = false;
+  toreturn.turnOnListener = false;
 
-  //determine the controls based on if the user has entered a preference
-  if (localStorage.getItem('control_left')) {
-    that.left = localStorage.getItem('control_left');
+  if (localStorage.getItem('goLeft')) {
+    toreturn.left = localStorage.getItem('goLeft');
   } else {
 
-    that.left = 65;
+    toreturn.left = 65;
   }
 
-  //right
-  if (localStorage.getItem('control_right')) {
-    that.right = localStorage.getItem('control_right');
+  if (localStorage.getItem('goRight')) {
+    toreturn.right = localStorage.getItem('goRight');
   } else {
 
-    that.right = 68;
+    toreturn.right = 68;
   }
 
-  //jump
-  if (localStorage.getItem('control_jump')) {
-    that.jump = localStorage.getItem('control_jump');
+  if (localStorage.getItem('jumpCharacter')) {
+    toreturn.jump = localStorage.getItem('jumpCharacter');
   } else {
 
-    that.jump = 87;
+    toreturn.jump = 87;
   }
 
-  //crouch
-  if (localStorage.getItem('control_crouch')) {
-    that.crouch = localStorage.getItem('control_crouch');
+  if (localStorage.getItem('shootFire')) {
+    toreturn.crouch = localStorage.getItem('shootFire');
   } else {
 
-    that.crouch = 83;
+    toreturn.crouch = 83;
   }
 
-  //menu options
-  let menu_count = 0;
-  let arrow = new Image();
-  let arrow_ready = false;
   function getMousePos(canvas, event) {
     var rect = canvas.getBoundingClientRect();
     return {
@@ -90,11 +82,6 @@ let Controls = (function(){
 function isInside(pos, rect){
     return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
 }
-  arrow.onload = () => {
-      arrow_ready = true;
-  };
-
-  arrow.src = 'Images/arrow.png';
 
   backgroundcontrols.onload = () =>{
     bgc_ready = true;
@@ -131,7 +118,7 @@ function isInside(pos, rect){
       if (isInside(mousePos,a)) {
 
         playSound('click');
-        that.enter_active= true;
+        toreturn.turnOnListener= true;
         changeLeft = true;
         changeRight = false;
         changeJump = false;
@@ -140,21 +127,21 @@ function isInside(pos, rect){
       }
       else if (isInside(mousePos,w)) {
         playSound('click');
-        that.enter_active= true;
+        toreturn.turnOnListener= true;
         changeLeft = false;
         changeRight = false;
         changeJump = true;
         fireball = false;
       }
       else if (isInside(mousePos,s)){
-        that.enter_active= true;
+        toreturn.turnOnListener= true;
         changeLeft = false;
         changeRight = false;
         changeJump = false;
         fireball = true;
       }
       else if (isInside(mousePos,d)){
-        that.enter_active= true;
+        toreturn.turnOnListener= true;
         changeLeft = false;
         changeRight = true;
         changeJump = false;
@@ -228,61 +215,45 @@ function isInside(pos, rect){
 
 
   }, false);
-  //add the player's event listener
   $(document).keydown(function(e) {
-    //dont allow multiple assignments of one key
-    if (changeLeft && that.enter_active) {
-      if (e.keyCode != that.right && e.keyCode != that.jump && e.keyCode != that.crouch ) {
 
-        that.left = e.keyCode;
-        localStorage.setItem('control_left', that.left);
+    if (changeLeft && toreturn.turnOnListener) {
+      if (e.keyCode != toreturn.right && e.keyCode != toreturn.jump && e.keyCode != toreturn.crouch ) {
+        toreturn.left = e.keyCode;
+        localStorage.setItem('goLeft', toreturn.left);
         changeLeft = false;
-        that.enter_active = false;
+        toreturn.turnOnListener = false;
       }
-    } else if (changeRight && that.enter_active) {
-      //dont allow multiple assignments of one key
-      if (e.keyCode != that.left && e.keyCode != that.jump && e.keyCode != that.crouch ) {
+    } else if (changeRight && toreturn.turnOnListener) {
 
-        that.right = e.keyCode;
+      if (e.keyCode != toreturn.left && e.keyCode != toreturn.jump && e.keyCode != toreturn.crouch ) {
+
+        toreturn.right = e.keyCode;
         changeRight = false;
-        localStorage.setItem('control_right', that.right);
-        that.enter_active = false;
+        localStorage.setItem('goRight', toreturn.right);
+        toreturn.turnOnListener = false;
       }
-    } else if (changeJump && that.enter_active) {
-      //dont allow multiple assignments of one key
-      if (e.keyCode != that.right && e.keyCode != that.left && e.keyCode != that.crouch ) {
+    } else if (changeJump && toreturn.turnOnListener) {
+      if (e.keyCode != toreturn.right && e.keyCode != toreturn.left && e.keyCode != toreturn.crouch ) {
 
-        that.jump = e.keyCode;
+        toreturn.jump = e.keyCode;
         changeJump = false;
-        localStorage.setItem('control_jump', that.jump);
-        that.enter_active = false;
+        localStorage.setItem('jumpCharacter', toreturn.jump);
+        toreturn.turnOnListener = false;
       }
-    } else if (fireball && that.enter_active) {
-      //dont allow multiple assignments of one key
-      if (e.keyCode != that.right && e.keyCode != that.jump && e.keyCode != that.left ) {
+    } else if (fireball && toreturn.turnOnListener) {
+      if (e.keyCode != toreturn.right && e.keyCode != toreturn.jump && e.keyCode != toreturn.left ) {
 
-        that.crouch = e.keyCode;
-        localStorage.setItem('control_crouch', that.crouch);
+        toreturn.crouch = e.keyCode;
+        localStorage.setItem('shootFire', toreturn.crouch);
         fireball = false;
-        that.enter_active = false;
-      }
-    } else {
-
-      if (e.keyCode == 37) { //left arrow
-        that.left_hlt()
-      } else if (e.keyCode == 39) { //right arrow
-        that.right_hlt()
-      } else if (e.keyCode == 13 && Game.controls_active) {
-        that.enter_active += 1;
+        toreturn.turnOnListener = false;
       }
     }
 
 
   })
 
-function checkClicked(){
-
-}
   function drawcontrols(){
       if(bgc_ready && opt2_ready) {
         context.clearRect(0,0,canvas.width,canvas.height);
@@ -307,82 +278,80 @@ function checkClicked(){
         context.fillStyle = '#b3b3b3';
 
         context.shadowColor = 'black';
-        context.shadowBlur = 7;
-        context.lineWidth = 5;
+        context.lineWidth = 4;
+        context.shadowBlur = 10;
 
-        context.font = '200px Calibri';
+
+        context.font = '200px Arial';
 
         //left highlight
-        if (changeLeft && that.enter_active) {
-          context.font = '200px Calibri';
+        if (changeLeft && toreturn.turnOnListener) {
+          context.font = '200px Arial';
 
-          context.strokeText(String.fromCharCode(that.left), 500, 700);
-          context.fillText(String.fromCharCode(that.left), 500, 700);
+          context.strokeText(String.fromCharCode(toreturn.left), 500, 710);
+          context.fillText(String.fromCharCode(toreturn.left), 500, 710);
 
-          context.font = '90px Calibri';
-          context.strokeText('Push any key you freaking want', 1040, 950);
-          context.fillText("Push any key you freaking want", 1040,  950);
-          context.font = '200px Calibri';
+          context.font = '90px Arial';
+          context.strokeText('Push any key you freaking want', 1015, 950);
+          context.fillText("Push any key you freaking want", 1015,  950);
+          context.font = '200px Arial';
 
         } else {
-          context.strokeText(String.fromCharCode(that.left), 500, 700);
-          context.fillText(String.fromCharCode(that.left), 500, 700);
+          context.strokeText(String.fromCharCode(toreturn.left), 500, 710);
+          context.fillText(String.fromCharCode(toreturn.left), 500, 710);
         }
 
-        //jump highlight
-        if (changeJump && that.enter_active) {
-          context.font = '200px Calibri';
+        if (changeJump && toreturn.turnOnListener) {
+          context.font = '200px Arial';
 
-          context.strokeText(String.fromCharCode(that.jump), 833, 700);
-          context.fillText(String.fromCharCode(that.jump), 833, 700);
+          context.strokeText(String.fromCharCode(toreturn.jump), 833, 710);
+          context.fillText(String.fromCharCode(toreturn.jump), 833, 710);
 
-          context.font = '90px Calibri';
-          context.strokeText('Push any key you freaking want', 1040, 950);
-          context.fillText("Push any key you freaking want", 1040,  950);
+          context.font = '90px Arial';
+          context.strokeText('Push any key you freaking want', 1015, 950);
+          context.fillText("Push any key you freaking want", 1015,  950);
 
-          context.font = '200px Calibri';
+          context.font = '200px Arial';
         } else {
-          context.strokeText(String.fromCharCode(that.jump), 833, 700);
-          context.fillText(String.fromCharCode(that.jump), 833, 700);
+          context.strokeText(String.fromCharCode(toreturn.jump), 833, 710);
+          context.fillText(String.fromCharCode(toreturn.jump), 833, 710);
         }
-        //right highlight
-        if (changeRight && that.enter_active) {
-          context.font = '200px Calibri';
+        if (changeRight && toreturn.turnOnListener) {
+          context.font = '200px Arial';
 
-          context.strokeText(String.fromCharCode(that.right), 1166, 700);
-          context.fillText(String.fromCharCode(that.right), 1166, 700);
+          context.strokeText(String.fromCharCode(toreturn.right), 1170, 710);
+          context.fillText(String.fromCharCode(toreturn.right), 1170, 710);
 
-          context.font = '90px Calibri';
-          context.strokeText('Push any key you freaking want', 1040, 950);
-          context.fillText("Push any key you freaking want", 1040,  950);
+          context.font = '90px Arial';
+          context.strokeText('Push any key you freaking want', 1015, 950);
+          context.fillText("Push any key you freaking want", 1015,  950);
 
-          context.font = '200px Calibri';
+          context.font = '200px Arial';
         } else {
-          context.strokeText(String.fromCharCode(that.right), 1166, 700);
-          context.fillText(String.fromCharCode(that.right), 1166, 700);
+          context.strokeText(String.fromCharCode(toreturn.right), 1170, 710);
+          context.fillText(String.fromCharCode(toreturn.right), 1170, 710);
         }
-        //crouch highlight
-        if (fireball && that.enter_active) {
-          context.font = '200px Calibri';
+        if (fireball && toreturn.turnOnListener) {
+          context.font = '200px Arial';
 
-          context.strokeText(String.fromCharCode(that.crouch), 1500, 700);
-          context.fillText(String.fromCharCode(that.crouch), 1500, 700);
+          context.strokeText(String.fromCharCode(toreturn.crouch), 1510, 710);
+          context.fillText(String.fromCharCode(toreturn.crouch), 1510, 710);
 
-          context.font = '90px Calibri';
-          context.strokeText('Push any key you freaking want', 1040, 950);
-          context.fillText("Push any key you freaking want", 1040,  950);
+          context.font = '90px Arial';
+          context.strokeText('Push any key you freaking want', 1015, 950);
+          context.fillText("Push any key you freaking want", 1015,  950);
 
-          context.font = '200px Calibri';
+          // context.font = '200px Arial';
         } else {
 
-          context.strokeText(String.fromCharCode(that.crouch), 1500, 700);
-          context.fillText(String.fromCharCode(that.crouch), 1500, 700);
+          context.strokeText(String.fromCharCode(toreturn.crouch), 1510, 710);
+          context.fillText(String.fromCharCode(toreturn.crouch), 1510, 710);
         }
 
 
 
 
-        context.font = '100px Calibri';
+        context.font = '80px Arial';
 
         context.strokeText('Left', 500, 500);
         context.fillText('Left', 500, 500);
@@ -396,7 +365,7 @@ function checkClicked(){
         context.strokeText('Weapon', 1500, 500);
         context.fillText('Weapon', 1500, 500);
 
-        context.font = '20px Calibri';
+        context.font = '20px Arial';
 
         context.strokeText('Click one of the controls to change it', 1000, 800);
         context.fillText("Click one of the controls to change it", 1000,  800);
@@ -407,7 +376,7 @@ function checkClicked(){
 
 
 
-  that.initialize = function() {
+  toreturn.initialize = function() {
     let canvas1 = document.getElementById('controls');
     let context1 = canvas1.getContext('2d');
     let canvas2 = document.getElementById('title-page');
@@ -428,5 +397,5 @@ function checkClicked(){
 
   };
 
-  return that;
+  return toreturn;
 }());
