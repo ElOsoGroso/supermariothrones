@@ -114,6 +114,7 @@ let Graphics = (function(){
             Player rendering
   #################################################### */
   that.player = function() {
+    let dimension = 64;
     let that = {};
     let speed = 5;
     let friction = 0.98;
@@ -244,14 +245,14 @@ let Graphics = (function(){
       for (let i=0; i < Map.map_rows; i++){
         for (let j=0; j < Map.map_cols; j++){
           if (map[i][j] == 'dirtleft' && Game.on_platform == false) {
-            if(that.pos.x > j*64 - 30 && that.pos.x < (j*64 + (3*64) - 20)&& that.pos.y > i*64 - 64 && that.pos.y < i*64 - 50) {
+            if(that.pos.x > j*dimension - 30 && that.pos.x < (j*dimension + (3*dimension) - 20)&& that.pos.y > i*dimension - dimension && that.pos.y < i*dimension - 50) {
               Game.on_platform = true;
               that.on_ground = true;
               that.velocity_y = 0.0;
               that.gravity = 0.0;
 
               //place the player on the platform
-              that.pos.y = i*64 - 64;
+              that.pos.y = i*dimension - dimension;
             } else {
               Game.on_platform = false;
               that.gravity = 0.5;
@@ -269,6 +270,7 @@ let Graphics = (function(){
             Enemy rendering
   #################################################### */
   that.enemy = function(spec) {
+    let dimension = 64;
     let that = {};
     let speed = 3;
     let friction = 0.98;
@@ -323,13 +325,13 @@ let Graphics = (function(){
       for (let i=0; i < Map.map_rows; i++){
         for (let j=0; j < Map.map_cols; j++){
           if (map[i][j] == 'dirtleft') {
-            if(that.pos.x > j*64 - 30 && that.pos.x < (j*64 + (3*64) - 20)&& that.pos.y > i*64 - 64 && that.pos.y < i*64 - 50) {
+            if(that.pos.x > j*dimension - 30 && that.pos.x < (j*dimension + (3*dimension) - 20)&& that.pos.y > i*dimension - dimension && that.pos.y < i*dimension - 50) {
               that.on_ground = true;
               that.velocity_y = 0.0;
               that.gravity = 0.0;
 
               //place the player on the platform
-              that.pos.y = i*64 - 64;
+              that.pos.y = i*dimension - dimension;
             } else {
               that.gravity = 0.5;
             }
@@ -383,14 +385,14 @@ let Graphics = (function(){
       for (let i=0; i < Map.map_rows; i++){
         for (let j=0; j < Map.map_cols; j++){
           if (map[i][j] == 'dirtleft' && Game.on_platform == false) {
-            if(that.pos.x > j*64 - 30 && that.pos.x < (j*64 + (3*64) - 20)&& that.pos.y > i*64 - 64 && that.pos.y < i*64 - 50) {
+            if(that.pos.x > j*dimension - 30 && that.pos.x < (j*dimension + (3*dimension) - 20)&& that.pos.y > i*dimension - dimension && that.pos.y < i*dimension - 50) {
               Game.on_platform = true;
               that.on_ground = true;
               that.velocity_y = 0.0;
               that.gravity = 0.0;
 
               //place the player on the platform
-              that.pos.y = i*64 - 64;
+              that.pos.y = i*dimension - dimension;
             } else {
               Game.on_platform = false;
               that.gravity = 0.5;
@@ -411,6 +413,7 @@ let Graphics = (function(){
             Map rendering
   #################################################### */
   that.map = function() {
+    let dimension =64;
     let that = {};
     Map.initialize();
 
@@ -429,16 +432,16 @@ let Graphics = (function(){
     for(let i=0; i < Map.map_rows; i++ ){
       for (let j=0; j < Map.map_cols; j++){
         if (map[i][j] == "stone"){
-          temp_context.drawImage(Images.stone_whole, j * 64, i*64 , tw, th);
+          temp_context.drawImage(Images.stone_whole, j * dimension, i*dimension , tw, th);
         }
         if (map[i][j] == 'dirtleft') {
-          temp_context.drawImage(Images.dirtleft, j*64, i*64, tw, th);
+          temp_context.drawImage(Images.dirtleft, j*dimension, i*dimension, tw, th);
         }
         if (map[i][j] == 'dirt') {
-          temp_context.drawImage(Images.dirt, j*64, i*64, tw, th);
+          temp_context.drawImage(Images.dirt, j*dimension, i*dimension, tw, th);
         }
         if (map[i][j] == 'dirtright') {
-          temp_context.drawImage(Images.dirtright, j*64, i*64, tw, th);
+          temp_context.drawImage(Images.dirtright, j*dimension, i*dimension, tw, th);
         }
       }
     }
