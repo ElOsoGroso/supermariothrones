@@ -47,8 +47,6 @@ let Game = (function() {
       previousXView = toreturn.camera.viewXCoord;
       previousYView = toreturn.camera.viewYCoord;
 
-      toreturn.player.yVelocity += toreturn.player.gravity;
-      toreturn.player.location.y += toreturn.player.yVelocity;
       // toreturn.player.isOnGround();
       // console.log(toreturn.player.onGround);
       // console.log(toreturn.player.jumpPressed);
@@ -56,17 +54,7 @@ let Game = (function() {
       //   toreturn.player.yVelocity = 0.0;
       //   toreturn.player.location.y = canvas.height - 128;
       // }
-      if (toreturn.player.location.y >= canvas.height - dimension*2 && toreturn.onPlat == false) {
-        toreturn.player.onGround = true;
-        toreturn.player.yVelocity = 0.0;
-        toreturn.player.location.y = canvas.height - dimension*2;
-      }
-      if (toreturn.enemy.location.y >= canvas.height - dimension*2 && toreturn.onPlat == false) {
-        toreturn.enemy.onGround = true;
-        toreturn.enemy.yVelocity = 0.0;
-        toreturn.enemy.location.y = canvas.height - dimension*2;
-      }
-
+      toreturn.player.update();
       toreturn.enemy.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
     }
 

@@ -218,8 +218,8 @@ let Graphics = (function(){
       for (let i=0; i < Map.levelrows; i++){
         for (let j=0; j < Map.levelcolumns; j++){
 
-          if (toreturn.onPlat == false && map[i][j] == 'dirtleft' ) {
-            if(toreturn.location.x > j*dimension - 30 && toreturn.location.x < (j*dimension + (3*dimension) - 20)&& toreturn.location.y > i*dimension - dimension && toreturn.location.y < i*dimension - 50) {
+          if (toreturn.onPlat == false && (map[i][j] == 'dirtleft' || map[i][j] == 'dirt' || map[i][j] == 'dirtright' || map[i][j] == 'stone') ) {
+            if(toreturn.location.x > j*dimension - 30 && toreturn.location.x < j * dimension + 60 && toreturn.location.y > i*dimension - dimension && toreturn.location.y < i*dimension - 50) {
 
               toreturn.onPlat = true;
               toreturn.yVelocity = 0.0;
@@ -247,6 +247,19 @@ let Graphics = (function(){
 
       }
     };
+
+    toreturn.update = function() {
+      toreturn.yVelocity += toreturn.gravity;
+      toreturn.location.y += toreturn.yVelocity;
+
+      /* removing this allows for character to fall through ground
+      if (toreturn.location.y >= canvas.height - dimension*2 && toreturn.onPlat == false) {
+        toreturn.onGround = true;
+        toreturn.yVelocity = 0.0;
+        toreturn.location.y = canvas.height - dimension*2;
+      }
+      */
+    }
     // toreturn.isOnGround = function(){
     //   for (let i=0; i < Map.levelrows; i++){
     //     for (let j=0; j < Map.levelcolumns; j++){
@@ -289,6 +302,7 @@ let Graphics = (function(){
     toreturn.onGround = true;
     toreturn.gravity = 0.5;
     toreturn.yVelocity = 0.0;
+    toreturn.onPlat = false;
 
     let enemy_animation = [];
 
@@ -329,18 +343,21 @@ let Graphics = (function(){
 
 
     toreturn.isOnPlatform = function(){
+
       for (let i=0; i < Map.levelrows; i++){
         for (let j=0; j < Map.levelcolumns; j++){
-              if (toreturn.onPlat == false && map[i][j] == 'dirtleft' ) {
-                if(toreturn.location.x > j*dimension - 30 && toreturn.location.x < (j*dimension + (3*dimension) - 20)&& toreturn.location.y > i*dimension - dimension && toreturn.location.y < i*dimension - 50) {
-            toreturn.onPlat = true;
-            toreturn.yVelocity = 0.0;
-            toreturn.gravity = 0.0;
 
-            toreturn.location.y = i*dimension - dimension;
-            }   else {
-            toreturn.onPlat = false;
-            toreturn.gravity = 0.5;
+          if (toreturn.onPlat == false && (map[i][j] == 'dirtleft' || map[i][j] == 'dirt' || map[i][j] == 'dirtright' || map[i][j] == 'stone')  ) {
+            if(toreturn.location.x > j*dimension - 30 && toreturn.location.x < (j*dimension + (3*dimension) - 20)&& toreturn.location.y > i*dimension - dimension && toreturn.location.y < i*dimension - 50) {
+
+              toreturn.onPlat = true;
+              toreturn.yVelocity = 0.0;
+              toreturn.gravity = 0.0;
+              toreturn.location.y = i*dimension - dimension;
+
+            } else {
+              toreturn.onPlat = false;
+              toreturn.gravity = 0.5;
             }
           }
         }
@@ -348,15 +365,17 @@ let Graphics = (function(){
 
     };
 
+    toreturn.onPlat = false;
+    toreturn.isOnPlatform();
+
     toreturn.update = function(elapsedTime, deltaXView, deltaYView, viewXCoord, viewYCoord) {
       // console.log(walkertime);
-      console.log(toreturn.onGround);
+      // console.log(toreturn.onGround);
       walkertime++;
       toreturn.yVelocity += toreturn.gravity;
       toreturn.location.y += toreturn.yVelocity;
       toreturn.location.x -= deltaXView;
       toreturn.location.y -= deltaYView;
-      toreturn.isOnPlatform();
 
       if (toreturn.location.x + viewXCoord > 16000) {
         direction = 'left';
@@ -371,7 +390,14 @@ let Graphics = (function(){
       else {
         toreturn.goLeft(elapsedTime);
       }
+
+      if (toreturn.location.y >= canvas.height - dimension*2 && toreturn.onPlat == false) {
+        toreturn.onGround = true;
+        toreturn.yVelocity = 0.0;
+        toreturn.location.y = canvas.height - dimension*2;
+      }
     }
+
     return toreturn;
   }
 
@@ -403,6 +429,7 @@ let Graphics = (function(){
 
       }
     }
+
 		contextForMap.restore();
 
 //to get a width of the contextmap
