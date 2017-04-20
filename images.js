@@ -2,8 +2,8 @@
 let Images = (function () {
   let that = {};
   that.tilesize = 64;
-  that.player_height = 73;
-  that.player_width = 67;
+  that.player_height = 50;
+  that.player_width = 44;
 
   that.bg = new Image();
   that.bg_ready = false;

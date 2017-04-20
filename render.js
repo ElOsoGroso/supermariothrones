@@ -90,14 +90,14 @@ let Graphics = (function(){
 
 
   toreturn.player = function() {
-    let dimension = 64;
-    let dimensiony = Graphics.player_height;
-    let dimensionx = Graphics.player_width;
+    let dimension = 40;
     let friction = 0.98;
     let toreturn = {};
     let speed = 5;
+    let canMoveLeft = true;
+    let canMoveRight = true;
 
-    toreturn.location = {x: tilesize, y: canvas.height-tilesize*2};
+    toreturn.location = {x: tilesize, y: canvas.height-tilesize*2, previousX: tilesize, previousY: canvas.height-tilesize*2};
     toreturn.jumpPressed = false;
 
     let goLeft = false;
@@ -173,9 +173,10 @@ let Graphics = (function(){
           animationCounter += 1;
         }
       }
-
+      /*
       toreturn.onPlat = false;
       toreturn.isOnPlatform();
+      */
       // toreturn.isOnGround();
 
       if(toreturn.jumpPressed) {
@@ -207,12 +208,12 @@ let Graphics = (function(){
     };
     toreturn.goLeft = function(elapsedTime) {
       if (toreturn.location.x - (friction * speed) >= 0) {
-
         toreturn.location.x -= (friction * speed);
       } else {
         toreturn.location.x = 0;
       }
     };
+    /*
     toreturn.isOnPlatform = function(){
 
       for (let i=0; i < Map.levelrows; i++){
@@ -235,22 +236,109 @@ let Graphics = (function(){
       }
 
     };
+    */
     toreturn.jumping = function() {
 
-      if (toreturn.onPlat || toreturn.onGround) {
+      if (toreturn.onGround) {
 
         playSound('jump');
 
           toreturn.yVelocity = -16;
           toreturn.onGround = false;
-          toreturn.onPlat = false;
 
       }
     };
 
-    toreturn.update = function() {
+    toreturn.checkForCollisions = function() {
+      let leftX = Math.floor(toreturn.location.x / tilesize);
+      let rightX = Math.floor((toreturn.location.x + Images.player_width)/ tilesize);
+      let upY = Math.floor(toreturn.location.y / tilesize);
+      let downY = Math.floor((toreturn.location.y + Images.player_height)/ tilesize);
+      console.log(leftX, rightX, upY, downY);
+
+      console.log(map[upY][leftX], map[downY][leftX], map[upY][rightX], map[downY][rightX]);
+
+/*
+      for ( let x = leftX; x <= rightX; x++ ) {
+        for ( let y = upY; y <= downY; y++ ) {
+          if (map[y][x] == 'stone') {
+
+            let tileXLeft = x * tilesize;
+            let tileXRight = x * tilesize + tilesize;
+            let tileYTop = y * tilesize;
+            let tileYBot = y * tilesize + tilesize;
+
+            let playerXLeft = toreturn.location.x;
+            let playerXRight = toreturn.location.x + Images.player_width;
+            let playerYTop = toreturn.location.y;
+            let playerYBot = toreturn.location.y + Images.player_height;
+
+            let xOverlap = 0;
+            let yOverlap = 0;
+
+            if ( tileXLeft < playerXLeft ) {
+              xOverlap = tileXRight - playerXLeft;
+            }
+            else if ( playerXLeft <= tileXLeft ) {
+              xOverlap = playerXRight - tileXLeft;
+            }
+            if ( tileYTop < playerYTop) {
+              yOverlap = tileYBot - playerYTop;
+            }
+            else if ( playerYTop <= tileYTop) {
+              yOverlap = playerYBot - tileYTop;
+            }
+
+            console.log(xOverlap, yOverlap);
+
+            if ( yOverlap < xOverlap) {
+              if ( yOverlap > 0) {
+                toreturn.location.y -= yOverlap;
+              }
+            }
+            else {
+              if (xOverlap > 0 ) {
+                toreturn.location.x -= xOverlap;
+              }
+            }
+          }
+        }
+      }
+      */
+
+      if ( map[downY][leftX] != undefined || map[downY][rightX] != undefined) {
+        toreturn.onGround = true;
+        toreturn.yVelocity = 0.0;
+        toreturn.gravity = 0.0;
+      }
+      else {
+        toreturn.gravity = 0.5;
+        toreturn.onGround = false;
+      }
+      if (map[upY][leftX] == 'stone') {
+        console.log("cant go left");
+        toreturn.location.x = toreturn.location.previousX;
+      }
+      else if (map[upY][rightX] == 'stone') {
+        console.log("cant go right");
+        toreturn.location.x = toreturn.location.previousX;
+      }
+      if (map[upY][leftX] == 'stone' || map[upY][rightX] == 'stone') {
+        console.log("cant go up");
+        toreturn.location.y = toreturn.location.previousY;
+      }
+    }
+
+
+    toreturn.update = function(elapsedTime) {
+
       toreturn.yVelocity += toreturn.gravity;
       toreturn.location.y += toreturn.yVelocity;
+
+      toreturn.checkForCollisions();
+
+      toreturn.location.previousX = toreturn.location.x;
+      toreturn.location.previousY = toreturn.location.y;
 
       /* removing this allows for character to fall through ground
       if (toreturn.location.y >= canvas.height - dimension*2 && toreturn.onPlat == false) {
