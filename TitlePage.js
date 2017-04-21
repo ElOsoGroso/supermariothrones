@@ -21,6 +21,7 @@ let TitlePage = (function () {
 
 
 
+
   function init() {
     console.log("Begin title page init: " + startgame);
     canvas1 = document.getElementById('title-page');
@@ -38,17 +39,30 @@ let TitlePage = (function () {
       context1.setTransform(1,0,0,1,0,0);
       context1.clearRect(0,0, canvas1.width, canvas1.height);
       if(drawnormal){
-      context1.drawImage(background,0,0,with1.width,with1.height,0,0,canvas1.width,canvas1.height);}
-      else if (drawopt1){  context1.drawImage(withbevel,0,0,with1.width,with1.height,0,0,canvas1.width,canvas1.height);}
-      else if (drawopt2){ context1.drawImage(with1,0,0,with1.width,with1.height,0,0,canvas1.width,canvas1.height);}
-      context1.drawImage(scroll,scrollwidth,1826,scroll.width,scroll.height);
+      context1.drawImage(background,0,0,with1.width,with1.height,0,0,canvas1.width,canvas1.height);
+      context1.drawImage(scroll,scrollwidth,1010,scroll.width,scroll.height);
+    }
+      else if (drawopt1){
+      context1.drawImage(withbevel,0,0,with1.width,with1.height,0,0,canvas1.width,canvas1.height);
+      context1.drawImage(scroll,scrollwidth,1010,scroll.width,scroll.height);
+    }
+      else if (drawopt2){
+      context1.drawImage(with1,0,0,with1.width,with1.height,0,0,canvas1.width,canvas1.height);
+      context1.drawImage(scroll,scrollwidth,1010,scroll.width,scroll.height);
+    }
+    else if (drawopt3){
+      context1.drawImage(opt3,0,0,opt3.width,opt3.height,0,0,canvas1.width,canvas1.height);
+      context1.drawImage(scroll,scrollwidth,1010,scroll.width,scroll.height);
+    }
+      console.log(scrollwidth);
+
       context1.restore();
     }
     CanvasRenderingContext2D.prototype.clear = function() {
       this.save();
       this.setTransform(1,0,0,1,0,0);
       this.clearRect(0,0, canvas1.width, canvas1.height);
-      console.log(scrollwidth);
+      // console.log(scrollwidth);
       this.drawImage(background,0,0,background.width,background.height,0,0,canvas1.width,canvas1.height);
       // this.drawImage(scroll,scrollwidth,0,scroll.width,scroll.height);
       this.restore();
@@ -129,11 +143,13 @@ let TitlePage = (function () {
         playSound('hover');
         newonce =true;
         new2once = false;
+        new3once = false;
       }
 
         drawnormal = false;
         drawopt2 = true;
         drawopt1 = false;
+        drawopt3 = false;
 
 
       }
@@ -143,12 +159,30 @@ let TitlePage = (function () {
           console.log("hover");
         playSound('hover');
         new2once =true;
+        new3once = false;
         newonce = false;
       }
 
         drawnormal = false;
         drawopt1 =true;
         drawopt2 = false;
+        drawopt3 = false;
+
+
+      }
+      else if (isInside(mousePos,rectHoverHighScores)) {
+        if(!new3once){
+          console.log("hover");
+        playSound('hover');
+        new3once =true;
+        newonce = false;
+        new2once = false;
+      }
+
+        drawnormal = false;
+        drawopt1 =false;
+        drawopt2 = false;
+        drawopt3 = true;
 
 
       }
@@ -160,7 +194,7 @@ let TitlePage = (function () {
     context1.clear();
   }
   function move(){
-    scrollwidth+=5;
+    scrollwidth+=2;
   }
 
 

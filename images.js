@@ -124,5 +124,14 @@ let Images = (function () {
   };
 
   that.icewalk2.src = "Images/enemies/icewalk2.png";
+
+  that.crown = new Image();
+  that.crown_ready = false;
+  that.crown.onload = () => {
+    crown_ready = true;
+  };
+
+  that.crown.src = "Images/tiles/crown.png";
+
   return that;
 }())

@@ -260,13 +260,31 @@ let Graphics = (function(){
       let enemyrightX = Math.floor((enemyspec.location.x + 73)/ tilesize);
       let enemyupY = Math.floor(enemyspec.location.y / tilesize);
       let enemydownY = Math.floor((enemyspec.location.y + 73)/ tilesize);
-      console.log(leftX,rightX,upY,downY);
-      console.log(enemyleftX,enemyrightX,enemyupY,enemydownY);
-      if (downY == enemyupY && leftX == enemyleftX && rightX == enemyrightX){return "kill";}
+      // console.log(leftX,rightX,upY,downY);
+      // console.log(enemyleftX,enemyrightX,enemyupY,enemydownY);
+      if (downY == enemyupY && leftX == enemyleftX && rightX == enemyrightX){
+        playSound('bop');
+        enemyspec.drawdeath = true;
+        return "kill";}
       if(leftX == (enemyspec.location.x+73)/tilesize){console.log("die");}
       if(rightX == enemyspec.location.x/tilesize){console.log("die");}
 
     }
+    // toreturn.drawDeathScores = function(){
+    //   console.log("trying to draw on : " + context);
+    //   context.save()
+    //   context.textAlign = 'center';
+    //   context.fillStyle = '#f8f8ff';
+    //   context.shadowColor = 'black';
+    //   context.lineWidth = 4;
+    //   context.shadowBlur = 10;
+    //
+    //   context.font = '80px Arial';
+    //
+    //   context.strokeText('Lives:', 1300, 100);
+    //   context.fillText('Lives:', 1300, 100);
+    //   context.restore();
+    // }
     toreturn.checkForCollisions = function() {
       let leftX = Math.floor(toreturn.location.x / tilesize);
       let rightX = Math.floor((toreturn.location.x + Images.player_width)/ tilesize);
@@ -355,6 +373,7 @@ let Graphics = (function(){
 
     toreturn.fellThroughMap = function() {
       if (toreturn.location.y + Images.player_height>= canvas.height-10) {
+        playSound('wilhelm');
         return true;
       }
       else {
@@ -413,17 +432,52 @@ let Graphics = (function(){
     toreturn.subtractLives = function() {
       livesRemaining--;
       if (livesRemaining <= 0) {
-        console.log("Game Over");
+      playertoadd = prompt("Enter your name for highscores","Enter name here");
+      if (onetime){
+        console.log(playertoadd);
+        console.log(score);
+      $.ajax({
+          type: 'POST',
+          dataType: "json",
+          data: {
+            player:playertoadd,
+            score:score
+          },
+          url: 'http://localhost:5000/highscoreset',
+          success: function(result){
+            scores = result;
+          }
+      });
+      onetime = false;
+    }
       }
+
+
     }
 
     toreturn.renderLives = function() {
       context.save();
       for ( let x = 0; x < livesRemaining; x++ ) {
-        context.drawImage(Images.johnsnow1, location.x + x * Image.player_width + x * 10, location.y, tilesize, tilesize);
+        // console.log(Images.johnsnow1);
+        context.textAlign = 'center';
+        context.fillStyle = '#f8f8ff';
+        context.shadowColor = 'black';
+        context.lineWidth = 4;
+        context.shadowBlur = 10;
+
+        context.font = '80px Arial';
+
+        context.strokeText('Lives:', 1400, 100);
+        context.fillText('Lives:', 1400, 100);
+        context.strokeText('Score:', 1500, 200);
+        context.fillText('Score:', 1500, 200);
+        context.strokeText(score.toString(), 1800, 200);
+        context.fillText(score.toString(), 1800, 200);
+        context.drawImage(Images.johnsnow1, 1530 +Images.player_width*(x*1.5), 43, tilesize, tilesize);
       }
       context.restore();
     }
+
 
     return toreturn;
   }
@@ -443,18 +497,28 @@ let Graphics = (function(){
     let jump_y = toreturn.location.y;
     let display_count = 0;
     let display_walker_count  = 0;
+    toreturn.drawdeath = false;
     toreturn.onGround = true;
+    toreturn.deathlocation = null;
     toreturn.gravity = 0.5;
     toreturn.yVelocity = 0.0;
     toreturn.onPlat = false;
+    toreturn.alpha = 1;
 
     let enemy_animation = [];
 
     enemy_animation.push(Images.icewalk);
     enemy_animation.push(Images.icewalk2);
     toreturn.setDead = function(){
+      score+=100;
       isdead = true;
+      toreturn.deathlocation = {x:toreturn.location.x,y:toreturn.location.y};
+      toreturn.location = {x:-100,y:-100};
     }
+    toreturn.getDead = function(){
+      if(isdead){return true;}
+      else{return false;}
+    };
     toreturn.renderEnemy = function(viewXCoord, viewYCoord) {
       if(!isdead){
       // console.log(walkertime);
@@ -487,7 +551,50 @@ let Graphics = (function(){
       }
     };
 
+    toreturn.renderDeathScores = function(){
 
+      context.save();
+      context.textAlign = 'center';
+      context.fillStyle = '#f8f8ff';
+      if (toreturn.alpha <=0){toreturn.alpha =0;}
+      context.globalAlpha = toreturn.alpha;
+      context.shadowColor = 'black';
+      context.lineWidth = 4;
+      context.shadowBlur = 10;
+
+      context.font = '80px Arial';
+      context.strokeText('100', toreturn.deathlocation.x, toreturn.deathlocation.y);
+      context.fillText('100', toreturn.deathlocation.x, toreturn.deathlocation.y);
+      context.restore();
+    }
+    // toreturn.checkForCollisions = function() {
+    //   let leftX = Math.floor(toreturn.location.x / tilesize);
+    //   let rightX = Math.floor((toreturn.location.x)/ tilesize);
+    //   let upY = Math.floor(toreturn.location.y / tilesize);
+    //   let downY = Math.floor((toreturn.location.y)/ tilesize);
+    //
+    //   if ( map[downY][leftX] != undefined || map[downY][rightX] != undefined) {
+    //     toreturn.onGround = true;
+    //     toreturn.yVelocity = 0.0;
+    //     toreturn.gravity = 0.0;
+    //   }
+    //   else {
+    //     toreturn.gravity = 0.5;
+    //     toreturn.onGround = false;
+    //   }
+    //   if (map[upY][leftX] == 'stone') {
+    //     console.log("cant go left");
+    //     toreturn.location.x = toreturn.location.previousX;
+    //   }
+    //   else if (map[upY][rightX] == 'stone') {
+    //     console.log("cant go right");
+    //     toreturn.location.x = toreturn.location.previousX;
+    //   }
+    //   if (map[upY][leftX] == 'stone' || map[upY][rightX] == 'stone') {
+    //     console.log("cant go up");
+    //     toreturn.location.y = toreturn.location.previousY;
+    //   }
+    // }
 
     toreturn.isOnPlatform = function(){
 
@@ -518,7 +625,12 @@ let Graphics = (function(){
     toreturn.update = function(elapsedTime, deltaXView, deltaYView, viewXCoord, viewYCoord) {
       // console.log(walkertime);
       // console.log(toreturn.onGround);
+      // toreturn.checkForCollisions();
       walkertime++;
+      console.log( Math.floor((toreturn.location.y)/ tilesize),Math.floor((toreturn.location.x)/ tilesize), map[Math.floor(toreturn.location.y / tilesize)][Math.floor((toreturn.location.x)/ tilesize)])
+      if(map[ Math.floor((toreturn.location.y)/ tilesize)+1][Math.floor((toreturn.location.x)/ tilesize)]== undefined){
+        direction = 'left';
+      }
       toreturn.yVelocity += toreturn.gravity;
       toreturn.location.y += toreturn.yVelocity;
       toreturn.location.x -= deltaXView;
@@ -572,6 +684,9 @@ let Graphics = (function(){
         }
         if (map[i][j] == "stone"){
           contextForMap.drawImage(Images.stone_whole, j * dimension, i*dimension , tilesize, tilesize);
+        }
+        if (map[i][j] == "crown"){
+            contextForMap.drawImage(Images.crown, j * dimension, i*dimension , tilesize, tilesize);
         }
 
       }

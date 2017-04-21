@@ -1,4 +1,5 @@
 'use strict';
+
 let Sounds = {}
 function loadAudio() {
 
@@ -6,6 +7,8 @@ Sounds['theme'] = loadSound('Audio/opentheme.mp3');
 Sounds['click'] = loadSound('Audio/click.ogg');
 Sounds['hover'] = loadSound('Audio/hover.mp3');
 Sounds['jump'] = loadSound('Audio/jump.mp3');
+Sounds['wilhelm'] = loadSound('Audio/wilhelm.mp3');
+Sounds['bop'] = loadSound('Audio/bop.mp3');
 
 }
 function loadSound(source) {
@@ -28,20 +31,29 @@ let Game = (function() {
   let deltaYView = 0;
   let previousYView = 0;
   let dimension = 64;
-
+  let enemies = [];
+  let count = 0;
   toreturn.player = null;
   toreturn.lives = null;
   toreturn.enemy = null;
-  toreturn.enemy2 = null;
+  // toreturn.enemy2 = null;
   toreturn.map = null;
   toreturn.camera = null;
   toreturn.onPlat =false;
   toreturn.onGround = true;
 
   function update(elapsedTime) {
+      for(let i = 0 ;i <enemies.length;i++){
+        if (enemies[i].drawdeath){
+          enemies[i].deathlocation.y-=5;
+          enemies[i].alpha-=.05;
+        }
+      }
+
       if (toreturn.camera){
         toreturn.camera.update();
       }
+
 
       deltaXView = toreturn.camera.viewXCoord - previousXView;
       deltaYView = toreturn.camera.viewYCoord - previousYView;
@@ -58,9 +70,14 @@ let Game = (function() {
       // }
 
       toreturn.player.update();
-      toreturn.enemy.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
-      toreturn.enemy2.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
-      if(toreturn.player.checkEnemyCollisions(toreturn.enemy) == "kill"){toreturn.enemy.setDead();toreturn.player.setJumpAnyway(); toreturn.player.jumping()}
+      for (let i = 0; i<enemies.length;i++){
+
+        if (!enemies[i].getDead()){
+      enemies[i].update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);}
+    }
+      // toreturn.enemy2.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
+      for (let i = 0; i<enemies.length;i++){
+      if(toreturn.player.checkEnemyCollisions(enemies[i]) == "kill"){enemies[i].setDead();toreturn.player.setJumpAnyway(); toreturn.player.jumping()}}
       if ( toreturn.player.fellThroughMap()) {
         toreturn.player.killPlayer();
         toreturn.lives.subtractLives();
@@ -73,9 +90,17 @@ let Game = (function() {
           context.clearRect(0,0,canvas.width, canvas.height);
           toreturn.map.renderMap(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
           toreturn.player.renderPlayer(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
-          toreturn.enemy.renderEnemy(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
-          toreturn.enemy2.renderEnemy(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
+          for(let i = 0; i<enemies.length;i++){
+          enemies[i].renderEnemy(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
+        }
+          // toreturn.enemy2.renderEnemy(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
           toreturn.lives.renderLives();
+
+          for(let i = 0; i<enemies.length;i++){
+            if(enemies[i].drawdeath){
+          enemies[i].renderDeathScores();}
+        }
+
         }
 
       }
@@ -114,8 +139,8 @@ let Game = (function() {
     canvas2.style.zIndex = 0;
     canvas1.style.zIndex = 2;
      toreturn.player = Graphics.player();
-     toreturn.enemy = Graphics.enemy({walkertime: walkertime, location: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}});
-     toreturn.enemy2 = Graphics.enemy({walkertime: walkertime, location: {x: 250, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}});
+     enemies.push(Graphics.enemy({walkertime: walkertime, location: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
+     enemies.push(Graphics.enemy({walkertime: walkertime, location: {x: 250, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
      toreturn.lives = Graphics.lives({x: 10, y: 10, howMany: 3});
      toreturn.map = Graphics.map();
      toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 17000, canvas.height);

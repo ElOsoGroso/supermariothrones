@@ -8,6 +8,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type='text/javascript' >
   var startgame = false;
+  var score = 0;
   var number =2 ;
   var secondchance = true;
   var stop = false;
@@ -22,6 +23,10 @@
   let controls_active =false;
   let high_scores_active = false;
   let walkertime = 0;
+  let drawdeath = false;
+  let playertoadd = "";
+  let onetime = true;
+
 </script>
 
   <body onload = "Game.inittitle();">

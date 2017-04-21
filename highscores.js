@@ -1,5 +1,7 @@
 
 let HighScores = (function(){
+
+  let scores = [];
   let toreturn = {};
   let canvas = $('#highscores').get(0);
   let context = canvas.getContext('2d');
@@ -12,7 +14,7 @@ let HighScores = (function(){
   };
 
   // needs to be changed to highscores picture
-  backgroundhighscores.src = 'got.png';
+  backgroundhighscores.src = 'Images/background/highscores.png';
 
   function drawHighScores() {
       if(bgh_ready) {
@@ -27,15 +29,22 @@ let HighScores = (function(){
 
         context.font = '80px Arial';
 
-        for ( let x = 1; x < 6; x++ ) {
-          context.strokeText(x + '. 1000000', canvas.width/2, canvas.height/7*x + 200);
-          context.fillText(x + '. 1000000', canvas.width/2, canvas.height/7*x + 200);
+        for ( let x = 0; x < scores.length; x++ ) {
+          context.strokeText(scores[x].playername+ ": " + scores[x].playerscore, canvas.width/2, canvas.height/7*x + 300);
+          context.fillText(scores[x].playername+  ": " + scores[x].playerscore, canvas.width/2, canvas.height/7*x + 300);
         }
       }
 
   }
 
   toreturn.initialize = function() {
+    $.ajax({
+        type: 'GET',
+        url: 'http://localhost:5000/highscores',
+        success: function(result){
+          scores = result;
+        }
+    });
     let canvas1 = document.getElementById('highscores');
     let context1 = canvas1.getContext('2d');
     let canvas2 = document.getElementById('title-page');

@@ -42,6 +42,9 @@ let Map = (function() {
     map[10][13] = 'stone';
     map[10][14] = 'stone';
 
+    map[9][13] = "crown";
+    map[9][14] = "crown";
+
     // box 1
     for ( let xPos = 14; xPos < 16; xPos++ ) {
       for ( let yPos = 14; yPos < 17; yPos++ ) {
@@ -192,30 +195,6 @@ let Map = (function() {
     }
 
 
-
-
-    /*
-    for (let i=0; i < numPlatforms; i++) {
-
-      let howfarin = i*5;
-      let howfarup = 4;
-      let howbig = 2;
-      map[toreturn.levelrows - howfarup][howfarin] = 'dirtleft';
-        for (let j = 1; j<howbig;j++){
-
-        map[toreturn.levelrows - howfarup][howfarin + j] = 'dirt';
-      }
-        map[toreturn.levelrows - howfarup][howfarin + 2] = 'dirtright';
-
-        map[toreturn.levelrows - 6][howfarin+2] = 'dirtleft';
-        for (let k = 1; k<howbig;k++){
-        map[toreturn.levelrows - 6][howfarin + (k+2)] = 'dirt';
-      }
-        map[toreturn.levelrows - 6][howfarin +(howbig+2)] = 'dirtright';
-
-
-    }
-    */
 
 
   toreturn.initialize = function() {
