@@ -346,6 +346,21 @@ let Graphics = (function(){
       }
     }
 
+    toreturn.killPlayer = function() {
+
+        toreturn.location.x = 50;
+        toreturn.location.y = canvas.height/2;
+
+    }
+
+    toreturn.fellThroughMap = function() {
+      if (toreturn.location.y + Images.player_height>= canvas.height-10) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
 
     toreturn.update = function(elapsedTime) {
 
@@ -389,6 +404,29 @@ let Graphics = (function(){
     return toreturn;
   }
 
+  toreturn.lives = function(spec) {
+    let location = {x: spec.x, y: spec.y};
+    let livesRemaining = spec.howMany;
+
+    let toreturn = {};
+
+    toreturn.subtractLives = function() {
+      livesRemaining--;
+      if (livesRemaining <= 0) {
+        console.log("Game Over");
+      }
+    }
+
+    toreturn.renderLives = function() {
+      context.save();
+      for ( let x = 0; x < livesRemaining; x++ ) {
+        context.drawImage(Images.johnsnow1, location.x + x * Image.player_width + x * 10, location.y, tilesize, tilesize);
+      }
+      context.restore();
+    }
+
+    return toreturn;
+  }
 
   toreturn.enemy = function(spec) {
     let isdead = false;

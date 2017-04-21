@@ -30,6 +30,7 @@ let Game = (function() {
   let dimension = 64;
 
   toreturn.player = null;
+  toreturn.lives = null;
   toreturn.enemy = null;
   toreturn.enemy2 = null;
   toreturn.map = null;
@@ -55,10 +56,15 @@ let Game = (function() {
       //   toreturn.player.yVelocity = 0.0;
       //   toreturn.player.location.y = canvas.height - 128;
       // }
+
       toreturn.player.update();
       toreturn.enemy.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
       toreturn.enemy2.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
       if(toreturn.player.checkEnemyCollisions(toreturn.enemy) == "kill"){toreturn.enemy.setDead();toreturn.player.setJumpAnyway(); toreturn.player.jumping()}
+      if ( toreturn.player.fellThroughMap()) {
+        toreturn.player.killPlayer();
+        toreturn.lives.subtractLives();
+      }
     }
 
     function render(elapsedTime) {
@@ -69,6 +75,7 @@ let Game = (function() {
           toreturn.player.renderPlayer(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
           toreturn.enemy.renderEnemy(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
           toreturn.enemy2.renderEnemy(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
+          toreturn.lives.renderLives();
         }
 
       }
@@ -109,6 +116,7 @@ let Game = (function() {
      toreturn.player = Graphics.player();
      toreturn.enemy = Graphics.enemy({walkertime: walkertime, location: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}});
      toreturn.enemy2 = Graphics.enemy({walkertime: walkertime, location: {x: 250, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}});
+     toreturn.lives = Graphics.lives({x: 10, y: 10, howMany: 3});
      toreturn.map = Graphics.map();
      toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 17000, canvas.height);
     context.clearRect(0,0,canvas.width, canvas.height);
