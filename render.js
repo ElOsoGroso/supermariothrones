@@ -91,6 +91,7 @@ let Graphics = (function(){
 
   toreturn.player = function() {
     let dimension = 40;
+    let jumpanyway = false;
     let friction = 0.98;
     let toreturn = {};
     let speed = 5;
@@ -143,7 +144,9 @@ let Graphics = (function(){
         toreturn.jumpPressed = false;
       }
     })
-
+    toreturn.setJumpAnyway = function(){
+      jumpanyway = true;
+    }
     toreturn.renderPlayer = function(viewXCoord, viewYCoord) {
       context.save();
       context.clearRect(viewXCoord,viewYCoord,canvas.width,canvas.height);
@@ -239,7 +242,7 @@ let Graphics = (function(){
     */
     toreturn.jumping = function() {
 
-      if (toreturn.onGround) {
+      if (toreturn.onGround || jumpanyway) {
 
         playSound('jump');
 
@@ -248,15 +251,30 @@ let Graphics = (function(){
 
       }
     };
+    toreturn.checkEnemyCollisions = function(enemyspec){
+      let leftX = Math.floor(toreturn.location.x / tilesize);
+      let rightX = Math.floor((toreturn.location.x + Images.player_width)/ tilesize);
+      let upY = Math.floor(toreturn.location.y / tilesize);
+      let downY = Math.floor((toreturn.location.y + Images.player_height)/ tilesize);
+      let enemyleftX = Math.floor(enemyspec.location.x / tilesize);
+      let enemyrightX = Math.floor((enemyspec.location.x + 73)/ tilesize);
+      let enemyupY = Math.floor(enemyspec.location.y / tilesize);
+      let enemydownY = Math.floor((enemyspec.location.y + 73)/ tilesize);
+      console.log(leftX,rightX,upY,downY);
+      console.log(enemyleftX,enemyrightX,enemyupY,enemydownY);
+      if (downY == enemyupY && leftX == enemyleftX && rightX == enemyrightX){return "kill";}
+      if(leftX == (enemyspec.location.x+73)/tilesize){console.log("die");}
+      if(rightX == enemyspec.location.x/tilesize){console.log("die");}
 
+    }
     toreturn.checkForCollisions = function() {
       let leftX = Math.floor(toreturn.location.x / tilesize);
       let rightX = Math.floor((toreturn.location.x + Images.player_width)/ tilesize);
       let upY = Math.floor(toreturn.location.y / tilesize);
       let downY = Math.floor((toreturn.location.y + Images.player_height)/ tilesize);
-      console.log(leftX, rightX, upY, downY);
+      // console.log(leftX, rightX, upY, downY);
 
-      console.log(map[upY][leftX], map[downY][leftX], map[upY][rightX], map[downY][rightX]);
+      // console.log(map[upY][leftX], map[downY][leftX], map[upY][rightX], map[downY][rightX]);
 
 /*
       for ( let x = leftX; x <= rightX; x++ ) {
@@ -305,7 +323,6 @@ let Graphics = (function(){
         }
       }
       */
-
       if ( map[downY][leftX] != undefined || map[downY][rightX] != undefined) {
         toreturn.onGround = true;
         toreturn.yVelocity = 0.0;
@@ -374,6 +391,7 @@ let Graphics = (function(){
 
 
   toreturn.enemy = function(spec) {
+    let isdead = false;
     let dimension = 64;
     let toreturn = {};
     let speed = 3;
@@ -396,8 +414,11 @@ let Graphics = (function(){
 
     enemy_animation.push(Images.icewalk);
     enemy_animation.push(Images.icewalk2);
-
+    toreturn.setDead = function(){
+      isdead = true;
+    }
     toreturn.renderEnemy = function(viewXCoord, viewYCoord) {
+      if(!isdead){
       // console.log(walkertime);
       if(walkertime>10){
         display_walker_count++;
@@ -409,7 +430,7 @@ let Graphics = (function(){
       context.save();
       context.drawImage(enemy_animation[display_walker_count], toreturn.location.x, toreturn.location.y, tilesize, tilesize);
       context.restore();
-
+    }
     };
     toreturn.goRight = function(elapsedTime) {
       if (toreturn.location.x + (friction * speed) >= Graphics.map_width - tilesize) {
