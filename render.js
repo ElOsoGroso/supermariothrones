@@ -256,7 +256,7 @@ let Graphics = (function(){
     };
 
     toreturn.checkEnemyCollisions = function(enemyspec){
-      let leftX = Math.floor(toreturn.location.x / tilesize);
+      let leftX = Math.floor((toreturn.location.x) / tilesize);
       let rightX = Math.floor((toreturn.location.x + Images.player_width)/ tilesize);
       let upY = Math.floor(toreturn.location.y / tilesize);
       let downY = Math.floor((toreturn.location.y + Images.player_height)/ tilesize);
@@ -264,8 +264,11 @@ let Graphics = (function(){
       let enemyrightX = Math.floor((enemyspec.location.x + 73)/ tilesize);
       let enemyupY = Math.floor(enemyspec.location.y / tilesize);
       let enemydownY = Math.floor((enemyspec.location.y + 73)/ tilesize);
-      // console.log(leftX,rightX,upY,downY);
-      // console.log(enemyleftX,enemyrightX,enemyupY,enemydownY);
+       console.log(leftX,rightX,upY,downY);
+       console.log(enemyleftX,enemyrightX,enemyupY,enemydownY);
+
+
+
       if (downY == enemyupY && leftX == enemyleftX && rightX == enemyrightX){
         playSound('bop');
         enemyspec.drawdeath = true;
@@ -744,7 +747,7 @@ let Graphics = (function(){
       toreturn.location.x -= deltaXView;
       toreturn.location.y -= deltaYView;
 
-      toreturn.checkPlayerCollision(locationX+viewXCoord, locationY+viewYCoord);
+      toreturn.checkPlayerCollision(locationX-viewXCoord, locationY-viewYCoord);
     }
 
     toreturn.renderCrowns = function(viewXCoord, viewYCoord) {

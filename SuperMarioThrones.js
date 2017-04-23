@@ -142,10 +142,6 @@ let Game = (function() {
           enemies[i].renderDeathScores();}
         }
         for(let i = 0; i<crowns.length;i++){
-          if (crowns[i].drawThis) {
-            console.log("crown position" + crowns[i].location.x, crowns[i].location.y);
-          }
-          console.log("player posiiton " + toreturn.player.location.x, toreturn.player.location.y);
         crowns[i].renderCrowns();
         }
 
@@ -195,10 +191,24 @@ let Game = (function() {
     enemies.push(Graphics.enemy({source: "jj", walkertime: walkertime, location: {x: 4000, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
      enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 6000, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
       enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 8000, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-     crowns.push(Graphics.crown({location: {x:100, y:800}}));
-     crowns.push(Graphics.crown({location: {x:200, y:800}}));
-     crowns.push(Graphics.crown({location: {x:300, y:800}}));
-     crowns.push(Graphics.crown({location: {x:400, y:800}}));
+      crowns.push(Graphics.crown({location: {x:10 * 64, y: 12 * 64}}));
+     crowns.push(Graphics.crown({location: {x:11 * 64, y: 12 * 64}}));
+     crowns.push(Graphics.crown({location: {x:13 * 64, y:9 * 64}}));
+     crowns.push(Graphics.crown({location: {x:14 * 64, y:9 * 64}}));
+     crowns.push(Graphics.crown({location: {x:36 * 64, y:7 * 64}}));
+     for ( let i = 50; i < 70; i+=2 ) {
+       crowns.push(Graphics.crown({location: {x:i * 64, y:12 * 64}}));
+     }
+     crowns.push(Graphics.crown({location: {x:97 * 64, y:9 * 64}}));
+     crowns.push(Graphics.crown({location: {x:98 * 64, y:9 * 64}}));
+     crowns.push(Graphics.crown({location: {x:104 * 64, y:16 * 64}}));
+     crowns.push(Graphics.crown({location: {x:105 * 64, y:16 * 64}}));
+     crowns.push(Graphics.crown({location: {x:106 * 64, y:16 * 64}}));
+     let helper = 14;
+     for ( let i = 148; i < 153; i++ ) {
+       crowns.push(Graphics.crown({location: {x:i * 64, y:i-147 + helper * 64}}));
+       helper--;
+     }
      toreturn.lives = Graphics.lives({x: 10, y: 10, howMany: 3});
      toreturn.map = Graphics.map();
      toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 17000, canvas.height);
