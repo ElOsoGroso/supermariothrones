@@ -113,7 +113,7 @@ let Game = (function() {
 
       // toreturn.enemy2.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
       for (let i = 0; i<enemies.length;i++){
-      if(toreturn.player.checkEnemyCollisions(enemies[i]) == "kill"){enemies[i].setDead();toreturn.player.setJumpAnyway(); toreturn.player.jumping()}}
+      if(toreturn.player.checkEnemyCollisions(enemies[i], toreturn.camera.viewXCoord) == "kill"){enemies[i].setDead();toreturn.player.setJumpAnyway(); toreturn.player.jumping()}}
       if ( toreturn.player.fellThroughMap()) {
         toreturn.player.killPlayer();
         toreturn.lives.subtractLives();
@@ -188,10 +188,10 @@ let Game = (function() {
      enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 1600, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
      enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 1200, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
      enemies.push(Graphics.enemy({source: "jj", walkertime: walkertime, location: {x: 5800, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-    enemies.push(Graphics.enemy({source: "jj", walkertime: walkertime, location: {x: 4000, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
+     enemies.push(Graphics.enemy({source: "jj", walkertime: walkertime, location: {x: 4000, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
      enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 6000, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-      enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 8000, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-      crowns.push(Graphics.crown({location: {x:10 * 64, y: 12 * 64}}));
+     enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 8000, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
+     crowns.push(Graphics.crown({location: {x:10 * 64, y: 12 * 64}}));
      crowns.push(Graphics.crown({location: {x:11 * 64, y: 12 * 64}}));
      crowns.push(Graphics.crown({location: {x:13 * 64, y:9 * 64}}));
      crowns.push(Graphics.crown({location: {x:14 * 64, y:9 * 64}}));

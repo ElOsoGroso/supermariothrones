@@ -255,9 +255,9 @@ let Graphics = (function(){
       }
     };
 
-    toreturn.checkEnemyCollisions = function(enemyspec){
-      let leftX = Math.floor((toreturn.location.x) / tilesize);
-      let rightX = Math.floor((toreturn.location.x + Images.player_width)/ tilesize);
+    toreturn.checkEnemyCollisions = function(enemyspec, viewXCoord){
+      let leftX = Math.floor((toreturn.location.x- viewXCoord) / tilesize);
+      let rightX = Math.floor((toreturn.location.x + Images.player_width-viewXCoord)/ tilesize);
       let upY = Math.floor(toreturn.location.y / tilesize);
       let downY = Math.floor((toreturn.location.y + Images.player_height)/ tilesize);
       let enemyleftX = Math.floor(enemyspec.location.x / tilesize);
