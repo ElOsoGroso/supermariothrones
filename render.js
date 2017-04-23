@@ -356,11 +356,11 @@ let Graphics = (function(){
         toreturn.onGround = false;
       }
       if (map[upY][leftX] == 'stone') {
-        console.log("cant go left");
+      //console.log("cant go left");
         toreturn.location.x = toreturn.location.previousX;
       }
       else if (map[upY][rightX] == 'stone') {
-        console.log("cant go right");
+        //console.log("cant go right");
         toreturn.location.x = toreturn.location.previousX;
       }
       if (map[upY][leftX] == 'stone' || map[upY][rightX] == 'stone' || map[upY][leftX] == 'crownstone' || map[upY][rightX] == 'crownstone') {
@@ -374,7 +374,7 @@ let Graphics = (function(){
           }
           changes = true;
         }
-        console.log("cant go up");
+        //console.log("cant go up");
         toreturn.location.y = toreturn.location.previousY;
       }
     }
@@ -513,7 +513,7 @@ let Graphics = (function(){
     let display_count = 0;
     let display_walker_count  = 0;
     toreturn.drawdeath = false;
-    toreturn.onGround = true;
+    toreturn.onGround = false;
     toreturn.deathlocation = null;
     toreturn.gravity = 0.5;
     toreturn.yVelocity = 0.0;
@@ -562,7 +562,7 @@ let Graphics = (function(){
 
         toreturn.location.x -= (friction * speed);
       } else {
-        toreturn.location.x = 0;
+        toreturn.location.x -= (friction * speed);
       }
     };
 
@@ -637,15 +637,36 @@ let Graphics = (function(){
     toreturn.onPlat = false;
     toreturn.isOnPlatform();
 
+    toreturn.changeDirection = function() {
+      if ( direction == 'right') {
+        direction ='left';
+      }
+      else if ( direction == 'left') {
+        direction = 'right';
+      }
+    }
+
     toreturn.update = function(elapsedTime, deltaXView, deltaYView, viewXCoord, viewYCoord) {
       // console.log(walkertime);
       // console.log(toreturn.onGround);
       // toreturn.checkForCollisions();
+
       walkertime++;
-      // console.log( Math.floor((toreturn.location.y)/ tilesize),Math.floor((toreturn.location.x)/ tilesize), map[Math.floor(toreturn.location.y / tilesize)][Math.floor((toreturn.location.x)/ tilesize)])
-      if(map[ Math.floor((toreturn.location.y)/ tilesize)+1][Math.floor((toreturn.location.x)/ tilesize)]== undefined){
-        direction = 'left';
+      //console.log( Math.floor((toreturn.location.y)/ tilesize),Math.floor((toreturn.location.x)/ tilesize), map[Math.floor(toreturn.location.y / tilesize)][Math.floor((toreturn.location.x)/ tilesize)])
+      if(map[ Math.floor((toreturn.location.y)/ tilesize+1)][Math.floor((toreturn.location.x + viewXCoord + Images.player_width/2)/ tilesize)]== undefined){
+        if ( toreturn.onGround == true ) {
+          if ( Math.floor((toreturn.location.x)/ tilesize) > 0 ) {
+            toreturn.changeDirection();
+          }
+        }
       }
+      else if ( map[ Math.floor((toreturn.location.y)/ tilesize)][Math.floor((toreturn.location.x + viewXCoord + Images.player_width)/ tilesize)] == 'stone'){
+        toreturn.changeDirection();
+      }
+      else if ( map[ Math.floor((toreturn.location.y)/ tilesize)][Math.floor((toreturn.location.x + viewXCoord)/ tilesize)] == 'stone') {
+        toreturn.changeDirection();
+      }
+
       toreturn.yVelocity += toreturn.gravity;
       toreturn.location.y += toreturn.yVelocity;
       toreturn.location.x -= deltaXView;
@@ -654,7 +675,8 @@ let Graphics = (function(){
       if (toreturn.location.x + viewXCoord > 16000) {
         direction = 'left';
       }
-      if ( toreturn.location.x + viewXCoord <= 0) {
+      else if ( toreturn.location.x + viewXCoord <= 0) {
+        toreturn.location.x = 0;
         direction = 'right';
       }
 
