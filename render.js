@@ -102,6 +102,7 @@ let Graphics = (function(){
 
     toreturn.location = {x: tilesize, y: canvas.height-tilesize*2, previousX: tilesize, previousY: canvas.height-tilesize*2};
     toreturn.jumpPressed = false;
+    toreturn.playerHitCoin = false;
 
     let goLeft = false;
     let goRight = false;
@@ -366,6 +367,7 @@ let Graphics = (function(){
       if (map[upY][leftX] == 'stone' || map[upY][rightX] == 'stone' || map[upY][leftX] == 'crownstone' || map[upY][rightX] == 'crownstone') {
         if(map[upY][leftX] == 'crownstone' || map[upY][rightX] == 'crownstone'){
           playSound('coin');
+          toreturn.playerHitCoin = true;
           if(map[upY-1][leftX] == "crown"){
           drawcrown[upY-1][leftX] = true;
         }
@@ -375,6 +377,9 @@ let Graphics = (function(){
           changes = true;
         }
         //console.log("cant go up");
+
+
+
         toreturn.location.y = toreturn.location.previousY;
       }
     }
@@ -698,22 +703,31 @@ let Graphics = (function(){
   }
 
   toreturn.crown = function(spec){
+    let toreturn = {};
+    toreturn.drawThis = true;
 
     toreturn.location = {x: spec.location.x, y: spec.location.y};
-    toreturn.update = function(elapsedTime, deltaXView, deltaYView, viewXCoord, viewYCoord){
+    toreturn.update = function(elapsedTime, deltaXView, deltaYView, viewXCoord, viewYCoord, locationX, locationY){
       toreturn.location.x -= deltaXView;
       toreturn.location.y -= deltaYView;
 
+      toreturn.checkPlayerCollision(locationX+viewXCoord, locationY+viewYCoord);
     }
 
     toreturn.renderCrowns = function(viewXCoord, viewYCoord) {
-      // if(!isdead){
-      context.save();
-      context.drawImage(Images.crown, toreturn.location.x, toreturn.location.y, tilesize, tilesize);
-      context.restore();
-    // }
+      if(toreturn.drawThis){
+        context.save();
+        context.drawImage(Images.crown, toreturn.location.x, toreturn.location.y, tilesize, tilesize);
+        context.restore();
+      }
+    }
 
-    };
+    toreturn.checkPlayerCollision = function(locationX, locationY) {
+      if (locationX >= toreturn.location.x && locationX <= toreturn.location.x + tilesize && locationY >= toreturn.location.y && locationY <= toreturn.location.y + tilesize) {
+        toreturn.drawThis = false;
+      }
+    }
+
     return toreturn;
   };
   toreturn.map = function() {

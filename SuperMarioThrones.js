@@ -78,9 +78,18 @@ let Game = (function() {
         if (!enemies[i].getDead()){
       enemies[i].update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);}
     }
+    if(toreturn.player.playerHitCoin) {
+      console.log("spawning crown");
+      crowns[0].location.x = toreturn.player.location.x -toreturn.camera.viewXCoord;
+      crowns[0].location.y = toreturn.player.location.y - 128;
+      crowns[0].drawThis = true;
+      toreturn.player.playerHitCoin = false;
+    }
       for (let i = 0; i<crowns.length;i++){
-        crowns[i].update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
+        crowns[i].update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord, toreturn.player.location.x, toreturn.player.location.y);
       }
+
+
       // toreturn.enemy2.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
       for (let i = 0; i<enemies.length;i++){
       if(toreturn.player.checkEnemyCollisions(enemies[i]) == "kill"){enemies[i].setDead();toreturn.player.setJumpAnyway(); toreturn.player.jumping()}}
@@ -99,9 +108,6 @@ let Game = (function() {
           //   changes = false;
           // }
           toreturn.map.renderMap(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
-          for(let i = 0; i<crowns.length;i++){
-          crowns[i].renderCrowns(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
-          }
 
           toreturn.player.renderPlayer(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
           for(let i = 0; i<enemies.length;i++){
@@ -113,6 +119,13 @@ let Game = (function() {
           for(let i = 0; i<enemies.length;i++){
             if(enemies[i].drawdeath){
           enemies[i].renderDeathScores();}
+        }
+        for(let i = 0; i<crowns.length;i++){
+          if (crowns[i].drawThis) {
+            console.log("crown position" + crowns[i].location.x, crowns[i].location.y);
+          }
+          console.log("player posiiton " + toreturn.player.location.x, toreturn.player.location.y);
+        crowns[i].renderCrowns();
         }
 
         }
@@ -155,8 +168,10 @@ let Game = (function() {
      toreturn.player = Graphics.player();
      enemies.push(Graphics.enemy({walkertime: walkertime, location: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
      enemies.push(Graphics.enemy({walkertime: walkertime, location: {x: 250, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-     crowns.push(Graphics.crown({location: {x:200, y:900}}));
-     crowns.push(Graphics.crown({location: {x:400, y:900}}));
+     crowns.push(Graphics.crown({location: {x:100, y:800}}));
+     crowns.push(Graphics.crown({location: {x:200, y:800}}));
+     crowns.push(Graphics.crown({location: {x:300, y:800}}));
+     crowns.push(Graphics.crown({location: {x:400, y:800}}));
      toreturn.lives = Graphics.lives({x: 10, y: 10, howMany: 3});
      toreturn.map = Graphics.map();
      toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 17000, canvas.height);
