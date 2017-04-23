@@ -760,9 +760,11 @@ let Graphics = (function(){
 
     toreturn.checkPlayerCollision = function(locationX, locationY) {
       if (locationX >= toreturn.location.x && locationX <= toreturn.location.x + tilesize && locationY >= toreturn.location.y && locationY <= toreturn.location.y + tilesize) {
-        toreturn.drawThis = false;
-        score+=200;
-        playSound('coin');
+        if ( toreturn.drawThis == true) {
+          toreturn.drawThis = false;
+          score+=200;
+          playSound('coin');
+        }
       }
     }
 
