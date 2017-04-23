@@ -155,7 +155,8 @@ let Game = (function() {
      toreturn.player = Graphics.player();
      enemies.push(Graphics.enemy({walkertime: walkertime, location: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
      enemies.push(Graphics.enemy({walkertime: walkertime, location: {x: 250, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-     crowns.push(Graphics.crown({location: {x:800, y:800}}));
+     crowns.push(Graphics.crown({location: {x:200, y:900}}));
+     crowns.push(Graphics.crown({location: {x:400, y:900}}));
      toreturn.lives = Graphics.lives({x: 10, y: 10, howMany: 3});
      toreturn.map = Graphics.map();
      toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 17000, canvas.height);
