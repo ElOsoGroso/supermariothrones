@@ -46,10 +46,7 @@ let Map = (function() {
     map[10][13] = 'stone';
     map[10][14] = 'stone';
 
-    map[9][13] = "crown";
-    drawcrown[9][13] = true;
-    map[9][14] = "crown";
-    drawcrown[9][14] = true;
+
 
     // box 1
     for ( let xPos = 14; xPos < 16; xPos++ ) {
@@ -100,11 +97,9 @@ let Map = (function() {
     }
 
     map[15][42] = 'crownstone';
-    map[14][42] = "crown";
-    drawcrown[14][42] = false;
+
     map[13][45] = 'crownstone';
-    map[12][45] = "crown";
-    drawcrown[12][45] = false;
+
 
     /* creates hole in ground
     for ( let xPos = 70; xPos < 75; xPos++ ) {
@@ -206,12 +201,10 @@ let Map = (function() {
 
 map[10][152] = 'flag';
 
+map[10][155] = 'dragon';
 
-  toreturn.updateMap = function(x,y){
-    map[x][y] = "crown";
-    changes = true;
 
-  }
+
   toreturn.initialize = function() {
 
     populateMap();

@@ -140,6 +140,42 @@ let Images = (function () {
 
   that.icewalk2.src = "Images/enemies/icewalk2.png";
 
+  that.dothraki1 = new Image();
+  that.dothraki1_ready = false;
+
+  that.dothraki1.onload = () => {
+    dothraki2_ready = true;
+  };
+
+  that.dothraki1.src = "Images/enemies/dothraki1.png";
+
+  that.dothraki2 = new Image();
+  that.dothraki2_ready = false;
+
+  that.dothraki2.onload = () => {
+    dothraki2_ready = true;
+  };
+
+  that.dothraki2.src = "Images/enemies/dothraki2.png";
+
+  that.joffrey1 = new Image();
+  that.joffrey1_ready = false;
+
+  that.joffrey1.onload = () => {
+  joffrey1_ready = true;
+  };
+
+  that.joffrey1.src = "Images/enemies/joffrey1.png";
+
+  that.joffrey2 = new Image();
+  that.joffrey2_ready = false;
+
+  that.joffrey2.onload = () => {
+  joffrey2_ready = true;
+  };
+
+  that.joffrey2.src = "Images/enemies/joffrey2.png";
+
   that.crown = new Image();
   that.crown_ready = false;
   that.crown.onload = () => {
@@ -148,5 +184,12 @@ let Images = (function () {
 
   that.crown.src = "Images/tiles/crown.png";
 
+  that.dragon2 = new Image();
+  that.dragon2_ready = false;
+  that.dragon2.onload = () => {
+  dragon2_ready = true;
+  };
+
+  that.dragon2.src = "Images/background/dragon2.png";
   return that;
 }())

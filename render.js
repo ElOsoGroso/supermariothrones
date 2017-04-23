@@ -289,6 +289,15 @@ let Graphics = (function(){
     //   context.fillText('Lives:', 1300, 100);
     //   context.restore();
     // }
+    toreturn.checkIfWon = function(){
+      let rightX = Math.floor((toreturn.location.x + Images.player_width)/ tilesize);
+
+      for (let i = 0; i<16;i++){
+        if (map[i][rightX-2] == 'flag'){
+          return true;
+        }
+      }
+    }
     toreturn.checkForCollisions = function() {
       let leftX = Math.floor(toreturn.location.x / tilesize);
       let rightX = Math.floor((toreturn.location.x + Images.player_width)/ tilesize);
@@ -503,10 +512,11 @@ let Graphics = (function(){
   }
 
   toreturn.enemy = function(spec) {
+    let source = spec.source;
     let isdead = false;
     let dimension = 64;
     let toreturn = {};
-    let speed = 3;
+    let speed = 2;
     let friction = 0.98;
     toreturn.location = {x: spec.location.x, y: spec.location.y};
     let animationCounter = 0;
@@ -525,10 +535,19 @@ let Graphics = (function(){
     toreturn.onPlat = false;
     toreturn.alpha = 1;
 
-    let enemy_animation = [];
-
-    enemy_animation.push(Images.icewalk);
-    enemy_animation.push(Images.icewalk2);
+    toreturn.enemy_animation = [];
+    if(source =="ww"){
+    toreturn.enemy_animation.push(Images.icewalk);
+    toreturn.enemy_animation.push(Images.icewalk2);
+  }
+  else if(source== "dd"){
+    toreturn.enemy_animation.push(Images.dothraki1);
+    toreturn.enemy_animation.push(Images.dothraki2);
+  }
+  else if (source == "jj"){
+    toreturn.enemy_animation.push(Images.joffrey1);
+    toreturn.enemy_animation.push(Images.joffrey2);
+  }
     toreturn.setDead = function(){
       score+=100;
       isdead = true;
@@ -549,9 +568,23 @@ let Graphics = (function(){
       if(display_walker_count>1){
         display_walker_count = 0;
       }
+      if(source =="ww"){
       context.save();
-      context.drawImage(enemy_animation[display_walker_count], toreturn.location.x, toreturn.location.y, tilesize, tilesize);
+      context.drawImage(toreturn.enemy_animation[display_walker_count], toreturn.location.x, toreturn.location.y, Images.icewalk.width, Images.icewalk.height);
       context.restore();
+    }
+    else if (source =="dd"){
+      context.save();
+      context.drawImage(toreturn.enemy_animation[display_walker_count], toreturn.location.x, toreturn.location.y, Images.dothraki1.width, Images.dothraki1.height);
+      context.restore();
+    }
+    else if(source == "jj"){
+      context.save();
+      context.drawImage(toreturn.enemy_animation[display_walker_count], toreturn.location.x, toreturn.location.y, Images.joffrey1.width, Images.joffrey1.height);
+      context.restore();
+    }
+
+
     }
     };
     toreturn.goRight = function(elapsedTime) {
@@ -725,6 +758,8 @@ let Graphics = (function(){
     toreturn.checkPlayerCollision = function(locationX, locationY) {
       if (locationX >= toreturn.location.x && locationX <= toreturn.location.x + tilesize && locationY >= toreturn.location.y && locationY <= toreturn.location.y + tilesize) {
         toreturn.drawThis = false;
+        score+=200;
+        playSound('coin');
       }
     }
 
@@ -766,6 +801,9 @@ let Graphics = (function(){
         }
         if(map[i][j] =='flag'){
             contextForMap.drawImage(Images.flag, j * dimension, i*dimension , 203, 662);
+        }
+        if (map[i][j] =='dragon'){
+            contextForMap.drawImage(Images.dragon2, j * dimension, i*dimension , Images.dragon2.width, Images.dragon2.height);
         }
 
       }

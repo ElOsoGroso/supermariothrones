@@ -35,6 +35,7 @@ let Game = (function() {
   let enemies = [];
   let crowns = [];
   let count = 0;
+  let once = true;
   toreturn.player = null;
   toreturn.lives = null;
   toreturn.enemy = null;
@@ -46,6 +47,26 @@ let Game = (function() {
   toreturn.onGround = true;
 
   function update(elapsedTime) {
+    if(toreturn.player.checkIfWon()){
+      if (once){
+    playertoadd = prompt("Enter your name for highscores","Enter name here");
+
+      console.log(playertoadd);
+      console.log(score);
+    $.ajax({
+        type: 'POST',
+        dataType: "json",
+        data: {
+          player:playertoadd,
+          score:score
+        },
+        url: 'http://localhost:5000/highscoreset',
+        success: function(result){
+          scores = result;
+        }
+    });
+    once = false;
+  }}
       for(let i = 0 ;i <enemies.length;i++){
         if (enemies[i].drawdeath){
           enemies[i].deathlocation.y-=5;
@@ -166,8 +187,14 @@ let Game = (function() {
     canvas2.style.zIndex = 0;
     canvas1.style.zIndex = 2;
      toreturn.player = Graphics.player();
-     enemies.push(Graphics.enemy({walkertime: walkertime, location: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-     enemies.push(Graphics.enemy({walkertime: walkertime, location: {x: 250, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
+     enemies.push(Graphics.enemy({source: "ww", walkertime: walkertime, location: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
+     enemies.push(Graphics.enemy({source: "ww", walkertime: walkertime, location: {x: 2400, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
+     enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 1600, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
+     enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 1200, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
+     enemies.push(Graphics.enemy({source: "jj", walkertime: walkertime, location: {x: 5800, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
+    enemies.push(Graphics.enemy({source: "jj", walkertime: walkertime, location: {x: 4000, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
+     enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 6000, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
+      enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 8000, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
      crowns.push(Graphics.crown({location: {x:100, y:800}}));
      crowns.push(Graphics.crown({location: {x:200, y:800}}));
      crowns.push(Graphics.crown({location: {x:300, y:800}}));
