@@ -264,8 +264,8 @@ let Graphics = (function(){
       let enemyrightX = Math.floor((enemyspec.location.x + 73)/ tilesize);
       let enemyupY = Math.floor(enemyspec.location.y / tilesize);
       let enemydownY = Math.floor((enemyspec.location.y + 73)/ tilesize);
-       console.log(leftX,rightX,upY,downY);
-       console.log(enemyleftX,enemyrightX,enemyupY,enemydownY);
+      // console.log(leftX,rightX,upY,downY);
+      // console.log(enemyleftX,enemyrightX,enemyupY,enemydownY);
 
 
 
@@ -768,6 +768,60 @@ let Graphics = (function(){
 
     return toreturn;
   };
+
+
+  toreturn.particle = function(spec) {
+    var toreturn = {};
+
+    spec.radius = 5;
+    spec.xMomentum = spec.xSpeed;
+    spec.yMomentum = spec.ySpeed;
+    spec.gravity = 0.13;
+    spec.alive = 0;
+    spec.drawThis = true;
+
+    /*
+    spec.radius = 5;
+    spec.alive = 0;
+    spec.Xspeed = spec.initialSpeed;
+    spec.Yspeed = spec.initialSpeed;
+    spec.secondAlive = 0;
+    */
+
+    toreturn.draw = function() {
+      if (spec.drawThis === true ) {
+        context.save();
+
+        context.beginPath();
+        context.arc(spec.position.x, spec.position.y, spec.radius, 0, 2*Math.PI, false);
+        context.fillStyle = spec.color;
+        context.fill();
+
+        context.restore();
+      }
+    }
+    toreturn.update = function(elapsedTime) {
+      if( spec.drawThis == true) {
+          spec.alive += elapsedTime;
+
+          //if ( spec.position.x <= 5 || spec.position.x >= 995 ) {
+          //  spec.xMomentum = -spec.xMomentum;
+          //}
+
+          if ( spec.position.y >= 1500 ) {
+            //spec.yMomentum = -spec.yMomentum;
+            //spec.alive += 1000;
+            spec.drawThis = false;
+          }
+          spec.yMomentum += spec.gravity * spec.alive/3000;
+
+          spec.position.x += (elapsedTime * spec.xMomentum);
+          spec.position.y += (elapsedTime * spec.yMomentum);
+      }
+    }
+    return toreturn;
+  }
+
   toreturn.map = function() {
     let contextForMap = document.createElement('canvas').getContext('2d');
     let dimension =64;

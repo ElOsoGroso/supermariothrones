@@ -34,6 +34,7 @@ let Game = (function() {
   let dimension = 64;
   let enemies = [];
   let crowns = [];
+  let particles = [];
   let count = 0;
   let once = true;
   toreturn.player = null;
@@ -113,10 +114,13 @@ let Game = (function() {
 
       // toreturn.enemy2.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
       for (let i = 0; i<enemies.length;i++){
-      if(toreturn.player.checkEnemyCollisions(enemies[i], toreturn.camera.viewXCoord) == "kill"){enemies[i].setDead();toreturn.player.setJumpAnyway(); toreturn.player.jumping()}}
+      if(toreturn.player.checkEnemyCollisions(enemies[i], toreturn.camera.viewXCoord) == "kill"){enemies[i].setDead();toreturn.player.setJumpAnyway(); toreturn.player.jumping();  spawnParticles({x: toreturn.player.location.x - toreturn.camera.viewXCoord, y: toreturn.player.location.y + 64}, 'red' );}}
       if ( toreturn.player.fellThroughMap()) {
         toreturn.player.killPlayer();
         toreturn.lives.subtractLives();
+      }
+      for (let x = 0; x < particles.length; x++ ) {
+          particles[x].update(elapsedTime);
       }
     }
 
@@ -143,6 +147,9 @@ let Game = (function() {
         }
         for(let i = 0; i<crowns.length;i++){
         crowns[i].renderCrowns();
+        }
+        for ( let x = 0; x < particles.length; x++ ) {
+          particles[x].draw();
         }
 
         }
@@ -217,6 +224,29 @@ let Game = (function() {
       Game.map.renderMap();
       $('.ourView').scrollLeft = 0;
      requestAnimationFrame(gameLoop);
+     }
+
+     function scaleNumber(num, min, max, scaleMin, scaleMax) {
+       return ((num - min) / (max - min) * (scaleMax - scaleMin) + scaleMin);
+     }
+
+     function spawnParticles(at, color) {
+       let thisMany = 15;
+       let minSpeed = -0.35;
+       let maxSpeed = 0.35;
+       for ( let num = 0; num < thisMany; num++ ) {
+         particles.push(Graphics.particle({
+             position: {
+               x: at.x,
+               y: at.y
+             },
+             xSpeed: scaleNumber(Math.floor(Math.random() * 100) + 1, 1, 100, minSpeed, maxSpeed),
+             ySpeed: scaleNumber(Math.floor(Math.random() * 100) + 1, 1, 100, minSpeed, maxSpeed),
+             drawThis: true,
+             color: color,
+           })
+         );
+       }
      }
 
 
