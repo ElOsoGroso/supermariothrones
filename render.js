@@ -1,5 +1,6 @@
 
 let Graphics = (function(){
+
   let toreturn = {};
   let canvas = $('#canvas-main')[0];
   console.log("Hola");
@@ -13,6 +14,7 @@ let Graphics = (function(){
   toreturn.map_height = canvas.height;
   toreturn.viewXCoord = 0;
   let map = Map.map();
+  let drawcrown = Map.drawcrown();
 
   toreturn.rectangle = function(left, top, width, height) {
     let toreturn = {};
@@ -242,8 +244,8 @@ let Graphics = (function(){
     */
     toreturn.jumping = function() {
 
-      if (toreturn.onGround || jumpanyway) {
-
+      if (toreturn.onGround || jumpanyway && pressAllowed) {
+        if(jumpanyway){pressAllowed = false;}
         playSound('jump');
 
           toreturn.yVelocity = -16;
@@ -251,6 +253,7 @@ let Graphics = (function(){
 
       }
     };
+
     toreturn.checkEnemyCollisions = function(enemyspec){
       let leftX = Math.floor(toreturn.location.x / tilesize);
       let rightX = Math.floor((toreturn.location.x + Images.player_width)/ tilesize);
@@ -341,6 +344,8 @@ let Graphics = (function(){
         }
       }
       */
+      if(upY<=1){
+        toreturn.location.y = toreturn.location.previousY;}
       if ( map[downY][leftX] != undefined || map[downY][rightX] != undefined) {
         toreturn.onGround = true;
         toreturn.yVelocity = 0.0;
@@ -358,7 +363,17 @@ let Graphics = (function(){
         console.log("cant go right");
         toreturn.location.x = toreturn.location.previousX;
       }
-      if (map[upY][leftX] == 'stone' || map[upY][rightX] == 'stone') {
+      if (map[upY][leftX] == 'stone' || map[upY][rightX] == 'stone' || map[upY][leftX] == 'crownstone' || map[upY][rightX] == 'crownstone') {
+        if(map[upY][leftX] == 'crownstone' || map[upY][rightX] == 'crownstone'){
+          playSound('coin');
+          if(map[upY-1][leftX] == "crown"){
+          drawcrown[upY-1][leftX] = true;
+        }
+          else if (map[upY-1][rightX] == "crown"){
+            drawcrown[upY-1][leftX] = true;
+          }
+          changes = true;
+        }
         console.log("cant go up");
         toreturn.location.y = toreturn.location.previousY;
       }
@@ -601,7 +616,7 @@ let Graphics = (function(){
       for (let i=0; i < Map.levelrows; i++){
         for (let j=0; j < Map.levelcolumns; j++){
 
-          if (toreturn.onPlat == false && (map[i][j] == 'dirtleft' || map[i][j] == 'dirt' || map[i][j] == 'dirtright' || map[i][j] == 'stone')  ) {
+          if (toreturn.onPlat == false && (map[i][j] == 'dirtleft' || map[i][j] == 'dirt' || map[i][j] == 'dirtright' || map[i][j] == 'stone' || map[i][j] == 'crownstone')  ) {
             if(toreturn.location.x > j*dimension - 30 && toreturn.location.x < (j*dimension + (3*dimension) - 20)&& toreturn.location.y > i*dimension - dimension && toreturn.location.y < i*dimension - 50) {
 
               toreturn.onPlat = true;
@@ -627,7 +642,7 @@ let Graphics = (function(){
       // console.log(toreturn.onGround);
       // toreturn.checkForCollisions();
       walkertime++;
-      console.log( Math.floor((toreturn.location.y)/ tilesize),Math.floor((toreturn.location.x)/ tilesize), map[Math.floor(toreturn.location.y / tilesize)][Math.floor((toreturn.location.x)/ tilesize)])
+      // console.log( Math.floor((toreturn.location.y)/ tilesize),Math.floor((toreturn.location.x)/ tilesize), map[Math.floor(toreturn.location.y / tilesize)][Math.floor((toreturn.location.x)/ tilesize)])
       if(map[ Math.floor((toreturn.location.y)/ tilesize)+1][Math.floor((toreturn.location.x)/ tilesize)]== undefined){
         direction = 'left';
       }
@@ -660,11 +675,31 @@ let Graphics = (function(){
     return toreturn;
   }
 
+  toreturn.crown = function(spec){
+
+    toreturn.location = {x: spec.location.x, y: spec.location.y};
+    toreturn.update = function(elapsedTime, deltaXView, deltaYView, viewXCoord, viewYCoord){
+      toreturn.location.x -= deltaXView;
+      toreturn.location.y -= deltaYView;
+
+    }
+
+    toreturn.renderCrowns = function(viewXCoord, viewYCoord) {
+      // if(!isdead){
+      context.save();
+      context.drawImage(Images.crown, toreturn.location.x, toreturn.location.y, tilesize, tilesize);
+      context.restore();
+    // }
+
+    };
+    return toreturn;
+  };
   toreturn.map = function() {
+    let contextForMap = document.createElement('canvas').getContext('2d');
     let dimension =64;
     let toreturn = {};
     Map.initialize();
-    let contextForMap = document.createElement('canvas').getContext('2d');
+
 		contextForMap.canvas.width = 16000;
 		contextForMap.canvas.height = 1152;
 
@@ -686,18 +721,47 @@ let Graphics = (function(){
           contextForMap.drawImage(Images.stone_whole, j * dimension, i*dimension , tilesize, tilesize);
         }
         if (map[i][j] == "crown"){
-            contextForMap.drawImage(Images.crown, j * dimension, i*dimension , tilesize, tilesize);
+          console.log(drawcrown[i][j]);
+          if(drawcrown[i][j]== true){
+            contextForMap.drawImage(Images.crown, j * dimension, i*dimension , tilesize, tilesize);}
+        }
+        if (map[i][j] == "crownstone"){
+          contextForMap.drawImage(Images.crownstone, j * dimension, i*dimension , tilesize, tilesize);
+        }
+        if(map[i][j] =='flag'){
+            contextForMap.drawImage(Images.flag, j * dimension, i*dimension , 203, 662);
         }
 
       }
     }
-
+    // toreturn.updatemap = function(){
+    //   // let contextForMap = document.createElement('canvas').getContext('2d');
+    //   let dimension =64;
+    //   let toreturn = {};
+    //   contextForMap.save();
+    //
+    //   for(let i=0; i < Map.levelrows; i++ ){
+    //     for (let j=0; j < Map.levelcolumns; j++){
+    //
+    //       if (map[i][j] == "crown"){
+    //         contextForMap.drawImage(Images.crown, j * dimension, i*dimension , tilesize, tilesize);
+    //       }
+    //
+    //     }
+    //   }
+    //
+    //   toreturn.canvasAsPng = new Image();
+    //   toreturn.canvasAsPng.src = contextForMap.canvas.toDataURL("image/png");
+    //   // contextForMap = null;
+    //
+    // };
 		contextForMap.restore();
 
 //to get a width of the contextmap
 		toreturn.canvasAsPng = new Image();
 		toreturn.canvasAsPng.src = contextForMap.canvas.toDataURL("image/png");
-		contextForMap = null;
+		// contextForMap = null;
+
 
     toreturn.renderMap = function(viewXCoord, viewYCoord) {
       canvas = $('#canvas-for-view').get(0);

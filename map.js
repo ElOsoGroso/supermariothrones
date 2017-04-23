@@ -15,7 +15,11 @@ let Map = (function() {
   for(let i=0; i < toreturn.levelrows; i++ ) {
     map[i] = new Array(toreturn.levelcolumns);
   }
+  let drawcrown = new Array(toreturn.levelrows);
 
+  for(let i=0; i < toreturn.levelrows; i++ ) {
+    drawcrown[i] = new Array(toreturn.levelcolumns);
+  }
   function populateMap() {
     let numPlatforms = 20;
     //draw the ground, we'll put holes in it later
@@ -43,7 +47,9 @@ let Map = (function() {
     map[10][14] = 'stone';
 
     map[9][13] = "crown";
+    drawcrown[9][13] = true;
     map[9][14] = "crown";
+    drawcrown[9][14] = true;
 
     // box 1
     for ( let xPos = 14; xPos < 16; xPos++ ) {
@@ -93,8 +99,12 @@ let Map = (function() {
       map[16][xPos] = 'stone';
     }
 
-    map[15][42] = 'stone';
-    map[13][45] = 'stone';
+    map[15][42] = 'crownstone';
+    map[14][42] = "crown";
+    drawcrown[14][42] = false;
+    map[13][45] = 'crownstone';
+    map[12][45] = "crown";
+    drawcrown[12][45] = false;
 
     /* creates hole in ground
     for ( let xPos = 70; xPos < 75; xPos++ ) {
@@ -194,15 +204,22 @@ let Map = (function() {
       }
     }
 
+map[10][152] = 'flag';
 
 
+  toreturn.updateMap = function(x,y){
+    map[x][y] = "crown";
+    changes = true;
 
+  }
   toreturn.initialize = function() {
 
     populateMap();
 
   };
-
+  toreturn.drawcrown = function(){
+    return drawcrown;
+  }
   toreturn.map = function() {
     return map;
   }

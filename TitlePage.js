@@ -10,6 +10,8 @@ let TitlePage = (function () {
   // withbevel2.src = "withbevel2.png"
   let opt3 = new Image();
   opt3.src = "gameofthroneswallpaperopt3.png"
+  let opt4 = new Image();
+  opt4.src = "gameofthroneswallpaperopt1.png"
   let scroll = new Image();
   scroll.src = "scroll.png";
   let context1 = null;
@@ -18,6 +20,7 @@ let TitlePage = (function () {
   let drawopt1 = false;
   let drawopt2 = false;
   let drawopt3 = false;
+  let new4once = false;
 
 
 
@@ -54,7 +57,12 @@ let TitlePage = (function () {
       context1.drawImage(opt3,0,0,opt3.width,opt3.height,0,0,canvas1.width,canvas1.height);
       context1.drawImage(scroll,scrollwidth,1010,scroll.width,scroll.height);
     }
-      console.log(scrollwidth);
+    else if (drawopt4){
+      context1.drawImage(opt3,0,0,opt3.width,opt3.height,0,0,canvas1.width,canvas1.height);
+      context1.drawImage(scroll,scrollwidth,1010,scroll.width,scroll.height);
+    }
+
+      // console.log(scrollwidth);
 
       context1.restore();
     }
@@ -99,6 +107,12 @@ let TitlePage = (function () {
     width:720,
     height: 152
   }
+  var recthovercredit = {
+    x: 650,
+    y: 904,
+    width: 720,
+    height: 152
+  }
 
   canvas1.addEventListener('click', function(evt) {
       var mousePos = getMousePos(canvas1, evt);
@@ -128,6 +142,12 @@ let TitlePage = (function () {
         HighScores.initialize();
 
       }
+      else if (isInside(mousePos,recthovercredit)) {
+        playSound('click');
+
+       Credits.initialize();
+
+      }
       else{
         console.log("ohno");
       }
@@ -144,12 +164,14 @@ let TitlePage = (function () {
         newonce =true;
         new2once = false;
         new3once = false;
+        new4once = false;
       }
 
         drawnormal = false;
         drawopt2 = true;
         drawopt1 = false;
         drawopt3 = false;
+        drawopt4 = false;
 
 
       }
@@ -161,12 +183,14 @@ let TitlePage = (function () {
         new2once =true;
         new3once = false;
         newonce = false;
+        new4once = false;
       }
 
         drawnormal = false;
         drawopt1 =true;
         drawopt2 = false;
         drawopt3 = false;
+        drawopt4 = false;
 
 
       }
@@ -177,12 +201,32 @@ let TitlePage = (function () {
         new3once =true;
         newonce = false;
         new2once = false;
+        new4once = false;
       }
 
         drawnormal = false;
         drawopt1 =false;
         drawopt2 = false;
         drawopt3 = true;
+        drawopt4 = false;
+
+
+      }
+      else if (isInside(mousePos,recthovercredit)) {
+        if(!new4once){
+          console.log("hover");
+        playSound('hover');
+        new3once =false;
+        newonce = false;
+        new2once = false;
+        new4once = true;
+      }
+
+        drawnormal = false;
+        drawopt1 =false;
+        drawopt2 = false;
+        drawopt3 = false;
+        drawopt4 = true;
 
 
       }

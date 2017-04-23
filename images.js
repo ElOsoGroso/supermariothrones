@@ -48,6 +48,21 @@ let Images = (function () {
 
   that.stone_whole.src = "Images/tiles/stone.png";
 
+  that.crownstone = new Image();
+  that.cs_ready = false;
+
+  that.crownstone.onload = () => {
+    cs_ready = true;
+  };
+
+  that.crownstone.src = "Images/tiles/crownstone.png";
+
+  that.flag = new Image();
+  that.fl_ready = false;
+  that.flag.onload = () => {
+    fl_ready = true;
+  };
+  that.flag.src = "Images/flags/finalflag.png";
 
   that.johnsnow1 = new Image();
   that.johnsnow1_ready = false;

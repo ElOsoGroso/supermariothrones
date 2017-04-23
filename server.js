@@ -34,6 +34,15 @@ app.get('/highscores', function(req,res){
       //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
       client.end();
     });
+    client.query('SELECT count(*) FROM highscores', function(err, result) {
+      if(err) {
+        return console.error('error running query', err);
+      }
+      
+      console.log(result.rows);
+      //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+      client.end();
+    });
   });
 })
 app.post('/highscoreset', function(req,res){
@@ -51,6 +60,7 @@ app.post('/highscoreset', function(req,res){
     if(err) {
       return console.error('could not connect to postgres', err);
     }
+
     client.query("INSERT INTO highscores VALUES('"+req.body.player+"',"+req.body.score+")", function(err, result) {
       if(err) {
         return console.error('error running query', err);
