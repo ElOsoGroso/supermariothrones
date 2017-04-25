@@ -150,6 +150,13 @@ let Graphics = (function(){
     toreturn.setJumpAnyway = function(){
       jumpanyway = true;
     }
+    toreturn.checkExitToMenu = function(viewXCoord){
+     if( Math.floor((toreturn.location.x + Images.player_width)/ tilesize)>222){
+       return true;
+     }
+     else return false;
+
+    }
     toreturn.renderPlayer = function(viewXCoord, viewYCoord) {
       context.save();
       context.clearRect(viewXCoord,viewYCoord,canvas.width,canvas.height);
@@ -478,6 +485,7 @@ let Graphics = (function(){
           url: 'http://localhost:5000/highscoreset',
           success: function(result){
             scores = result;
+            postedhighscore = true;
           }
       });
       onetime = false;

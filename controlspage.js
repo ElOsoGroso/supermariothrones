@@ -29,6 +29,14 @@ let Controls = (function(){
       opt5_ready = true;
   };
   opt5.src = "got4.png";
+
+  let optback = new Image();
+  let optback_ready = false;
+  optback.onload = () => {
+      optback_ready = true;
+  };
+  optback.src = "gotback.png";
+
   let changeLeft = false;
   let changeRight = false;
   let changeJump = false;
@@ -38,6 +46,7 @@ let Controls = (function(){
   let drawopt2 = false;
   let drawopt3 = false;
   let drawopt4 = false;
+  let drawopt5 = false;
   let already = false;
   toreturn.turnOnListener = false;
 
@@ -110,6 +119,12 @@ let Controls = (function(){
       width:227,
       height:200
   };
+  var b = {
+    x:768,
+    y:855,
+    width:468,
+    height:50
+  }
   canvas.addEventListener('click', function(evt) {
       var mousePos = getMousePos(canvas, evt);
 
@@ -148,6 +163,13 @@ let Controls = (function(){
         changeJump = false;
         fireball = false;
       }
+      else if (isInside(mousePos,b)){
+        playSound('theme');
+        TitlePage.init();
+        TitlePage.renderStart();
+
+      }
+
       else{
           console.log("nope");
       }
@@ -168,6 +190,7 @@ let Controls = (function(){
         drawopt2 = true;
         drawopt3 = false;
         drawopt4 = false;
+        drawopt5 = false;
       }
       else if (isInside(mousePos,d)) {
         if(!new2once){
@@ -180,6 +203,7 @@ let Controls = (function(){
         drawopt1 = false;
         drawopt2 = false;
         drawopt4 = false;
+        drawopt5 = false;
       }
       else if (isInside(mousePos,s)) {
         if(!new2once){
@@ -192,6 +216,7 @@ let Controls = (function(){
         drawopt1 = false;
         drawopt2 = false;
         drawopt3 = false;
+        drawopt5 = false;
       }
 
       else if (isInside(mousePos,a)) {
@@ -205,6 +230,20 @@ let Controls = (function(){
         drawopt2 = false;
         drawopt3 = false;
         drawopt4 = false;
+        drawopt5 = false;
+      }
+      else if (isInside(mousePos,b)) {
+        if(!new2once){
+        playSound('hover');
+        new2once =true;
+        newonce = false;
+      }
+        drawnormal = false;
+        drawopt1 =false;
+        drawopt2 = false;
+        drawopt3 = false;
+        drawopt4 = false;
+        drawopt5 = true;
       }
       else{
         drawopt1 = false;
@@ -212,6 +251,7 @@ let Controls = (function(){
         drawopt2 = false;
         drawopt3 = false;
         drawopt4 = false;
+        drawopt5 = false;
       }
 
 
@@ -282,6 +322,9 @@ let Controls = (function(){
         context.drawImage(opt4,0,0, canvas.width, canvas.height);}
         else if (drawopt4){
             context.drawImage(opt5,0,0, canvas.width, canvas.height);
+        }
+        else if (drawopt5){
+          context.drawImage(optback,0,0,canvas.width,canvas.height);
         }
 
         context.textAlign = 'center';
@@ -406,8 +449,10 @@ let Controls = (function(){
 
 
   toreturn.initialize = function() {
+
     let canvas1 = document.getElementById('controls');
     let context1 = canvas1.getContext('2d');
+    canvas1.style.display= 'initial';
     let canvas2 = document.getElementById('title-page');
     let  context2 = canvas1.getContext('2d');
     var frames = 30;

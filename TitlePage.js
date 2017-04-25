@@ -11,7 +11,7 @@ let TitlePage = (function () {
   let opt3 = new Image();
   opt3.src = "gameofthroneswallpaperopt3.png"
   let opt4 = new Image();
-  opt4.src = "gameofthroneswallpaperopt1.png"
+  opt4.src = "gameofthroneswallpaperopt4.png"
   let scroll = new Image();
   scroll.src = "scroll.png";
   let context1 = null;
@@ -29,6 +29,20 @@ let TitlePage = (function () {
     console.log("Begin title page init: " + startgame);
     canvas1 = document.getElementById('title-page');
     context1 = canvas1.getContext('2d');
+    canvas1.style.display = 'initial';
+    let canvas2 = document.getElementById('controls');
+    let context2 = canvas1.getContext('2d');
+    let canvas3 = document.getElementById('highscores');
+    let context3 = canvas1.getContext('2d');
+    let canvas4 = document.getElementById('credits-page');
+    let context4 = canvas1.getContext('2d');
+    canvas4.style.display = "none";
+    canvas4.style.zIndex = 0;
+    canvas3.style.display = "none";
+    canvas3.style.zIndex = 0;
+    canvas2.style.display="none";
+    canvas2.style.zIndex = 0;
+    canvas1.style.zIndex = 2;
     var frames = 30;
     var timerId = 0;
     timerId = setInterval(update,1000/frames);
@@ -58,9 +72,10 @@ let TitlePage = (function () {
       context1.drawImage(scroll,scrollwidth,1010,scroll.width,scroll.height);
     }
     else if (drawopt4){
-      context1.drawImage(opt3,0,0,opt3.width,opt3.height,0,0,canvas1.width,canvas1.height);
+      context1.drawImage(opt4,0,0,opt3.width,opt3.height,0,0,canvas1.width,canvas1.height);
       context1.drawImage(scroll,scrollwidth,1010,scroll.width,scroll.height);
     }
+
 
       // console.log(scrollwidth);
 

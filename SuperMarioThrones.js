@@ -48,6 +48,9 @@ let Game = (function() {
   toreturn.onGround = true;
 
   function update(elapsedTime) {
+    if(toreturn.player.checkExitToMenu() || postedhighscore){
+      location.reload();
+    }
     if(toreturn.player.checkIfWon()){
       if (once){
     playertoadd = prompt("Enter your name for highscores","Enter name here");

@@ -3,27 +3,89 @@ let Credits = (function(){
 
   let scores = [];
   let toreturn = {};
+  let option1 = true;
+  let option2 = false;
   let canvas = $('#credits-page').get(0);
   let context = canvas.getContext('2d');
-  let backgroundhighscores = new Image();
-  let bgh_ready = false;
+  let backgroundcredits = new Image();
+  let bgc_ready = false;
   let x = 640;
 
-
-  backgroundhighscores.onload = () => {
-    bgh_ready = true;
+  backgroundcredits.onload = () => {
+    bgc_ready = true;
   };
+  backgroundcredits.src = 'gotcredits.png';
+
+  let backgroundcreditsback = new Image();
+  backgroundcreditsback.onload = () => {
+    bghb_ready = true;
+  };
+  backgroundcreditsback.src = 'gotcreditsback.png';
+
+  function getMousePos(canvas, event) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+    };
+  }
+
+  //Function to check whether a point is inside a rectangle
+  function isInside(pos, rect){
+    return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
+  }
+  var b = {
+    x:777,
+    y:858,
+    width:468,
+    height:50
+  }
+  canvas.addEventListener('click', function(evt) {
+      var mousePos = getMousePos(canvas, evt);
+
+      if (isInside(mousePos,b)) {
+        playSound('click');
+        TitlePage.init();
+        TitlePage.renderStart();
+
+      }
+      else{
+          console.log("nope");
+      }
+  }, false);
+
+  canvas.addEventListener('mousemove', function(evt) {
+    // console.log("hello")
+    var mousePos = getMousePos(canvas, evt);
+    console.log(mousePos);
+      // console.log(mousePos);
+      if (isInside(mousePos,b)) {
+
+        playSound('hover');
+      option1 = false;
+      option2 = true;
+      }
+      else{
+      option2 = false;
+      option1 = true;
+      }
+
+
+  }, false);
 
 
 
-  // needs to be changed to highscores picture
-  backgroundhighscores.src = 'gotcredits.png';
 
   function drawCredits() {
 
-      if(bgh_ready) {
+      if(bgc_ready) {
         context.clearRect(0,0,canvas.width,canvas.height);
-        context.drawImage(backgroundhighscores,0,0, canvas.width, canvas.height);
+        if(option2){
+        context.drawImage(backgroundcreditsback,0,0, canvas.width, canvas.height);
+      }
+      else{
+        context.drawImage(backgroundcredits,0,0,canvas.width,canvas.height);
+      }
 
         context.textAlign = 'center';
         context.fillStyle = '#f8f8ff';
@@ -33,11 +95,11 @@ let Credits = (function(){
 
         context.font = '80px Arial';
         // console.log(scores);
-        context.strokeText('Matthew Morris', canvas.width/2, canvas.height/2);
-        context.fillText('Matthew Morris', canvas.width/2, canvas.height/2);
+        context.strokeText('Matthew Morris', canvas.width/2, canvas.height/2-200);
+        context.fillText('Matthew Morris', canvas.width/2, canvas.height/2-200);
 
-          context.strokeText('Terik Brunson', canvas.width/2, canvas.height/2 + 300);
-          context.fillText('Terik Brunson', canvas.width/2, canvas.height/2 + 300);
+          context.strokeText('Terik Brunson', canvas.width/2, canvas.height/2);
+          context.fillText('Terik Brunson', canvas.width/2, canvas.height/2);
 
       }
 
@@ -46,8 +108,10 @@ let Credits = (function(){
   toreturn.initialize = function() {
 
 
+
     let canvas1 = document.getElementById('credits-page');
     let context1 = canvas1.getContext('2d');
+    canvas1.style.display = 'initial';
     let canvas2 = document.getElementById('title-page');
     let context2 = canvas1.getContext('2d');
     var frames = 30;
