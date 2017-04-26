@@ -4,8 +4,8 @@ let Map = (function() {
 
   let tilesize = Images.tilesize;
 
-  let viewWidth = 16000;
-  let viewHeight = 1152;
+  let viewWidth = 16000/2;
+  let viewHeight = 1152/2;
 
   toreturn.levelrows = viewHeight / tilesize;
   toreturn.levelcolumns = viewWidth / tilesize;

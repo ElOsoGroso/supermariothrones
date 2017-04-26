@@ -104,29 +104,29 @@ let TitlePage = (function () {
   }
 
   var rectplay = {
-      x:652,
-      y:352,
-      width:720,
-      height:152
+      x:652/2,
+      y:352/2,
+      width:720/2,
+      height:152/2
   };
   var recthoverhigh = {
-      x:649,
-      y:537,
-      width:720,
-      height:152
+      x:649/2,
+      y:537/2,
+      width:720/2,
+      height:152/2
   };
 
   var rectHoverHighScores = {
-    x: 650,
-    y: 725,
-    width:720,
-    height: 152
+    x: 650/2,
+    y: 725/2,
+    width:720/2,
+    height: 152/2
   }
   var recthovercredit = {
-    x: 650,
-    y: 904,
-    width: 720,
-    height: 152
+    x: 650/2,
+    y: 904/2,
+    width: 720/2,
+    height: 152/2
   }
 
   canvas1.addEventListener('click', function(evt) {
@@ -135,12 +135,9 @@ let TitlePage = (function () {
       if (isInside(mousePos,rectplay)) {
 
         playSound('click');
-        // console.log(mousePos);
-        startgame = true;
-        // console.log(startgame);
-        countdowntime = 3100;
         clearInterval(timerId);
-        Game.init();
+        NewLoad.init();
+        NewLoad.renderStart();
 
       }
       else if (isInside(mousePos,recthoverhigh)) {

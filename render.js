@@ -9,8 +9,8 @@ let Graphics = (function(){
 
 //this stuff is all from justins explanation of the camera
 
-  let padding = 600;
-  toreturn.map_width = 16000;
+  let padding = 600/2;
+  toreturn.map_width = 16000/2;
   toreturn.map_height = canvas.height;
   toreturn.viewXCoord = 0;
   let map = Map.map();
@@ -91,18 +91,23 @@ let Graphics = (function(){
   }
 
 
-  toreturn.player = function() {
-    let dimension = 40;
+  toreturn.player = function(pos) {
+
+    let dimension = 40/2;
     let jumpanyway = false;
     let friction = 0.98;
     let toreturn = {};
-    let speed = 5;
+    let speed = 3.5;
     let canMoveLeft = true;
     let canMoveRight = true;
 
-    toreturn.location = {x: tilesize, y: canvas.height-tilesize*2, previousX: tilesize, previousY: canvas.height-tilesize*2};
+    // toreturn.location = {x: tilesize, y: canvas.height-tilesize*2, previousX: tilesize, previousY: canvas.height-tilesize*2};
+    // toreturn.location = {x:spritepositions[0].spritelocationx, y:spritepositions[0].spritelocationy, previousX: spritepositions[0].spritelocationx, previousY:spritepositions[0].spritelocationy}
+    toreturn.location = pos;
+    toreturn.location.previousY = pos.y;
     toreturn.jumpPressed = false;
     toreturn.playerHitCoin = false;
+    toreturn.enemyKilledMe = false;
 
     let goLeft = false;
     let goRight = false;
@@ -151,7 +156,7 @@ let Graphics = (function(){
       jumpanyway = true;
     }
     toreturn.checkExitToMenu = function(viewXCoord){
-     if( Math.floor((toreturn.location.x + Images.player_width)/ tilesize)>222){
+     if( Math.round((toreturn.location.x + Images.player_width)/ tilesize)>222){
        return true;
      }
      else return false;
@@ -226,81 +231,44 @@ let Graphics = (function(){
         toreturn.location.x = 0;
       }
     };
-    /*
-    toreturn.isOnPlatform = function(){
 
-      for (let i=0; i < Map.levelrows; i++){
-        for (let j=0; j < Map.levelcolumns; j++){
-
-          if (toreturn.onPlat == false && (map[i][j] == 'dirtleft' || map[i][j] == 'dirt' || map[i][j] == 'dirtright' || map[i][j] == 'stone') ) {
-            if(toreturn.location.x > j*dimension - 30 && toreturn.location.x < j * dimension + 60 && toreturn.location.y > i*dimension - dimension && toreturn.location.y < i*dimension - 50) {
-
-              toreturn.onPlat = true;
-              toreturn.yVelocity = 0.0;
-              toreturn.gravity = 0.0;
-              toreturn.location.y = i*dimension - dimension;
-
-            } else {
-              toreturn.onPlat = false;
-              toreturn.gravity = 0.5;
-            }
-          }
-        }
-      }
-
-    };
-    */
     toreturn.jumping = function() {
 
       if (toreturn.onGround || jumpanyway && pressAllowed) {
         if(jumpanyway){pressAllowed = false;}
         playSound('jump');
 
-          toreturn.yVelocity = -16;
+          toreturn.yVelocity = -13;
           toreturn.onGround = false;
 
       }
     };
 
     toreturn.checkEnemyCollisions = function(enemyspec, viewXCoord){
-      let leftX = Math.floor((toreturn.location.x- viewXCoord) / tilesize);
-      let rightX = Math.floor((toreturn.location.x + Images.player_width-viewXCoord)/ tilesize);
-      let upY = Math.floor(toreturn.location.y / tilesize);
-      let downY = Math.floor((toreturn.location.y + Images.player_height)/ tilesize);
-      let enemyleftX = Math.floor(enemyspec.location.x / tilesize);
-      let enemyrightX = Math.floor((enemyspec.location.x + 73)/ tilesize);
-      let enemyupY = Math.floor(enemyspec.location.y / tilesize);
-      let enemydownY = Math.floor((enemyspec.location.y + 73)/ tilesize);
+      let leftX = Math.round((toreturn.location.x- viewXCoord) / tilesize);
+      let rightX = Math.round((toreturn.location.x + Images.player_width-viewXCoord)/ tilesize);
+      let upY = Math.round(toreturn.location.y / tilesize);
+      let downY = Math.round((toreturn.location.y + Images.player_height)/ tilesize);
+      let enemyleftX = Math.round(enemyspec.location.x / tilesize);
+      let enemyrightX = Math.round((enemyspec.location.x + 51/2)/ tilesize);
+      let enemyupY = Math.round(enemyspec.location.y / tilesize);
+      let enemydownY = Math.round((enemyspec.location.y + 51/2)/ tilesize);
       // console.log(leftX,rightX,upY,downY);
       // console.log(enemyleftX,enemyrightX,enemyupY,enemydownY);
 
 
 
-      if (downY == enemyupY && leftX == enemyleftX && rightX == enemyrightX){
+      if (downY == enemyupY && (leftX == enemyleftX || rightX == enemyrightX)){
         playSound('bop');
         enemyspec.drawdeath = true;
         return "kill";}
-      if(leftX == (enemyspec.location.x+73)/tilesize){console.log("die");}
-      if(rightX == enemyspec.location.x/tilesize){console.log("die");}
+      if(leftX == enemyleftX && upY == enemyupY){playSound('wilhelm');toreturn.enemyKilledMe = true;}
+      if(rightX == enemyrightX && upY == enemyupY){playSound('wilhelm');toreturn.enemyKilledMe =true;}
 
     }
-    // toreturn.drawDeathScores = function(){
-    //   console.log("trying to draw on : " + context);
-    //   context.save()
-    //   context.textAlign = 'center';
-    //   context.fillStyle = '#f8f8ff';
-    //   context.shadowColor = 'black';
-    //   context.lineWidth = 4;
-    //   context.shadowBlur = 10;
-    //
-    //   context.font = '80px Arial';
-    //
-    //   context.strokeText('Lives:', 1300, 100);
-    //   context.fillText('Lives:', 1300, 100);
-    //   context.restore();
-    // }
+
     toreturn.checkIfWon = function(){
-      let rightX = Math.floor((toreturn.location.x + Images.player_width)/ tilesize);
+      let rightX = Math.round((toreturn.location.x + Images.player_width)/ tilesize);
 
       for (let i = 0; i<16;i++){
         if (map[i][rightX-2] == 'flag'){
@@ -311,62 +279,14 @@ let Graphics = (function(){
     toreturn.checkForCollisions = function() {
       let leftX = Math.floor(toreturn.location.x / tilesize);
       let rightX = Math.floor((toreturn.location.x + Images.player_width)/ tilesize);
-      let upY = Math.floor(toreturn.location.y / tilesize);
+      let upY = Math.floor((toreturn.location.y)/ tilesize);
       let downY = Math.floor((toreturn.location.y + Images.player_height)/ tilesize);
-      // console.log(leftX, rightX, upY, downY);
-
-      // console.log(map[upY][leftX], map[downY][leftX], map[upY][rightX], map[downY][rightX]);
-
-/*
-      for ( let x = leftX; x <= rightX; x++ ) {
-        for ( let y = upY; y <= downY; y++ ) {
-          if (map[y][x] == 'stone') {
-
-            let tileXLeft = x * tilesize;
-            let tileXRight = x * tilesize + tilesize;
-            let tileYTop = y * tilesize;
-            let tileYBot = y * tilesize + tilesize;
-
-            let playerXLeft = toreturn.location.x;
-            let playerXRight = toreturn.location.x + Images.player_width;
-            let playerYTop = toreturn.location.y;
-            let playerYBot = toreturn.location.y + Images.player_height;
-
-            let xOverlap = 0;
-            let yOverlap = 0;
-
-            if ( tileXLeft < playerXLeft ) {
-              xOverlap = tileXRight - playerXLeft;
-            }
-            else if ( playerXLeft <= tileXLeft ) {
-              xOverlap = playerXRight - tileXLeft;
-            }
-            if ( tileYTop < playerYTop) {
-              yOverlap = tileYBot - playerYTop;
-            }
-            else if ( playerYTop <= tileYTop) {
-              yOverlap = playerYBot - tileYTop;
-            }
-
-            console.log(xOverlap, yOverlap);
-
-            if ( yOverlap < xOverlap) {
-              if ( yOverlap > 0) {
-                toreturn.location.y -= yOverlap;
-              }
-            }
-            else {
-              if (xOverlap > 0 ) {
-                toreturn.location.x -= xOverlap;
-              }
-            }
-          }
-        }
-      }
-      */
+      // console.log(downY);
+      if(downY<=17){
       if(upY<=1){
         toreturn.location.y = toreturn.location.previousY;}
       if ( map[downY][leftX] != undefined || map[downY][rightX] != undefined) {
+        toreturn.location.y = toreturn.location.previousY;
         toreturn.onGround = true;
         toreturn.yVelocity = 0.0;
         toreturn.gravity = 0.0;
@@ -400,18 +320,18 @@ let Graphics = (function(){
 
 
         toreturn.location.y = toreturn.location.previousY;
-      }
+      }}
     }
 
     toreturn.killPlayer = function() {
 
-        toreturn.location.x = 50;
+        toreturn.location.x = 50/2;
         toreturn.location.y = canvas.height/2;
 
     }
 
     toreturn.fellThroughMap = function() {
-      if (toreturn.location.y + Images.player_height>= canvas.height-10) {
+      if (toreturn.location.y + Images.player_height>= canvas.height-10/2) {
         playSound('wilhelm');
         return true;
       }
@@ -430,33 +350,9 @@ let Graphics = (function(){
       toreturn.location.previousX = toreturn.location.x;
       toreturn.location.previousY = toreturn.location.y;
 
-      /* removing this allows for character to fall through ground
-      if (toreturn.location.y >= canvas.height - dimension*2 && toreturn.onPlat == false) {
-        toreturn.onGround = true;
-        toreturn.yVelocity = 0.0;
-        toreturn.location.y = canvas.height - dimension*2;
-      }
-      */
+
     }
-    // toreturn.isOnGround = function(){
-    //   for (let i=0; i < Map.levelrows; i++){
-    //     for (let j=0; j < Map.levelcolumns; j++){
-    //       if (map[i][j]!= 'stone' && toreturn.onGround) {
-    //
-    //         if(toreturn.location.x > j*dimension - 30 && toreturn.location.x < (j*dimension + (3*dimension) - 20)&& toreturn.location.y > (i+1)*dimension - dimension && toreturn.location.y < (i+1)*dimension - 50) {
-    //           toreturn.onGround = false;
-    //           toreturn.gravity = 0.5;
-    //         } else {
-    //           toreturn.onGround = true;
-    //           toreturn.yVelocity = 0.0;
-    //           toreturn.gravity = 0.0;
-    //
-    //           toreturn.location.y = i*dimension - dimension;
-    //         }
-    //       }
-    //     }
-    //   }
-    // };
+
 
 
     return toreturn;
@@ -505,15 +401,14 @@ let Graphics = (function(){
         context.lineWidth = 4;
         context.shadowBlur = 10;
 
-        context.font = '80px Arial';
-
-        context.strokeText('Lives:', 1400, 100);
-        context.fillText('Lives:', 1400, 100);
-        context.strokeText('Score:', 1500, 200);
-        context.fillText('Score:', 1500, 200);
-        context.strokeText(score.toString(), 1800, 200);
-        context.fillText(score.toString(), 1800, 200);
-        context.drawImage(Images.johnsnow1, 1530 +Images.player_width*(x*1.5), 43, tilesize, tilesize);
+        context.font = '40px Arial';
+        context.strokeText('Lives:', 1400/2, 100/2);
+        context.fillText('Lives:', 1400/2, 100/2);
+        context.strokeText('Score:', 1500/2, 200/2);
+        context.fillText('Score:', 1500/2, 200/2);
+        context.strokeText(score.toString(), 1800/2, 200/2);
+        context.fillText(score.toString(), 1800/2, 200/2);
+        context.drawImage(Images.johnsnow1, 1530/2 +Images.player_width*(x*1.5), 43/2, tilesize, tilesize);
       }
       context.restore();
     }
@@ -525,13 +420,14 @@ let Graphics = (function(){
   toreturn.enemy = function(spec) {
     let source = spec.source;
     let isdead = false;
-    let dimension = 64;
+    let dimension = 32;
     let toreturn = {};
-    let speed = 2;
+    toreturn.id = spec.id;
+
+    let speed = 1;
     let friction = 0.98;
     toreturn.location = {x: spec.location.x, y: spec.location.y};
     let animationCounter = 0;
-    let areaToMoveInside = {minX: spec.range.minX, maxX: spec.range.maxX, minY: spec.range.minY, maxY: spec.range.maxY};
     let direction = 'left';
     let walkertime = spec.walkertime;
 
@@ -581,17 +477,17 @@ let Graphics = (function(){
       }
       if(source =="ww"){
       context.save();
-      context.drawImage(toreturn.enemy_animation[display_walker_count], toreturn.location.x, toreturn.location.y, Images.icewalk.width, Images.icewalk.height);
+      context.drawImage(toreturn.enemy_animation[display_walker_count], toreturn.location.x, toreturn.location.y, Images.icewalk.width/2, Images.icewalk.height/2);
       context.restore();
     }
     else if (source =="dd"){
       context.save();
-      context.drawImage(toreturn.enemy_animation[display_walker_count], toreturn.location.x, toreturn.location.y, Images.dothraki1.width, Images.dothraki1.height);
+      context.drawImage(toreturn.enemy_animation[display_walker_count], toreturn.location.x, toreturn.location.y, Images.dothraki1.width/2, Images.dothraki1.height/2);
       context.restore();
     }
     else if(source == "jj"){
       context.save();
-      context.drawImage(toreturn.enemy_animation[display_walker_count], toreturn.location.x, toreturn.location.y, Images.joffrey1.width, Images.joffrey1.height);
+      context.drawImage(toreturn.enemy_animation[display_walker_count], toreturn.location.x, toreturn.location.y, Images.joffrey1.width/2, Images.joffrey1.height/2);
       context.restore();
     }
 
@@ -626,39 +522,12 @@ let Graphics = (function(){
       context.lineWidth = 4;
       context.shadowBlur = 10;
 
-      context.font = '80px Arial';
+      context.font = '40px Arial';
       context.strokeText('100', toreturn.deathlocation.x, toreturn.deathlocation.y);
       context.fillText('100', toreturn.deathlocation.x, toreturn.deathlocation.y);
       context.restore();
     }
-    // toreturn.checkForCollisions = function() {
-    //   let leftX = Math.floor(toreturn.location.x / tilesize);
-    //   let rightX = Math.floor((toreturn.location.x)/ tilesize);
-    //   let upY = Math.floor(toreturn.location.y / tilesize);
-    //   let downY = Math.floor((toreturn.location.y)/ tilesize);
-    //
-    //   if ( map[downY][leftX] != undefined || map[downY][rightX] != undefined) {
-    //     toreturn.onGround = true;
-    //     toreturn.yVelocity = 0.0;
-    //     toreturn.gravity = 0.0;
-    //   }
-    //   else {
-    //     toreturn.gravity = 0.5;
-    //     toreturn.onGround = false;
-    //   }
-    //   if (map[upY][leftX] == 'stone') {
-    //     console.log("cant go left");
-    //     toreturn.location.x = toreturn.location.previousX;
-    //   }
-    //   else if (map[upY][rightX] == 'stone') {
-    //     console.log("cant go right");
-    //     toreturn.location.x = toreturn.location.previousX;
-    //   }
-    //   if (map[upY][leftX] == 'stone' || map[upY][rightX] == 'stone') {
-    //     console.log("cant go up");
-    //     toreturn.location.y = toreturn.location.previousY;
-    //   }
-    // }
+
 
     toreturn.isOnPlatform = function(){
 
@@ -666,7 +535,7 @@ let Graphics = (function(){
         for (let j=0; j < Map.levelcolumns; j++){
 
           if (toreturn.onPlat == false && (map[i][j] == 'dirtleft' || map[i][j] == 'dirt' || map[i][j] == 'dirtright' || map[i][j] == 'stone' || map[i][j] == 'crownstone')  ) {
-            if(toreturn.location.x > j*dimension - 30 && toreturn.location.x < (j*dimension + (3*dimension) - 20)&& toreturn.location.y > i*dimension - dimension && toreturn.location.y < i*dimension - 50) {
+            if(toreturn.location.x > j*dimension - 40/2 && toreturn.location.x < (j*dimension + (3*dimension))&& toreturn.location.y > i*dimension - dimension && toreturn.location.y < i*dimension - 40/2) {
 
               toreturn.onPlat = true;
               toreturn.yVelocity = 0.0;
@@ -699,52 +568,71 @@ let Graphics = (function(){
       // console.log(walkertime);
       // console.log(toreturn.onGround);
       // toreturn.checkForCollisions();
-
       walkertime++;
-      //console.log( Math.floor((toreturn.location.y)/ tilesize),Math.floor((toreturn.location.x)/ tilesize), map[Math.floor(toreturn.location.y / tilesize)][Math.floor((toreturn.location.x)/ tilesize)])
-      if(map[ Math.floor((toreturn.location.y)/ tilesize+1)][Math.floor((toreturn.location.x + viewXCoord + Images.player_width/2)/ tilesize)]== undefined){
-        if ( toreturn.onGround == true ) {
-          if ( Math.floor((toreturn.location.x)/ tilesize) > 0 ) {
-            toreturn.changeDirection();
+            //console.log( Math.round((toreturn.location.y)/ tilesize),Math.round((toreturn.location.x)/ tilesize), map[Math.round(toreturn.location.y / tilesize)][Math.round((toreturn.location.x)/ tilesize)])
+            if ( map[ Math.round((toreturn.location.y + Images.player_height)/ tilesize)][Math.floor((toreturn.location.x + viewXCoord)/ tilesize)] == 'stone' || map[ Math.round((toreturn.location.y + Images.player_height)/ tilesize)][Math.round((toreturn.location.x + viewXCoord)/ tilesize)]  == 'dirt') {
+              toreturn.onPlat = true;
+              toreturn.onGround = true;
+              toreturn.yVelocity = 0.0;
+              toreturn.gravity = 0.0;
+            }
+            else {
+              toreturn.onPlat = false;
+              toreturn.gravity = 0.5;
+            }
+            //console.log(map[ Math.round((toreturn.location.y)/ tilesize+1)][Math.round((toreturn.location.x + viewXCoord - Images.player_width)/ tilesize)]);
+            if(map[ Math.round((toreturn.location.y)/ tilesize+1)][Math.floor((toreturn.location.x + viewXCoord)/ tilesize)]== undefined){
+              if ( toreturn.onGround == true || toreturn.onPlat == true) {
+                if ( Math.round((toreturn.location.x)/ tilesize) > 0 ) {
+                  toreturn.changeDirection();
+                }
+              }
+            }
+            else if(map[ Math.round((toreturn.location.y)/ tilesize+1)][Math.floor((toreturn.location.x + viewXCoord + Images.player_width)/ tilesize)]== undefined){
+              if ( toreturn.onGround == true || toreturn.onPlat == true) {
+                if ( Math.round((toreturn.location.x)/ tilesize) > 0 ) {
+                  toreturn.changeDirection();
+                }
+              }
+            }
+            else if ( map[ Math.round((toreturn.location.y)/ tilesize)][Math.floor((toreturn.location.x + viewXCoord + Images.player_width)/ tilesize)] == 'stone' || map[ Math.round((toreturn.location.y)/ tilesize)][Math.round((toreturn.location.x + viewXCoord +Images.player_width)/ tilesize)] == 'dirt'){
+              toreturn.changeDirection();
+            }
+            else if ( map[ Math.round((toreturn.location.y)/ tilesize)][Math.floor((toreturn.location.x + viewXCoord)/ tilesize)] == 'stone' || map[ Math.round((toreturn.location.y)/ tilesize)][Math.round((toreturn.location.x + viewXCoord)/ tilesize)] == 'dirt') {
+              toreturn.changeDirection();
+            }
+
+            toreturn.yVelocity += toreturn.gravity;
+            toreturn.location.y += toreturn.yVelocity;
+            toreturn.location.x -= deltaXView;
+            toreturn.location.y -= deltaYView;
+
+            if (toreturn.location.x + viewXCoord > 16000) {
+              direction = 'left';
+            }
+            else if ( toreturn.location.x + viewXCoord <= 0) {
+              toreturn.location.x = 0;
+              direction = 'right';
+            }
+
+            if ( direction == 'right') {
+              toreturn.goRight(elapsedTime);
+            }
+            else {
+              toreturn.goLeft(elapsedTime);
+            }
+
+            if (toreturn.location.y >= canvas.height - dimension*2 && toreturn.onPlat == false) {
+              toreturn.onGround = true;
+              toreturn.yVelocity = 0.0;
+              toreturn.location.y = canvas.height - dimension*2;
+            }
+            if(toreturn.id =="walker0");
+            // console.log(direction);
           }
+
+          return toreturn;
         }
-      }
-      else if ( map[ Math.floor((toreturn.location.y)/ tilesize)][Math.floor((toreturn.location.x + viewXCoord + Images.player_width)/ tilesize)] == 'stone'){
-        toreturn.changeDirection();
-      }
-      else if ( map[ Math.floor((toreturn.location.y)/ tilesize)][Math.floor((toreturn.location.x + viewXCoord)/ tilesize)] == 'stone') {
-        toreturn.changeDirection();
-      }
-
-      toreturn.yVelocity += toreturn.gravity;
-      toreturn.location.y += toreturn.yVelocity;
-      toreturn.location.x -= deltaXView;
-      toreturn.location.y -= deltaYView;
-
-      if (toreturn.location.x + viewXCoord > 16000) {
-        direction = 'left';
-      }
-      else if ( toreturn.location.x + viewXCoord <= 0) {
-        toreturn.location.x = 0;
-        direction = 'right';
-      }
-
-      if ( direction == 'right') {
-        toreturn.goRight(elapsedTime);
-      }
-      else {
-        toreturn.goLeft(elapsedTime);
-      }
-
-      if (toreturn.location.y >= canvas.height - dimension*2 && toreturn.onPlat == false) {
-        toreturn.onGround = true;
-        toreturn.yVelocity = 0.0;
-        toreturn.location.y = canvas.height - dimension*2;
-      }
-    }
-
-    return toreturn;
-  }
 
   toreturn.crown = function(spec){
     let toreturn = {};
@@ -834,12 +722,12 @@ let Graphics = (function(){
 
   toreturn.map = function() {
     let contextForMap = document.createElement('canvas').getContext('2d');
-    let dimension =64;
+    let dimension =32;
     let toreturn = {};
     Map.initialize();
 
-		contextForMap.canvas.width = 16000;
-		contextForMap.canvas.height = 1152;
+		contextForMap.canvas.width = 16000/2;
+		contextForMap.canvas.height = 1152/2;
 
 	  contextForMap.save();
     contextForMap.drawImage(Images.bg, 0,0, contextForMap.canvas.width, contextForMap.canvas.height);
@@ -867,35 +755,15 @@ let Graphics = (function(){
           contextForMap.drawImage(Images.crownstone, j * dimension, i*dimension , tilesize, tilesize);
         }
         if(map[i][j] =='flag'){
-            contextForMap.drawImage(Images.flag, j * dimension, i*dimension , 203, 662);
+            contextForMap.drawImage(Images.flag, j * dimension, i*dimension , 203/2, 662/2);
         }
         if (map[i][j] =='dragon'){
-            contextForMap.drawImage(Images.dragon2, j * dimension, i*dimension , Images.dragon2.width, Images.dragon2.height);
+            contextForMap.drawImage(Images.dragon2, j * dimension, i*dimension , Images.dragon2.width/2, Images.dragon2.height/2);
         }
 
       }
     }
-    // toreturn.updatemap = function(){
-    //   // let contextForMap = document.createElement('canvas').getContext('2d');
-    //   let dimension =64;
-    //   let toreturn = {};
-    //   contextForMap.save();
-    //
-    //   for(let i=0; i < Map.levelrows; i++ ){
-    //     for (let j=0; j < Map.levelcolumns; j++){
-    //
-    //       if (map[i][j] == "crown"){
-    //         contextForMap.drawImage(Images.crown, j * dimension, i*dimension , tilesize, tilesize);
-    //       }
-    //
-    //     }
-    //   }
-    //
-    //   toreturn.canvasAsPng = new Image();
-    //   toreturn.canvasAsPng.src = contextForMap.canvas.toDataURL("image/png");
-    //   // contextForMap = null;
-    //
-    // };
+
 		contextForMap.restore();
 
 //to get a width of the contextmap

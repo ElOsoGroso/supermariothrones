@@ -96,34 +96,34 @@ let Controls = (function(){
 
   backgroundcontrols.src = 'got.png';
   var a = {
-      x:388,
-      y:547,
-      width:227,
-      height:200
+      x:388/2,
+      y:547/2,
+      width:227/2,
+      height:200/2
   };
   var w = {
-      x:726,
-      y:537,
-      width:227,
-      height:200
+      x:726/2,
+      y:537/2,
+      width:227/2,
+      height:200/2
   };
   var d= {
-      x:1064,
-      y:537,
-      width:227,
-      height:200
+      x:1064/2,
+      y:537/2,
+      width:227/2,
+      height:200/2
   };
   var s = {
-      x:1402,
-      y:537,
-      width:227,
-      height:200
+      x:1402/2,
+      y:537/2,
+      width:227/2,
+      height:200/2
   };
   var b = {
-    x:768,
-    y:855,
-    width:468,
-    height:50
+    x:768/2,
+    y:855/2,
+    width:468/2,
+    height:50/2
   }
   canvas.addEventListener('click', function(evt) {
       var mousePos = getMousePos(canvas, evt);
@@ -333,108 +333,108 @@ let Controls = (function(){
         context.lineWidth = 4;
         context.shadowBlur = 10;
 
-        context.font = '80px Arial';
+        context.font = '40px Arial';
 
-        context.strokeText('Left', 500, 500);
-        context.fillText('Left', 500, 500);
+        context.strokeText('Left', 500/2, 500/2);
+        context.fillText('Left', 500/2, 500/2);
 
-        context.strokeText('Jump', 833, 500);
-        context.fillText('Jump', 833, 500);
+        context.strokeText('Jump', 833/2, 500/2);
+        context.fillText('Jump', 833/2, 500/2);
 
-        context.strokeText('Right', 1166, 500);
-        context.fillText('Right', 1166, 500);
+        context.strokeText('Right', 1166/2, 500/2);
+        context.fillText('Right', 1166/2, 500/2);
 
-        context.strokeText('Weapon', 1500, 500);
-        context.fillText('Weapon', 1500, 500);
+        context.strokeText('Weapon', 1500/2, 500/2);
+        context.fillText('Weapon', 1500/2, 500/2);
 
-        context.font = '20px Arial';
+        context.font = '10px Arial';
 
-        context.strokeText('Click one of the controls to change it', 1000, 800);
-        context.fillText("Click one of the controls to change it", 1000,  800);
-        context.font = '200px Arial';
+        context.strokeText('Click one of the controls to change it', 1000/2, 800/2);
+        context.fillText("Click one of the controls to change it", 1000/2,  800/2);
+        context.font = '100px Arial';
 
         if (toreturn.turnOnListener &&changeLeft) {
-          context.font = '200px Arial';
+          context.font = '100px Arial';
 
-          context.strokeText(String.fromCharCode(toreturn.left), 500, 710);
-          context.fillText(String.fromCharCode(toreturn.left), 500, 710);
+          context.strokeText(String.fromCharCode(toreturn.left), 500/2, 710/2);
+          context.fillText(String.fromCharCode(toreturn.left), 500/2, 710/2);
 
-          context.font = '90px Arial';
+          context.font = '45px Arial';
           if(already){
-            context.strokeText('You already have a key set to that', 1015, 950);
-            context.fillText("You already have a key set to that", 1015,  950);
+            context.strokeText('You already have a key set to that', 1015/2, 950/2);
+            context.fillText("You already have a key set to that", 1015/2,  950/2);
           }
           else{
-          context.strokeText('Push any key you freaking want', 1015, 950);
-          context.fillText("Push any key you freaking want", 1015,  950);}
-          context.font = '200px Arial';
+          context.strokeText('Push any key you freaking want', 1015/2, 950/2);
+          context.fillText("Push any key you freaking want", 1015/2,  950/2);}
+          context.font = '100px Arial';
 
         } else {
-          context.strokeText(String.fromCharCode(toreturn.left), 500, 710);
-          context.fillText(String.fromCharCode(toreturn.left), 500, 710);
+          context.strokeText(String.fromCharCode(toreturn.left), 500/2, 710/2);
+          context.fillText(String.fromCharCode(toreturn.left), 500/2, 710/2);
         }
 
         if (toreturn.turnOnListener && changeJump) {
-          context.font = '200px Arial';
+          context.font = '100px Arial';
 
-          context.strokeText(String.fromCharCode(toreturn.jump), 833, 710);
-          context.fillText(String.fromCharCode(toreturn.jump), 833, 710);
+          context.strokeText(String.fromCharCode(toreturn.jump), 833/2, 710/2);
+          context.fillText(String.fromCharCode(toreturn.jump), 833/2, 710/2);
 
-          context.font = '90px Arial';
+          context.font = '45px Arial';
           if(already){
-            context.strokeText('You already have akey set to that', 1015, 950);
-            context.fillText("You already have a key set to that", 1015,  950);
+            context.strokeText('You already have akey set to that', 1015/2, 950/2);
+            context.fillText("You already have a key set to that", 1015/2,  950/2);
           }
           else{
-          context.strokeText('Push any key you freaking want', 1015, 950);
-          context.fillText("Push any key you freaking want", 1015,  950);
+          context.strokeText('Push any key you freaking want', 1015/2, 950/2);
+          context.fillText("Push any key you freaking want", 1015/2,  950/2);
 }
-          context.font = '200px Arial';
+          context.font = '100px Arial';
         } else {
-          context.strokeText(String.fromCharCode(toreturn.jump), 833, 710);
-          context.fillText(String.fromCharCode(toreturn.jump), 833, 710);
+          context.strokeText(String.fromCharCode(toreturn.jump), 833/2, 710/2);
+          context.fillText(String.fromCharCode(toreturn.jump), 833/2, 710/2);
         }
         if (toreturn.turnOnListener &&changeRight) {
-          context.font = '200px Arial';
+          context.font = '100px Arial';
 
-          context.strokeText(String.fromCharCode(toreturn.right), 1170, 710);
-          context.fillText(String.fromCharCode(toreturn.right), 1170, 710);
+          context.strokeText(String.fromCharCode(toreturn.right), 1170/2, 710/2);
+          context.fillText(String.fromCharCode(toreturn.right), 1170/2, 710/2);
 
-          context.font = '90px Arial';
+          context.font = '45px Arial';
           if(already){
-            context.strokeText('You already have akey set to that', 1015, 950);
-            context.fillText("You already have a key set to that", 1015,  950);
+            context.strokeText('You already have akey set to that', 1015/2, 950/2);
+            context.fillText("You already have a key set to that", 1015/2,  950/2);
           }
           else{
-          context.strokeText('Push any key you freaking want', 1015, 950);
-          context.fillText("Push any key you freaking want", 1015,  950);
+          context.strokeText('Push any key you freaking want', 1015/2, 950/2);
+          context.fillText("Push any key you freaking want", 1015/2,  950/2);
         }
 
-          context.font = '200px Arial';
+          context.font = '100px Arial';
         } else {
-          context.strokeText(String.fromCharCode(toreturn.right), 1170, 710);
-          context.fillText(String.fromCharCode(toreturn.right), 1170, 710);
+          context.strokeText(String.fromCharCode(toreturn.right), 1170/2, 710/2);
+          context.fillText(String.fromCharCode(toreturn.right), 1170/2, 710/2);
         }
         if (toreturn.turnOnListener &&fireball) {
-          context.font = '200px Arial';
+          context.font = '100px Arial';
 
-          context.strokeText(String.fromCharCode(toreturn.crouch), 1510, 710);
-          context.fillText(String.fromCharCode(toreturn.crouch), 1510, 710);
+          context.strokeText(String.fromCharCode(toreturn.crouch), 1510/2, 710/2);
+          context.fillText(String.fromCharCode(toreturn.crouch), 1510/2, 710/2);
 
-          context.font = '90px Arial';
+          context.font = '45px Arial';
           if(already){
-            context.strokeText('You already have akey set to that', 1015, 950);
-            context.fillText("You already have a key set to that", 1015,  950);
+            context.strokeText('You already have akey set to that', 1015/2, 950/2);
+            context.fillText("You already have a key set to that", 1015/2,  950/2);
           }
           else{
-          context.strokeText('Push any key you freaking want', 1015, 950);
-          context.fillText("Push any key you freaking want", 1015,  950);}
+          context.strokeText('Push any key you freaking want', 1015/2, 950/2);
+          context.fillText("Push any key you freaking want", 1015/2,  950/2);}
 
-          context.font = '200px Arial';
+          context.font = '100px Arial';
         } else {
 
-          context.strokeText(String.fromCharCode(toreturn.crouch), 1510, 710);
-          context.fillText(String.fromCharCode(toreturn.crouch), 1510, 710);
+          context.strokeText(String.fromCharCode(toreturn.crouch), 1510/2, 710/2);
+          context.fillText(String.fromCharCode(toreturn.crouch), 1510/2, 710/2);
         }
 
 

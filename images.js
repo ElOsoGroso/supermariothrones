@@ -1,9 +1,9 @@
 
 let Images = (function () {
   let that = {};
-  that.tilesize = 64;
-  that.player_height = 50;
-  that.player_width = 44;
+  that.tilesize = 32;
+  that.player_height = 25;
+  that.player_width = 22;
 
   that.bg = new Image();
   that.bg_ready = false;

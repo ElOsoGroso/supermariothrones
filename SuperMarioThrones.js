@@ -31,7 +31,7 @@ let Game = (function() {
   let previousXView = 0;
   let deltaYView = 0;
   let previousYView = 0;
-  let dimension = 64;
+  let dimension = 32;
   let enemies = [];
   let crowns = [];
   let particles = [];
@@ -46,8 +46,61 @@ let Game = (function() {
   toreturn.camera = null;
   toreturn.onPlat =false;
   toreturn.onGround = true;
+  let countajax = 0;
+  toreturn.first = false;
+  toreturn.second = false;
+  toreturn.showSaving = function(){
+    $("a").show();
+  }
+  toreturn.appendDiv= function(){
+    $("a").hide();
+    $("p").show();
+  }
+  toreturn.updatePositions = function (){
+    console.log("hello");
+    $.ajax({
+        type: 'POST',
+        dataType: "json",
+        data: {
+          playerid:"player",
+          playerposx:toreturn.player.location.x,
+          playerposy:toreturn.player.location.y,
+        },
+        url: 'http://localhost:5000/updatePosPlayer',
+        success: function(result){
+          console.log("we win");
+        }
+    });
+    toreturn.first = true;
+  }
+  toreturn.updateEnemyPositions = function(){
+    console.log(enemies);
+    if(countajax==enemies.length-1){toreturn.second = true;}
+    $.ajax({
+        type: 'POST',
+        dataType: "json",
+        async: true,
+        data: {
+          enemyid:enemies[countajax].id,
+          enemyposx:enemies[countajax].location.x,
+          enemyposy:enemies[countajax].location.y
+        },
+        url: 'http://localhost:5000/updatePos',
+        success: function(result){
+          console.log("we won");
+          countajax++;
+          if (countajax<enemies.length){toreturn.updateEnemyPositions();}
+        }
+    });
 
+  }
   function update(elapsedTime) {
+    if(toreturn.first && toreturn.second){
+      toreturn.appendDiv();
+    }
+    else if (toreturn.first && !toreturn.second){
+      toreturn.showSaving();
+    }
     if(toreturn.player.checkExitToMenu() || postedhighscore){
       location.reload();
     }
@@ -89,13 +142,7 @@ let Game = (function() {
       previousXView = toreturn.camera.viewXCoord;
       previousYView = toreturn.camera.viewYCoord;
 
-      // toreturn.player.isOnGround();
-      // console.log(toreturn.player.onGround);
-      // console.log(toreturn.player.jumpPressed);
-      // if (toreturn.player.onGround && !toreturn.player.jumpPressed) {
-      //   toreturn.player.yVelocity = 0.0;
-      //   toreturn.player.location.y = canvas.height - 128;
-      // }
+
 
       toreturn.player.update();
       for (let i = 0; i<enemies.length;i++){
@@ -106,7 +153,7 @@ let Game = (function() {
     if(toreturn.player.playerHitCoin) {
       console.log("spawning crown");
       crowns[0].location.x = toreturn.player.location.x -toreturn.camera.viewXCoord;
-      crowns[0].location.y = toreturn.player.location.y - 128;
+      crowns[0].location.y = toreturn.player.location.y - 128/2;
       crowns[0].drawThis = true;
       toreturn.player.playerHitCoin = false;
     }
@@ -117,10 +164,15 @@ let Game = (function() {
 
       // toreturn.enemy2.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
       for (let i = 0; i<enemies.length;i++){
-      if(toreturn.player.checkEnemyCollisions(enemies[i], toreturn.camera.viewXCoord) == "kill"){enemies[i].setDead();toreturn.player.setJumpAnyway(); toreturn.player.jumping();  spawnParticles({x: toreturn.player.location.x - toreturn.camera.viewXCoord, y: toreturn.player.location.y + 64}, 'red' );}}
+      if(toreturn.player.checkEnemyCollisions(enemies[i], toreturn.camera.viewXCoord) == "kill"){enemies[i].setDead();toreturn.player.setJumpAnyway(); toreturn.player.jumping();  spawnParticles({x: toreturn.player.location.x - toreturn.camera.viewXCoord, y: toreturn.player.location.y + 64/2}, 'red' );}}
       if ( toreturn.player.fellThroughMap()) {
         toreturn.player.killPlayer();
         toreturn.lives.subtractLives();
+      }
+      else if (toreturn.player.enemyKilledMe){
+        toreturn.player.killPlayer();
+        toreturn.lives.subtractLives();
+        toreturn.player.enemyKilledMe= false;
       }
       for (let x = 0; x < particles.length; x++ ) {
           particles[x].update(elapsedTime);
@@ -177,51 +229,95 @@ let Game = (function() {
 
   toreturn.inittitle = function(){
     loadAudio();
+
     playSound('theme');
+    Sounds['theme'].addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+}, false);
     TitlePage.init();
     TitlePage.renderStart();
 
   }
   toreturn.init = function() {
+
     console.log("starting game");
 //Make the title page disappear and the real page appear//
     let canvas1 = document.getElementById('canvas-main');
     let context1 = canvas1.getContext('2d');
-    let canvas2 = document.getElementById('title-page');
+    let canvas2 = document.getElementById('newload');
     let  context2 = canvas1.getContext('2d');
+    let canvas3 = document.getElementById('title-page');
+    let context3 = canvas3.getContext('2d');
+    canvas3.style.display = "none";
+    canvas3.style.zIndex = 0;
     canvas2.style.display="none";
     canvas2.style.zIndex = 0;
     canvas1.style.zIndex = 2;
-     toreturn.player = Graphics.player();
-     enemies.push(Graphics.enemy({source: "ww", walkertime: walkertime, location: {x: 100, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-     enemies.push(Graphics.enemy({source: "ww", walkertime: walkertime, location: {x: 2400, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-     enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 1600, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-     enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 1200, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-     enemies.push(Graphics.enemy({source: "jj", walkertime: walkertime, location: {x: 5800, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-     enemies.push(Graphics.enemy({source: "jj", walkertime: walkertime, location: {x: 4000, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-     enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 6000, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-     enemies.push(Graphics.enemy({source: "dd", walkertime: walkertime, location: {x: 8000, y: 100}, range: {minX: 10, maxX: 1000, minY: 0, maxY: 900}}));
-     crowns.push(Graphics.crown({location: {x:10 * 64, y: 12 * 64}}));
-     crowns.push(Graphics.crown({location: {x:11 * 64, y: 12 * 64}}));
-     crowns.push(Graphics.crown({location: {x:13 * 64, y:9 * 64}}));
-     crowns.push(Graphics.crown({location: {x:14 * 64, y:9 * 64}}));
-     crowns.push(Graphics.crown({location: {x:36 * 64, y:7 * 64}}));
-     for ( let i = 50; i < 70; i+=2 ) {
-       crowns.push(Graphics.crown({location: {x:i * 64, y:12 * 64}}));
+    for(let i =0; i<spritepositions.length;i++){
+      if (spritepositions[i].spritetype == "player"){
+        playerlocation = {x: spritepositions[i].spritelocationx, y:spritepositions[i].spritelocationy};
+      }
+    }
+    if (newgame){
+      toreturn.player = Graphics.player({x:64/2,y:1024/2});
+    }
+    else{
+    toreturn.player = Graphics.player(playerlocation);
+  }
+     if (newgame){
+
+        enemies.push(Graphics.enemy({id: "walker0", source: "ww", walkertime: walkertime, location: {x: 550, y: 320}}));
+        enemies.push(Graphics.enemy({id: "walker1", source: "ww", walkertime: walkertime, location: {x: 2200/2, y: 550/2}}));
+        enemies.push(Graphics.enemy({id: "dothraki0", source: "dd", walkertime: walkertime, location: {x: 4900/2, y: 1000/2}}));
+        enemies.push(Graphics.enemy({id: "dothraki1", source: "dd", walkertime: walkertime, location: {x: 5700/2, y: 600/2}}));
+        enemies.push(Graphics.enemy({id: "dothraki2", source: "dd", walkertime: walkertime, location: {x:6091/2, y: 840/2}}));
+        enemies.push(Graphics.enemy({id: "dothraki3", source: "dd", walkertime: walkertime, location: {x: 7900/2, y: 1000/2}}));
+        enemies.push(Graphics.enemy({id: "joffrey0", source: "jj", walkertime: walkertime, location: {x: 4000/2, y: 100/2}}));
+        enemies.push(Graphics.enemy({id: "joffrey1", source: "jj", walkertime: walkertime, location: {x: 7200/2, y: 1000/2}}));
+        enemies.push(Graphics.enemy({id: "joffrey3", source: "jj", walkertime: walkertime, location: {x: 3300/2, y: 900/2}}));
+        enemies.push(Graphics.enemy({id: "joffrey4", source: "jj", walkertime: walkertime, location: {x: 3600/2, y: 900/2}}));
      }
-     crowns.push(Graphics.crown({location: {x:97 * 64, y:9 * 64}}));
-     crowns.push(Graphics.crown({location: {x:98 * 64, y:9 * 64}}));
-     crowns.push(Graphics.crown({location: {x:104 * 64, y:16 * 64}}));
-     crowns.push(Graphics.crown({location: {x:105 * 64, y:16 * 64}}));
-     crowns.push(Graphics.crown({location: {x:106 * 64, y:16 * 64}}));
+     else{
+     for (let i = 0; i<spritepositions.length;i++){
+
+     if (spritepositions[i].spritetype == "walker0" || spritepositions[i].spritetype == "walker1"){
+       if(spritepositions[i].spritelocationx >=0 && spritepositions[i].spritelocationy >=0){
+     enemies.push(Graphics.enemy({id: spritepositions[i].spritetype, source: "ww", walkertime: walkertime, location: {x: spritepositions[i].spritelocationx, y: spritepositions[i].spritelocationy}}));
+      }
+   }
+    else if (spritepositions[i].spritetype == "dothraki0" || spritepositions[i].spritetype == "dothraki2" || spritepositions[i].spritetype == "dothraki3" ){
+      if(spritepositions[i].spritelocationx >=0 && spritepositions[i].spritelocationy >=0){
+     enemies.push(Graphics.enemy({id: spritepositions[i].spritetype, source: "dd", walkertime: walkertime, location: {x: spritepositions[i].spritelocationx, y: spritepositions[i].spritelocationy}}));
+   }
+   }
+   else if (spritepositions[i].spritetype == "joffrey0" || spritepositions[i].spritetype == "joffrey1" || spritepositions[i].spritetype == "joffrey3" || spritepositions[i].spritetype == "joffrey4")
+   if(spritepositions[i].spritelocationx >=0 && spritepositions[i].spritelocationy >=0){
+     enemies.push(Graphics.enemy({id: spritepositions[i].spritetype, source: "jj", walkertime: walkertime, location: {x: spritepositions[i].spritelocationx, y: spritepositions[i].spritelocationy}}));
+    }
+   }
+   }
+     crowns.push(Graphics.crown({location: {x:(10 * 64)/2, y: (12 * 64)/2}}));
+     crowns.push(Graphics.crown({location: {x:(11 * 64)/2, y: (12 * 64)/2}}));
+     crowns.push(Graphics.crown({location: {x:(13 * 64)/2, y:(9 * 64)/2}}));
+     crowns.push(Graphics.crown({location: {x:(14 * 64)/2, y:(9 * 64)/2}}));
+     crowns.push(Graphics.crown({location: {x:(36 * 64)/2, y:(7 * 64)/2}}));
+     for ( let i = 50; i < 70; i+=2 ) {
+       crowns.push(Graphics.crown({location: {x:(i * 64)/2, y:(12 * 64)/2}}));
+     }
+     crowns.push(Graphics.crown({location: {x:(97 * 64)/2, y:(9 * 64)}}));
+     crowns.push(Graphics.crown({location: {x:(98 * 64)/2, y:(9 * 64)}}));
+     crowns.push(Graphics.crown({location: {x:(104 * 64)/2, y:(16 * 64)}}));
+     crowns.push(Graphics.crown({location: {x:(105 * 64)/2, y:(16 * 64)}}));
+     crowns.push(Graphics.crown({location: {x:(106 * 64)/2, y:(16 * 64)}}));
      let helper = 14;
      for ( let i = 148; i < 153; i++ ) {
-       crowns.push(Graphics.crown({location: {x:i * 64, y:i-147 + helper * 64}}));
+       crowns.push(Graphics.crown({location: {x:(i * 64)/2, y:(i-147 + helper * 64)/2}}));
        helper--;
      }
      toreturn.lives = Graphics.lives({x: 10, y: 10, howMany: 3});
      toreturn.map = Graphics.map();
-     toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 17000, canvas.height);
+     toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 17000/2, canvas.height);
     context.clearRect(0,0,canvas.width, canvas.height);
     Game.game_active= true;
       Game.map.renderMap();

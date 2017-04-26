@@ -25,10 +25,10 @@ let HighScores = (function(){
     return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
   }
   var b = {
-    x:777,
-    y:1023,
-    width:468,
-    height:50
+    x:777/2,
+    y:1023/2,
+    width:468/2,
+    height:50/2
   }
   canvas.addEventListener('click', function(evt) {
       var mousePos = getMousePos(canvas, evt);
@@ -100,12 +100,12 @@ let HighScores = (function(){
         context.lineWidth = 4;
         context.shadowBlur = 10;
 
-        context.font = '80px Arial';
+        context.font = '40px Arial';
         // console.log(scores);
         for ( let x = 0; x < 5; x++ ) {
           // console.log(scores);
-          context.strokeText(scores[x].playername+ ": " + scores[x].playerscore, canvas.width/2, canvas.height/7*x + 300);
-          context.fillText(scores[x].playername+  ": " + scores[x].playerscore, canvas.width/2, canvas.height/7*x + 300);
+          context.strokeText(scores[x].playername+ ": " + scores[x].playerscore, canvas.width/2, canvas.height/7*x + 150);
+          context.fillText(scores[x].playername+  ": " + scores[x].playerscore, canvas.width/2, canvas.height/7*x + 150);
         }
       }
 
