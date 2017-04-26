@@ -68,6 +68,29 @@ app.get('/getspritepositions', function(req,res){
     });
   });
 })
+app.get('/getScore', function(req,res){
+  let pg = require('pg');
+  //or native libpq bindings
+  //var pg = require('pg').native
+
+  var conString = "postgres://eixtvjdc:uBl6PUOi6jrTPw2fGkCFYE_7VdGSH749@stampy.db.elephantsql.com:5432/eixtvjdc";
+
+  var client = new pg.Client(conString);
+  client.connect(function(err) {
+    if(err) {
+      return console.error('could not connect to postgres', err);
+    }
+    client.query('SELECT * FROM score', function(err, result) {
+      if(err) {
+        return console.error('error running query', err);
+      }
+      res.send(result.rows);
+      console.log(result.rows);
+      //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+      client.end();
+    });
+  });
+})
 app.post('/updatePos', function(req,res){
   let pg = require('pg');
 
@@ -96,6 +119,33 @@ app.post('/updatePos', function(req,res){
     });
   });
 })
+app.post('/updateScore', function(req,res){
+  let pg = require('pg');
+
+  console.log(req.body.score);
+  //or native libpq bindings
+  //var pg = require('pg').native
+
+  var conString = "postgres://eixtvjdc:uBl6PUOi6jrTPw2fGkCFYE_7VdGSH749@stampy.db.elephantsql.com:5432/eixtvjdc";
+
+  var client = new pg.Client(conString);
+  client.connect(function(err) {
+    if(err) {
+      return console.error('could not connect to postgres', err);
+    }
+
+    client.query("UPDATE score SET score = "+req.body.score, function(err, result) {
+      if(err) {
+        return console.error('error running query', err);
+      }
+      res.send(result.rows);
+      console.log(result.rows);
+      //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+      client.end();
+    });
+  });
+})
+
 app.post('/updatePosPlayer', function(req,res){
   let pg = require('pg');
 

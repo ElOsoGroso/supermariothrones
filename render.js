@@ -280,13 +280,13 @@ let Graphics = (function(){
       let leftX = Math.floor(toreturn.location.x / tilesize);
       let rightX = Math.floor((toreturn.location.x + Images.player_width)/ tilesize);
       let upY = Math.floor((toreturn.location.y)/ tilesize);
-      let downY = Math.floor((toreturn.location.y + Images.player_height)/ tilesize);
+      let downY = Math.floor((toreturn.location.y + Images.player_height+5)/ tilesize);
       // console.log(downY);
       if(downY<=17){
       if(upY<=1){
         toreturn.location.y = toreturn.location.previousY;}
       if ( map[downY][leftX] != undefined || map[downY][rightX] != undefined) {
-        toreturn.location.y = toreturn.location.previousY;
+        // toreturn.location.y = toreturn.location.previousY;
         toreturn.onGround = true;
         toreturn.yVelocity = 0.0;
         toreturn.gravity = 0.0;
@@ -307,12 +307,6 @@ let Graphics = (function(){
         if(map[upY][leftX] == 'crownstone' || map[upY][rightX] == 'crownstone'){
           playSound('coin');
           toreturn.playerHitCoin = true;
-          if(map[upY-1][leftX] == "crown"){
-          drawcrown[upY-1][leftX] = true;
-        }
-          else if (map[upY-1][rightX] == "crown"){
-            drawcrown[upY-1][leftX] = true;
-          }
           changes = true;
         }
         //console.log("cant go up");

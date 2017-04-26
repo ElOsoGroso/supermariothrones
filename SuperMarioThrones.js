@@ -46,7 +46,7 @@ let Game = (function() {
   toreturn.camera = null;
   toreturn.onPlat =false;
   toreturn.onGround = true;
-  let countajax = 0;
+
   toreturn.first = false;
   toreturn.second = false;
   toreturn.showSaving = function(){
@@ -58,6 +58,17 @@ let Game = (function() {
   }
   toreturn.updatePositions = function (){
     console.log("hello");
+    $.ajax({
+        type: 'POST',
+        dataType: "json",
+        data: {
+          score:score,
+        },
+        url: 'http://localhost:5000/updateScore',
+        success: function(result){
+          console.log("we postedt the score");
+        }
+    });
     $.ajax({
         type: 'POST',
         dataType: "json",
@@ -75,6 +86,8 @@ let Game = (function() {
   }
   toreturn.updateEnemyPositions = function(){
     console.log(enemies);
+    console.log(countajax);
+    console.log("length:" +enemies.length);
     if(countajax==enemies.length-1){toreturn.second = true;}
     $.ajax({
         type: 'POST',
@@ -95,8 +108,10 @@ let Game = (function() {
 
   }
   function update(elapsedTime) {
-    console.log("player spped" + toreturn.player.speed);
-    console.log("enemy sped" + enemies[0].speed);
+  //   if(newgame){
+  //   console.log("player spped" + toreturn.player.speed);
+  //   console.log("enemy sped" + enemies[0].speed);
+  // }
     if(toreturn.first && toreturn.second){
       toreturn.appendDiv();
     }
@@ -242,7 +257,7 @@ let Game = (function() {
 
   }
   toreturn.init = function() {
-
+    if (newgame){score = 0;}
     console.log("starting game");
 //Make the title page disappear and the real page appear//
     let canvas1 = document.getElementById('canvas-main');

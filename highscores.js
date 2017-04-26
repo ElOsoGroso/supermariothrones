@@ -35,8 +35,9 @@ let HighScores = (function(){
 
       if (isInside(mousePos,b)) {
         playSound('click');
-        TitlePage.init();
-        TitlePage.renderStart();
+        // TitlePage.init();
+        // TitlePage.renderStart();
+        location.reload();
 
       }
       else{
