@@ -140,6 +140,9 @@ let Graphics = (function(){
       } else if (e.keyCode == Controls.jump) {
         toreturn.jumpPressed = true;
       }
+      else if(e.keyCode== Controls.crouch){
+        toreturn.fireZeWeapons = true;
+      }
 
     }).keyup(function(e) {
       if (e.keyCode == Controls.left) {
@@ -627,7 +630,49 @@ let Graphics = (function(){
 
           return toreturn;
         }
-  
+  toreturn.fireball = function(){
+    let toreturn = {};
+    toreturn.idtokill = "nothing";
+    toreturn.temptokill = "nothing";
+    toreturn.location = {x:-100,y:-100};
+    toreturn.drawThis = false;
+    toreturn.create = function(spec){
+    toreturn.location.x= spec.x;
+    toreturn.location.y = spec.y;
+    toreturn.drawThis = true;
+  }
+
+    toreturn.update = function(elapsedTime,deltaXView,deltaYView,viewXCoord, viewYCoord,locationX,locationY,id){
+      toreturn.location.x+=1.5;
+      toreturn.temptokill = id;
+      // toreturn.location.y+=2;
+      toreturn.location.x -=deltaXView;
+      toreturn.location.y -=deltaYView;
+
+      toreturn.checkEnemyCollideFire(locationX-viewXCoord,locationY-viewYCoord);
+    }
+
+
+    toreturn.renderFireball = function(viewXCoord,viewYCoord){
+      if(toreturn.drawThis){
+        context.save();
+        context.drawImage(Images.fireball,toreturn.location.x,toreturn.location.y,tilesize,tilesize);
+        context.restore();
+      }
+    }
+
+    toreturn.checkEnemyCollideFire= function(locationX,locationY){
+      if (locationX >= toreturn.location.x-20 && locationX <= toreturn.location.x + tilesize && locationY >= toreturn.location.y-15 && locationY <= toreturn.location.y + tilesize) {
+        if ( toreturn.drawThis == true) {
+          toreturn.drawThis = false;
+          toreturn.idtokill = toreturn.temptokill;
+          score+=200;
+          playSound('bop');
+        }
+      }
+    }
+    return toreturn;
+  }
   toreturn.crown = function(spec){
     let toreturn = {};
     toreturn.drawThis = true;

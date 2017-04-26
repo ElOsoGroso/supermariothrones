@@ -184,6 +184,15 @@ let Images = (function () {
 
   that.crown.src = "Images/tiles/crown.png";
 
+  that.fireball = new Image();
+  that.fireball_ready = false;
+  that.fireball.onload = () => {
+    fireball_ready = true;
+  };
+
+  that.fireball.src = "Images/fireball.png";
+
+
   that.dragon2 = new Image();
   that.dragon2_ready = false;
   that.dragon2.onload = () => {

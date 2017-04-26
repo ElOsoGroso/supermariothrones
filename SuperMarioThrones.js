@@ -37,6 +37,7 @@ let Game = (function() {
   let particles = [];
   let count = 0;
   let once = true;
+  toreturn.fireball = null;
   toreturn.player = null;
   toreturn.lives = null;
   toreturn.enemy = null;
@@ -112,6 +113,22 @@ let Game = (function() {
   //   console.log("player spped" + toreturn.player.speed);
   //   console.log("enemy sped" + enemies[0].speed);
   // }
+  console.log(toreturn.player.fireZeWeapons);
+  if (toreturn.player.fireZeWeapons){
+    toreturn.fireball.create(toreturn.player.location);
+    toreturn.player.fireZeWeapons = false;
+}
+if(toreturn.fireball.drawThis){
+  for (let i =0; i<enemies.length; i++){
+   toreturn.fireball.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord, enemies[i].location.x, enemies[i].location.y, enemies[i].id);
+   if (toreturn.fireball.idtokill !="nothing"){
+     if(toreturn.fireball.idtokill == enemies[i].id){
+     enemies[i].setDead();}
+   }
+ }
+
+ }
+
     if(toreturn.first && toreturn.second){
       toreturn.appendDiv();
     }
@@ -223,7 +240,9 @@ let Game = (function() {
         for ( let x = 0; x < particles.length; x++ ) {
           particles[x].draw();
         }
-
+        if(toreturn.fireball.drawThis){
+        toreturn.fireball.renderFireball();
+      }
         }
 
       }
@@ -271,6 +290,7 @@ let Game = (function() {
     canvas2.style.display="none";
     canvas2.style.zIndex = 0;
     canvas1.style.zIndex = 2;
+    toreturn.fireball = Graphics.fireball();
     for(let i =0; i<spritepositions.length;i++){
       if (spritepositions[i].spritetype == "player"){
         playerlocation = {x: spritepositions[i].spritelocationx, y:spritepositions[i].spritelocationy};
@@ -335,9 +355,9 @@ let Game = (function() {
      toreturn.lives = Graphics.lives({x: 10, y: 10, howMany: 3});
      toreturn.map = Graphics.map();
      toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 17000/2, canvas.height);
-    context.clearRect(0,0,canvas.width, canvas.height);
-    Game.game_active= true;
-      Game.map.renderMap();
+     context.clearRect(0,0,canvas.width, canvas.height);
+     Game.game_active= true;
+     Game.map.renderMap();
       $('.ourView').scrollLeft = 0;
      requestAnimationFrame(gameLoop);
      }
