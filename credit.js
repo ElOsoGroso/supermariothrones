@@ -35,18 +35,19 @@ let Credits = (function(){
     return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
   }
   var b = {
-    x:777,
-    y:858,
-    width:468,
-    height:50
+    x:777/2,
+    y:858/2,
+    width:468/2,
+    height:50/2
   }
   canvas.addEventListener('click', function(evt) {
       var mousePos = getMousePos(canvas, evt);
 
       if (isInside(mousePos,b)) {
         playSound('click');
-        TitlePage.init();
-        TitlePage.renderStart();
+        // TitlePage.init();
+        // TitlePage.renderStart();
+        location.reload();
 
       }
       else{
@@ -93,10 +94,10 @@ let Credits = (function(){
         context.lineWidth = 4;
         context.shadowBlur = 10;
 
-        context.font = '80px Arial';
+        context.font = '40px Arial';
         // console.log(scores);
-        context.strokeText('Matthew Morris', canvas.width/2, canvas.height/2-200);
-        context.fillText('Matthew Morris', canvas.width/2, canvas.height/2-200);
+        context.strokeText('Matthew Morris', canvas.width/2, canvas.height/2-200/2);
+        context.fillText('Matthew Morris', canvas.width/2, canvas.height/2-200/2);
 
           context.strokeText('Terik Brunson', canvas.width/2, canvas.height/2);
           context.fillText('Terik Brunson', canvas.width/2, canvas.height/2);

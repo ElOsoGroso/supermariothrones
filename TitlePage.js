@@ -25,7 +25,9 @@ let TitlePage = (function () {
 
 
 
+
   function init() {
+
     console.log("Begin title page init: " + startgame);
     canvas1 = document.getElementById('title-page');
     context1 = canvas1.getContext('2d');

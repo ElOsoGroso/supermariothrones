@@ -97,7 +97,7 @@ let Graphics = (function(){
     let jumpanyway = false;
     let friction = 0.98;
     let toreturn = {};
-    let speed = 3.5;
+    toreturn.speed = 3.5;
     let canMoveLeft = true;
     let canMoveRight = true;
 
@@ -217,16 +217,16 @@ let Graphics = (function(){
 
 
     toreturn.goRight = function(elapsedTime) {
-      if (toreturn.location.x + (friction * speed) >= Graphics.map_width - tilesize) {
+      if (toreturn.location.x + (friction * toreturn.speed) >= Graphics.map_width - tilesize) {
         toreturn.location.x = Graphics.map_width - tilesize;
       } else {
-        toreturn.location.x += (friction * speed);
+        toreturn.location.x += (friction * toreturn.speed);
       }
 
     };
     toreturn.goLeft = function(elapsedTime) {
-      if (toreturn.location.x - (friction * speed) >= 0) {
-        toreturn.location.x -= (friction * speed);
+      if (toreturn.location.x - (friction * toreturn.speed) >= 0) {
+        toreturn.location.x -= (friction * toreturn.speed);
       } else {
         toreturn.location.x = 0;
       }
@@ -424,7 +424,7 @@ let Graphics = (function(){
     let toreturn = {};
     toreturn.id = spec.id;
 
-    let speed = 1;
+    toreturn.speed = 1;
     let friction = 0.98;
     toreturn.location = {x: spec.location.x, y: spec.location.y};
     let animationCounter = 0;
@@ -495,19 +495,19 @@ let Graphics = (function(){
     }
     };
     toreturn.goRight = function(elapsedTime) {
-      if (toreturn.location.x + (friction * speed) >= Graphics.map_width - tilesize) {
+      if (toreturn.location.x + (friction * toreturn.speed) >= Graphics.map_width - tilesize) {
         toreturn.location.x = Graphics.map_width - tilesize;
       } else {
-        toreturn.location.x += (friction * speed);
+        toreturn.location.x += (friction * toreturn.speed);
       }
 
     };
     toreturn.goLeft = function(elapsedTime) {
-      if (toreturn.location.x - (friction * speed) >= 0) {
+      if (toreturn.location.x - (friction * toreturn.speed) >= 0) {
 
-        toreturn.location.x -= (friction * speed);
+        toreturn.location.x -= (friction * toreturn.speed);
       } else {
-        toreturn.location.x -= (friction * speed);
+        toreturn.location.x -= (friction * toreturn.speed);
       }
     };
 

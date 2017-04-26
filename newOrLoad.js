@@ -109,7 +109,6 @@ let NewLoad = (function () {
         startgame = true;
         newgame = true;
         // console.log(startgame);
-        countdowntime = 3100;
         clearInterval(timerId);
         Game.init();
 
@@ -120,8 +119,6 @@ let NewLoad = (function () {
 
         newgame = false;
         startgame = true;
-        // console.log(startgame);
-        countdowntime = 3100;
         clearInterval(timerId);
         Game.init();
       }

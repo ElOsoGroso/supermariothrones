@@ -165,8 +165,9 @@ let Controls = (function(){
       }
       else if (isInside(mousePos,b)){
         playSound('theme');
-        TitlePage.init();
-        TitlePage.renderStart();
+        // TitlePage.init();
+        // TitlePage.renderStart();
+        location.reload();
 
       }
 

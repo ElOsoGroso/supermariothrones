@@ -95,6 +95,8 @@ let Game = (function() {
 
   }
   function update(elapsedTime) {
+    console.log("player spped" + toreturn.player.speed);
+    console.log("enemy sped" + enemies[0].speed);
     if(toreturn.first && toreturn.second){
       toreturn.appendDiv();
     }
