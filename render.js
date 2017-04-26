@@ -671,7 +671,7 @@ let Graphics = (function(){
   toreturn.particle = function(spec) {
     var toreturn = {};
 
-    spec.radius = 5;
+    spec.radius = 2;
     spec.xMomentum = spec.xSpeed;
     spec.yMomentum = spec.ySpeed;
     spec.gravity = 0.13;
