@@ -113,21 +113,6 @@ let Game = (function() {
   //   console.log("player spped" + toreturn.player.speed);
   //   console.log("enemy sped" + enemies[0].speed);
   // }
-  console.log(toreturn.player.fireZeWeapons);
-  if (toreturn.player.fireZeWeapons){
-    toreturn.fireball.create(toreturn.player.location);
-    toreturn.player.fireZeWeapons = false;
-}
-if(toreturn.fireball.drawThis){
-  for (let i =0; i<enemies.length; i++){
-   toreturn.fireball.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord, enemies[i].location.x, enemies[i].location.y, enemies[i].id);
-   if (toreturn.fireball.idtokill !="nothing"){
-     if(toreturn.fireball.idtokill == enemies[i].id){
-     enemies[i].setDead();}
-   }
- }
-
- }
 
     if(toreturn.first && toreturn.second){
       toreturn.appendDiv();
@@ -195,6 +180,25 @@ if(toreturn.fireball.drawThis){
         crowns[i].update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord, toreturn.player.location.x, toreturn.player.location.y);
       }
 
+      console.log(toreturn.player.fireZeWeapons);
+      if (toreturn.player.fireZeWeapons){
+        toreturn.fireball.create(toreturn.player.location);
+        console.log("fireball at " + toreturn.fireball.location.x);
+        console.log("Player at " + toreturn.player.location.x);
+        toreturn.player.fireZeWeapons = false;
+    }
+    toreturn.fireball.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
+
+    if(toreturn.fireball.drawThis){
+      for (let i =0; i<enemies.length; i++){
+        toreturn.fireball.checkEnemyCollideFire(enemies[i].location.x + toreturn.camera.viewXCoord, enemies[i].location.y + toreturn.camera.viewYCoord, enemies[i].id)
+       if (toreturn.fireball.idtokill !="nothing"){
+         if(toreturn.fireball.idtokill == enemies[i].id){
+         enemies[i].setDead();}
+       }
+     }
+
+     }
 
       // toreturn.enemy2.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
       for (let i = 0; i<enemies.length;i++){
@@ -241,7 +245,7 @@ if(toreturn.fireball.drawThis){
           particles[x].draw();
         }
         if(toreturn.fireball.drawThis){
-        toreturn.fireball.renderFireball();
+        toreturn.fireball.renderFireball(toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
       }
         }
 

@@ -637,31 +637,36 @@ let Graphics = (function(){
     toreturn.location = {x:-100,y:-100};
     toreturn.drawThis = false;
     toreturn.create = function(spec){
-    toreturn.location.x= spec.x;
+    toreturn.location.x= spec.x ;
     toreturn.location.y = spec.y;
     toreturn.drawThis = true;
   }
 
-    toreturn.update = function(elapsedTime,deltaXView,deltaYView,viewXCoord, viewYCoord,locationX,locationY,id){
-      toreturn.location.x+=1.5;
-      toreturn.temptokill = id;
-      // toreturn.location.y+=2;
-      toreturn.location.x -=deltaXView;
-      toreturn.location.y -=deltaYView;
+    toreturn.update = function(elapsedTime,deltaXView,deltaYView,viewXCoord, viewYCoord){
+      if (toreturn.drawThis == true) {
+        toreturn.location.x+=10;
+        // toreturn.location.y+=2;
+        //toreturn.location.x -=deltaXView;
+        //toreturn.location.y -=deltaYView;
 
-      toreturn.checkEnemyCollideFire(locationX-viewXCoord,locationY-viewYCoord);
+        if (toreturn.location.x < viewXCoord || toreturn.location.x > viewXCoord + canvas.width) {
+          toreturn.drawThis = false;
+        }
+      }
     }
 
 
     toreturn.renderFireball = function(viewXCoord,viewYCoord){
       if(toreturn.drawThis){
         context.save();
-        context.drawImage(Images.fireball,toreturn.location.x,toreturn.location.y,tilesize,tilesize);
+        context.drawImage(Images.fireball,toreturn.location.x - viewXCoord,toreturn.location.y- viewYCoord,tilesize,tilesize);
         context.restore();
       }
     }
 
-    toreturn.checkEnemyCollideFire= function(locationX,locationY){
+    toreturn.checkEnemyCollideFire= function(locationX,locationY, id){
+
+      toreturn.temptokill = id;
       if (locationX >= toreturn.location.x-20 && locationX <= toreturn.location.x + tilesize && locationY >= toreturn.location.y-15 && locationY <= toreturn.location.y + tilesize) {
         if ( toreturn.drawThis == true) {
           toreturn.drawThis = false;
