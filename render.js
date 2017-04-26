@@ -7,7 +7,7 @@ let Graphics = (function(){
   let context = canvas.getContext('2d');
   let tilesize = Images.tilesize;
 
-//this stuff is all from justins explanation of the camera
+//the camera code is all from an online explanation of the 2d camera
 
   let padding = 600/2;
   toreturn.map_width = 16000/2;
