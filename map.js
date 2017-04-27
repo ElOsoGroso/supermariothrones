@@ -96,7 +96,7 @@ let Map = (function() {
       map[16][xPos] = 'stone';
     }
 
-    map[15][42] = 'crownstone';
+    map[15][42] = 'stone';
 
     map[13][45] = 'crownstone';
 

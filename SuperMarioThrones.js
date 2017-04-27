@@ -89,28 +89,31 @@ let Game = (function() {
     toreturn.first = true;
   }
   toreturn.updateEnemyPositions = function(){
-    console.log(enemies);
-    console.log(countajax);
-    console.log("length:" +enemies.length);
-    if(countajax==enemies.length-1){toreturn.second = true;}
-    $.ajax({
-        type: 'POST',
-        dataType: "json",
-        async: true,
-        data: {
-          enemyid:enemies[countajax].id,
-          enemyposx:enemies[countajax].location.x,
-          enemyposy:enemies[countajax].location.y
-        },
-        url: 'http://localhost:5000/updatePos',
-        success: function(result){
-          console.log("we won");
-          countajax++;
-          if (countajax<enemies.length){toreturn.updateEnemyPositions();}
-        }
-    });
+      console.log(enemies);
+      console.log(countajax);
+      console.log("length:" +enemies.length);
+      if(enemies.length>0){
+      if(countajax==enemies.length-1){toreturn.second = true;}
+      else if(countajax ==0 && enemies.length==1){toreturn.second =true;}
+      $.ajax({
+          type: 'POST',
+          dataType: "json",
+          async: true,
+          data: {
+            enemyid:enemies[countajax].id,
+            enemyposx:enemies[countajax].location.x,
+            enemyposy:enemies[countajax].location.y
+          },
+          url: 'http://localhost:5000/updatePos',
+          success: function(result){
+            console.log("we won");
+            countajax++;
+            if (countajax<enemies.length){toreturn.updateEnemyPositions();}
+          }
+      });}
+      else{toreturn.second = true;}
 
-  }
+    }
   function update(elapsedTime) {
     //console.log(enemies);
 
