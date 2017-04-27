@@ -37,6 +37,7 @@ let Game = (function() {
   let particles = [];
   let count = 0;
   let once = true;
+  let stopscore = false;
   toreturn.fireball = null;
   toreturn.player = null;
   toreturn.lives = null;
@@ -58,7 +59,7 @@ let Game = (function() {
     $("p").show();
   }
   toreturn.updatePositions = function (){
-    console.log("hello");
+    // console.log("hello");
     $.ajax({
         type: 'POST',
         dataType: "json",
@@ -80,7 +81,7 @@ let Game = (function() {
         },
         url: 'http://localhost:5000/updatePosPlayer',
         success: function(result){
-          console.log("we win");
+          // console.log("we win");
         }
     });
     toreturn.first = true;
@@ -109,10 +110,7 @@ let Game = (function() {
 
   }
   function update(elapsedTime) {
-  //   if(newgame){
-  //   console.log("player spped" + toreturn.player.speed);
-  //   console.log("enemy sped" + enemies[0].speed);
-  // }
+    console.log(enemies);
 
     if(toreturn.first && toreturn.second){
       toreturn.appendDiv();
@@ -170,7 +168,7 @@ let Game = (function() {
       enemies[i].update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);}
     }
     if(toreturn.player.playerHitCoin) {
-      console.log("spawning crown");
+      // console.log("spawning crown");
       crowns[0].location.x = toreturn.player.location.x -toreturn.camera.viewXCoord;
       crowns[0].location.y = toreturn.player.location.y - 128/2;
       crowns[0].drawThis = true;
@@ -180,11 +178,11 @@ let Game = (function() {
         crowns[i].update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord, toreturn.player.location.x, toreturn.player.location.y);
       }
 
-      console.log(toreturn.player.fireZeWeapons);
+      // console.log(toreturn.player.fireZeWeapons);
       if (toreturn.player.fireZeWeapons){
         toreturn.fireball.create(toreturn.player.location);
-        console.log("fireball at " + toreturn.fireball.location.x);
-        console.log("Player at " + toreturn.player.location.x);
+        // console.log("fireball at " + toreturn.fireball.location.x);
+        // console.log("Player at " + toreturn.player.location.x);
         toreturn.player.fireZeWeapons = false;
     }
     toreturn.fireball.update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);
@@ -194,7 +192,14 @@ let Game = (function() {
         toreturn.fireball.checkEnemyCollideFire(enemies[i].location.x + toreturn.camera.viewXCoord, enemies[i].location.y + toreturn.camera.viewYCoord, enemies[i].id)
        if (toreturn.fireball.idtokill !="nothing"){
          if(toreturn.fireball.idtokill == enemies[i].id){
-         enemies[i].setDead();}
+           if(!enemies[i].stopscore){
+             spawnParticles({x: enemies[i].location.x, y: enemies[i].location.y + 64/2}, 'red' );
+         enemies[i].setDead();
+         enemies[i].drawdeath = true;
+         enemies[i].stopscore =true;
+
+            }
+          }
        }
      }
 

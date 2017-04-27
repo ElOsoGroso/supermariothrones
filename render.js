@@ -420,7 +420,7 @@ let Graphics = (function(){
     let dimension = 32;
     let toreturn = {};
     toreturn.id = spec.id;
-
+    toreturn.stopscore = false;
     toreturn.speed = 1;
     let friction = 0.98;
     toreturn.location = {x: spec.location.x, y: spec.location.y};
