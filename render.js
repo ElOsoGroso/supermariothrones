@@ -111,6 +111,8 @@ let Graphics = (function(){
 
     let goLeft = false;
     let goRight = false;
+    let leftLastPressed = false;
+    let rightLastPressed = true;
     let animationCounter = 0;
     let jump_y = toreturn.location.y;
     let display_count = 0;
@@ -136,7 +138,11 @@ let Graphics = (function(){
     $(document).keydown(function(e) {
       if (e.keyCode == Controls.left) {
         goLeft = true;
+        rightlastPressed = false;
+        leftLastPressed = true;
       } else if (e.keyCode == Controls.right) {
+        leftLastPressed =false;
+        rightLastPressed =true;
         goRight = true;
       } else if (e.keyCode == Controls.jump) {
         toreturn.jumpPressed = true;
@@ -208,7 +214,7 @@ let Graphics = (function(){
           toreturn.yVelocity = -5.0;
         }
       }
-      if(goLeft){
+      if(leftLastPressed){
         //our left facing animations
       context.drawImage(animatePlayerLeft[display_count], toreturn.location.x - viewXCoord, toreturn.location.y - viewYCoord, tilesize, tilesize);}
         //our right facing animations
@@ -360,13 +366,14 @@ let Graphics = (function(){
 
   toreturn.lives = function(spec) {
     let location = {x: spec.x, y: spec.y};
-    let livesRemaining = spec.howMany;
+
 
     let toreturn = {};
+    toreturn.livesRemaining = spec.livesLeft;
 
     toreturn.subtractLives = function() {
-      livesRemaining--;
-      if (livesRemaining <= 0) {
+      toreturn.livesRemaining--;
+      if (toreturn.livesRemaining <= 0) {
       playertoadd = prompt("Enter your name for highscores","Enter name here");
       if (onetime){
         console.log(playertoadd);
@@ -393,7 +400,7 @@ let Graphics = (function(){
 
     toreturn.renderLives = function() {
       context.save();
-      for ( let x = 0; x < livesRemaining; x++ ) {
+      for ( let x = 0; x < toreturn.livesRemaining; x++ ) {
         // console.log(Images.johnsnow1);
         context.textAlign = 'center';
         context.fillStyle = '#f8f8ff';
@@ -402,13 +409,18 @@ let Graphics = (function(){
         context.shadowBlur = 10;
 
         context.font = '40px Arial';
-        context.strokeText('Lives:', 1400/2, 100/2);
-        context.fillText('Lives:', 1400/2, 100/2);
+        context.strokeText('Lives:', 1500/2, 100/2);
+        context.fillText('Lives:', 1500/2, 100/2);
+        context.strokeText('Time:', 70,100/2);
+        context.fillText('Time:', 70,100/2);
+        context.strokeText(Math.floor(totalTime).toString(), 150,100/2);
+        context.fillText(Math.floor(totalTime).toString(), 150,100/2);
+
         context.strokeText('Score:', 1500/2, 200/2);
         context.fillText('Score:', 1500/2, 200/2);
         context.strokeText(score.toString(), 1800/2, 200/2);
         context.fillText(score.toString(), 1800/2, 200/2);
-        context.drawImage(Images.johnsnow1, 1530/2 +Images.player_width*(x*1.5), 43/2, tilesize, tilesize);
+        context.drawImage(Images.johnsnow1, 1630/2 +Images.player_width*(x*1.5), 43/2, tilesize, tilesize);
       }
       context.restore();
     }
@@ -426,6 +438,7 @@ let Graphics = (function(){
     toreturn.stopscore = false;
     toreturn.speed = 1;
     let friction = 0.98;
+    toreturn.locationforupdate = {x:spec.location.x,y:spec.location.y};
     toreturn.location = {x: spec.location.x, y: spec.location.y};
     let animationCounter = 0;
     let direction = 'left';
@@ -497,8 +510,10 @@ let Graphics = (function(){
     toreturn.goRight = function(elapsedTime) {
       if (toreturn.location.x + (friction * toreturn.speed) >= Graphics.map_width - tilesize) {
         toreturn.location.x = Graphics.map_width - tilesize;
+        toreturn.locationforupdate.x = Graphics.map_width - tilesize;
       } else {
         toreturn.location.x += (friction * toreturn.speed);
+        toreturn.locationforupdate.x += (friction * toreturn.speed);
       }
 
     };
@@ -506,8 +521,12 @@ let Graphics = (function(){
       if (toreturn.location.x - (friction * toreturn.speed) >= 0) {
 
         toreturn.location.x -= (friction * toreturn.speed);
+        toreturn.locationforupdate.x -= (friction * toreturn.speed);
+
       } else {
         toreturn.location.x -= (friction * toreturn.speed);
+        toreturn.locationforupdate.x -= (friction * toreturn.speed);
+
       }
     };
 
@@ -605,6 +624,7 @@ let Graphics = (function(){
             toreturn.yVelocity += toreturn.gravity;
             toreturn.location.y += toreturn.yVelocity;
             toreturn.location.x -= deltaXView;
+
             toreturn.location.y -= deltaYView;
 
             if (toreturn.location.x + viewXCoord > 16000) {
@@ -676,7 +696,7 @@ let Graphics = (function(){
     toreturn.checkEnemyCollideFire= function(locationX,locationY, id){
 
       toreturn.temptokill = id;
-      if (locationX >= toreturn.location.x-20 && locationX <= toreturn.location.x + tilesize && locationY >= toreturn.location.y-15 && locationY <= toreturn.location.y + tilesize) {
+      if (locationX >= toreturn.location.x-20 && locationX <= toreturn.location.x + tilesize && locationY >= toreturn.location.y-30 && locationY <= toreturn.location.y+10 + tilesize) {
         if ( toreturn.drawThis == true) {
           toreturn.drawThis = false;
           toreturn.idtokill = toreturn.temptokill;

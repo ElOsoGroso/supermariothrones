@@ -37,6 +37,8 @@
   let newgame = false;
   let playerlocation = null;
   let countajax = 0;
+  let livesLeft = 3;
+  let totalTime = 0;
 
   let spritepositions = [];
   $.ajax({
@@ -56,6 +58,16 @@
         console.log(score);
       }
   });
+  $.ajax({
+      type: 'GET',
+      url: 'http://localhost:5000/getLives',
+      success: function(result){
+        livesLeft = result[0].lives;
+        console.log("we got the lives");
+        console.log(livesLeft);
+      }
+  });
+
 
 
 </script>
@@ -94,8 +106,8 @@
 
       <div id = "butt" style = "margin-left: 900px;">
     <button type="button" style ="position:absolute; top: 580px; left:400px;height:50px;width: 200px;" onclick = "countajax=0;Game.updatePositions(); Game.updateEnemyPositions();">Click This To Save</button>
-    <p id = "p" style = "position:absolute; top: 630px; left:425px;height:50px;width: 200px;" >The save was completed</br> Reload the page to load <br>your saved game.</p>
-    <a id = "p" style = "position:absolute; top: 630px; left:425px;height:50px;width: 200px;" >Saving................</a>
+    <p id = "p" style = "position:absolute; top: 630px; left:425px;height:50px;width: 200px;" >The save was completed.</br> Reload the page to load <br>your saved game.</p>
+    <a id = "p" style = "position:absolute; top: 630px; left:425px;height:50px;width: 200px;" >Saving.............please wait</a>
 
 
   </div>

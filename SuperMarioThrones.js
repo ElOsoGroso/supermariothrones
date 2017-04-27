@@ -40,6 +40,7 @@ let Game = (function() {
   let stopscore = false;
   let timeSinceLastCoinCollected = 0;
   let coinsCollected = 0;
+  let firststart = true;
   toreturn.fireball = null;
   toreturn.player = null;
   toreturn.lives = null;
@@ -66,11 +67,34 @@ let Game = (function() {
         type: 'POST',
         dataType: "json",
         data: {
+          time:totalTime,
+        },
+        url: 'http://localhost:5000/updateTime',
+        success: function(result){
+          console.log("we postedt the time");
+        }
+    });
+    $.ajax({
+        type: 'POST',
+        dataType: "json",
+        data: {
           score:score,
         },
         url: 'http://localhost:5000/updateScore',
         success: function(result){
           console.log("we postedt the score");
+        }
+    });
+    console.log("before ajax post" + toreturn.lives.livesRemaining);
+    $.ajax({
+        type: 'POST',
+        dataType: "json",
+        data: {
+          lives:toreturn.lives.livesRemaining,
+        },
+        url: 'http://localhost:5000/updateLives',
+        success: function(result){
+          console.log("we postedt the lives");
         }
     });
     $.ajax({
@@ -101,8 +125,8 @@ let Game = (function() {
           async: true,
           data: {
             enemyid:enemies[countajax].id,
-            enemyposx:enemies[countajax].location.x,
-            enemyposy:enemies[countajax].location.y
+            enemyposx:enemies[countajax].locationforupdate.x,
+            enemyposy:enemies[countajax].location.y-100
           },
           url: 'http://localhost:5000/updatePos',
           success: function(result){
@@ -115,8 +139,9 @@ let Game = (function() {
 
     }
   function update(elapsedTime) {
-    //console.log(enemies);
-
+    if(firststart){elapsedTime = 0;firststart =false;}
+    totalTime += elapsedTime/1000;
+    // console.log(totalTime);
     if(toreturn.first && toreturn.second){
       toreturn.appendDiv();
     }
@@ -128,23 +153,120 @@ let Game = (function() {
     }
     if(toreturn.player.checkIfWon()){
       if (once){
-    playertoadd = prompt("Enter your name for highscores","Enter name here");
+        if(totalTime<10){let scoretoadd = 1000000;score += scoretoadd;
+          playertoadd = prompt("You finished! Your time bonus was "+ scoretoadd +". Enter your name for highscores","Enter name here");
+          $.ajax({
+              type: 'POST',
+              dataType: "json",
+              data: {
+                player:playertoadd,
+                score:score
+              },
+              url: 'http://localhost:5000/highscoreset',
+              success: function(result){
+                // scores = result;
+              }
+          });
+          once = false;}
+        else if (totalTime>=10 && totalTime<20){let scoretoadd = 30000;
+          score += scoretoadd;
+          playertoadd = prompt("You finished! Your time bonus was "+ scoretoadd +". Enter your name for highscores","Enter name here");
 
-      //console.log(playertoadd);
-      //console.log(score);
-    $.ajax({
-        type: 'POST',
-        dataType: "json",
-        data: {
-          player:playertoadd,
-          score:score
-        },
-        url: 'http://localhost:5000/highscoreset',
-        success: function(result){
-          scores = result;
+          $.ajax({
+              type: 'POST',
+              dataType: "json",
+              data: {
+                player:playertoadd,
+                score:score
+              },
+              url: 'http://localhost:5000/highscoreset',
+              success: function(result){
+                // scores = result;
+              }
+          });
+          once = false;
         }
-    });
-    once = false;
+        else if (totalTime>=20 && totalTime<30){
+          let scoretoadd = 5000;
+          score += scoretoadd;
+          playertoadd = prompt("You finished! Your time bonus was "+ scoretoadd +". Enter your name for highscores","Enter name here");
+          $.ajax({
+              type: 'POST',
+              dataType: "json",
+              data: {
+                player:playertoadd,
+                score:score
+              },
+              url: 'http://localhost:5000/highscoreset',
+              success: function(result){
+                // scores = result;
+              }
+          });
+          once = false;}
+        else if (totalTime>=30 && totalTime<40){let scoretoadd = 5000;
+          score += scoretoadd;
+          playertoadd = prompt("You finished! Your time bonus was "+ scoretoadd +". Enter your name for highscores","Enter name here");
+          $.ajax({
+              type: 'POST',
+              dataType: "json",
+              data: {
+                player:playertoadd,
+                score:score
+              },
+              url: 'http://localhost:5000/highscoreset',
+              success: function(result){
+                // scores = result;
+              }
+          });
+          once = false;}
+        else if (totalTime>=40 && totalTime<50){let scoretoadd = 2500;
+          score += scoretoadd;
+          playertoadd = prompt("You finished! Your time bonus was "+ scoretoadd +". Enter your name for highscores","Enter name here");
+          $.ajax({
+              type: 'POST',
+              dataType: "json",
+              data: {
+                player:playertoadd,
+                score:score
+              },
+              url: 'http://localhost:5000/highscoreset',
+              success: function(result){
+                // scores = result;
+              }
+          });
+          once = false;}
+        else if(totalTime >60) {let scoretoadd = 1000;score += scoretoadd;
+          playertoadd = prompt("You finished! Your time bonus was "+ scoretoadd +". Enter your name for highscores","Enter name here");
+          $.ajax({
+              type: 'POST',
+              dataType: "json",
+              data: {
+                player:playertoadd,
+                score:score
+              },
+              url: 'http://localhost:5000/highscoreset',
+              success: function(result){
+                // scores = result;
+              }
+          });
+          once = false;}
+          else if(totalTime >80) {let scoretoadd = -1000;score += scoretoadd;
+            playertoadd = prompt("You finished! Your time bonus was "+ scoretoadd +". Enter your name for highscores","Enter name here");
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                data: {
+                  player:playertoadd,
+                  score:score
+                },
+                url: 'http://localhost:5000/highscoreset',
+                success: function(result){
+                  // scores = result;
+                }
+            });
+            once = false;}
+
+
   }}
       for(let i = 0 ;i <enemies.length;i++){
         if (enemies[i].drawdeath){
@@ -293,7 +415,9 @@ let Game = (function() {
 
   }
   toreturn.init = function() {
+
     if (newgame){score = 0;}
+    if (newgame){livesLeft=3};
     console.log("starting game");
 //Make the title page disappear and the real page appear//
     let canvas1 = document.getElementById('canvas-main');
@@ -330,7 +454,7 @@ let Game = (function() {
         enemies.push(Graphics.enemy({id: "joffrey0", source: "jj", walkertime: walkertime, location: {x: 4000/2, y: 100/2}}));
         enemies.push(Graphics.enemy({id: "joffrey1", source: "jj", walkertime: walkertime, location: {x: 7200/2, y: 1000/2}}));
         enemies.push(Graphics.enemy({id: "joffrey3", source: "jj", walkertime: walkertime, location: {x: 3300/2, y: 900/2}}));
-        enemies.push(Graphics.enemy({id: "joffrey4", source: "jj", walkertime: walkertime, location: {x: 3600/2, y: 900/2}}));
+        // enemies.push(Graphics.enemy({id: "joffrey4", source: "jj", walkertime: walkertime, location: {x: 3600/2, y: 900/2}}));
      }
      else{
      for (let i = 0; i<spritepositions.length;i++){
@@ -345,7 +469,7 @@ let Game = (function() {
      enemies.push(Graphics.enemy({id: spritepositions[i].spritetype, source: "dd", walkertime: walkertime, location: {x: spritepositions[i].spritelocationx, y: spritepositions[i].spritelocationy}}));
    }
    }
-   else if (spritepositions[i].spritetype == "joffrey0" || spritepositions[i].spritetype == "joffrey1" || spritepositions[i].spritetype == "joffrey3" || spritepositions[i].spritetype == "joffrey4")
+   else if (spritepositions[i].spritetype == "joffrey0" || spritepositions[i].spritetype == "joffrey1" || spritepositions[i].spritetype == "joffrey3")
    if(spritepositions[i].spritelocationx >=0 && spritepositions[i].spritelocationy >=0){
      enemies.push(Graphics.enemy({id: spritepositions[i].spritetype, source: "jj", walkertime: walkertime, location: {x: spritepositions[i].spritelocationx, y: spritepositions[i].spritelocationy}}));
     }
@@ -369,12 +493,23 @@ let Game = (function() {
        crowns.push(Graphics.crown({location: {x:(i * 64)/2, y:(i-147 + helper * 64)/2}}));
        helper--;
      }
-     toreturn.lives = Graphics.lives({x: 10, y: 10, howMany: 3});
+     toreturn.lives = Graphics.lives({x: 10, y: 10, livesLeft: livesLeft});
      toreturn.map = Graphics.map();
      toreturn.camera = Graphics.camera(0,0, canvas.width, canvas.height, 17000/2, canvas.height);
      context.clearRect(0,0,canvas.width, canvas.height);
      Game.game_active= true;
      Game.map.renderMap();
+     if (newgame){totalTime= 0;}
+     else{
+     $.ajax({
+         type: 'GET',
+         url: 'http://localhost:5000/getTime',
+         success: function(result){
+           totalTime = result[0].time;
+           console.log("we got the time");
+
+         }
+     });}
       $('.ourView').scrollLeft = 0;
      requestAnimationFrame(gameLoop);
      }
