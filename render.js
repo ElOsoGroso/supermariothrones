@@ -118,6 +118,7 @@ let Graphics = (function(){
     toreturn.onGround = true;
     toreturn.gravity = 0.5;
     toreturn.yVelocity = 0.0;
+    toreturn.direction = null;
 
     let animatePlayerArray = [];
     let animatePlayerLeft = [];
@@ -220,6 +221,7 @@ let Graphics = (function(){
 
 
     toreturn.goRight = function(elapsedTime) {
+      toreturn.direction = "right";
       if (toreturn.location.x + (friction * toreturn.speed) >= Graphics.map_width - tilesize) {
         toreturn.location.x = Graphics.map_width - tilesize;
       } else {
@@ -228,6 +230,7 @@ let Graphics = (function(){
 
     };
     toreturn.goLeft = function(elapsedTime) {
+      toreturn.direction = "left";
       if (toreturn.location.x - (friction * toreturn.speed) >= 0) {
         toreturn.location.x -= (friction * toreturn.speed);
       } else {
@@ -636,15 +639,21 @@ let Graphics = (function(){
     toreturn.temptokill = "nothing";
     toreturn.location = {x:-100,y:-100};
     toreturn.drawThis = false;
-    toreturn.create = function(spec){
+    toreturn.create = function(spec, dir){
     toreturn.location.x= spec.x ;
     toreturn.location.y = spec.y;
     toreturn.drawThis = true;
+    toreturn.direction = dir;
   }
 
     toreturn.update = function(elapsedTime,deltaXView,deltaYView,viewXCoord, viewYCoord){
       if (toreturn.drawThis == true) {
-        toreturn.location.x+=10;
+        if ( toreturn.direction == "right") {
+            toreturn.location.x+=10;
+        }
+        else {
+            toreturn.location.x-=10;
+        }
         // toreturn.location.y+=2;
         //toreturn.location.x -=deltaXView;
         //toreturn.location.y -=deltaYView;

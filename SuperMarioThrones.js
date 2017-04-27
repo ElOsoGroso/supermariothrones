@@ -38,6 +38,8 @@ let Game = (function() {
   let count = 0;
   let once = true;
   let stopscore = false;
+  let timeSinceLastCoinCollected = 0;
+  let coinsCollected = 0;
   toreturn.fireball = null;
   toreturn.player = null;
   toreturn.lives = null;
@@ -110,7 +112,7 @@ let Game = (function() {
 
   }
   function update(elapsedTime) {
-    console.log(enemies);
+    //console.log(enemies);
 
     if(toreturn.first && toreturn.second){
       toreturn.appendDiv();
@@ -125,8 +127,8 @@ let Game = (function() {
       if (once){
     playertoadd = prompt("Enter your name for highscores","Enter name here");
 
-      console.log(playertoadd);
-      console.log(score);
+      //console.log(playertoadd);
+      //console.log(score);
     $.ajax({
         type: 'POST',
         dataType: "json",
@@ -167,12 +169,16 @@ let Game = (function() {
         if (!enemies[i].getDead()){
       enemies[i].update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord);}
     }
+    timeSinceLastCoinCollected += elapsedTime;
     if(toreturn.player.playerHitCoin) {
-      // console.log("spawning crown");
-      crowns[0].location.x = toreturn.player.location.x -toreturn.camera.viewXCoord;
-      crowns[0].location.y = toreturn.player.location.y - 128/2;
-      crowns[0].drawThis = true;
-      toreturn.player.playerHitCoin = false;
+      if (timeSinceLastCoinCollected >= 2000 && coinsCollected < 4) {
+        crowns[0].location.x = 1440 - toreturn.camera.viewXCoord;
+        crowns[0].location.y = 375;
+        crowns[0].drawThis = true;
+        toreturn.player.playerHitCoin = false;
+        timeSinceLastCoinCollected = 0;
+        coinsCollected++;
+      }
     }
       for (let i = 0; i<crowns.length;i++){
         crowns[i].update(elapsedTime, deltaXView, deltaYView, toreturn.camera.viewXCoord, toreturn.camera.viewYCoord, toreturn.player.location.x, toreturn.player.location.y);
@@ -180,7 +186,7 @@ let Game = (function() {
 
       // console.log(toreturn.player.fireZeWeapons);
       if (toreturn.player.fireZeWeapons){
-        toreturn.fireball.create(toreturn.player.location);
+        toreturn.fireball.create(toreturn.player.location, toreturn.player.direction);
         // console.log("fireball at " + toreturn.fireball.location.x);
         // console.log("Player at " + toreturn.player.location.x);
         toreturn.player.fireZeWeapons = false;
@@ -274,7 +280,6 @@ let Game = (function() {
 
   toreturn.inittitle = function(){
     loadAudio();
-
     playSound('theme');
     Sounds['theme'].addEventListener('ended', function() {
     this.currentTime = 0;
