@@ -169,7 +169,7 @@ let TitlePage = (function () {
   canvas1.addEventListener('mousemove', function(evt) {
     // console.log("hello")
     var mousePos = getMousePos(canvas1, evt);
-    console.log(mousePos);
+    //console.log(mousePos);
       // console.log(mousePos);
       if (isInside(mousePos,recthoverhigh)) {
         console.log("controls");

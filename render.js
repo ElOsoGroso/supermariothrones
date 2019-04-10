@@ -385,7 +385,7 @@ let Graphics = (function(){
             player:playertoadd,
             score:score
           },
-          url: 'http://localhost:5000/highscoreset',
+          url: 'https://supermariothrones.netlify.com/highscoreset',
           success: function(result){
             scores = result;
             postedhighscore = true;
