@@ -69,7 +69,7 @@ let Game = (function() {
         data: {
           time:totalTime,
         },
-        url: 'https://supermariothrones.netlify.com/updateTime',
+        url: 'http://localhost:5000/updateTime',
         success: function(result){
           console.log("we postedt the time");
         }
@@ -80,7 +80,7 @@ let Game = (function() {
         data: {
           score:score,
         },
-        url: 'https://supermariothrones.netlify.com/updateScore',
+        url: 'http://localhost:5000/updateScore',
         success: function(result){
           console.log("we postedt the score");
         }
@@ -92,7 +92,7 @@ let Game = (function() {
         data: {
           lives:toreturn.lives.livesRemaining,
         },
-        url: 'https://supermariothrones.netlify.com/updateLives',
+        url: 'http://localhost:5000/updateLives',
         success: function(result){
           console.log("we postedt the lives");
         }
@@ -105,7 +105,7 @@ let Game = (function() {
           playerposx:toreturn.player.location.x,
           playerposy:toreturn.player.location.y,
         },
-        url: 'https://supermariothrones.netlify.com/updatePosPlayer',
+        url: 'http://localhost:5000/updatePosPlayer',
         success: function(result){
           // console.log("we win");
         }
@@ -128,7 +128,7 @@ let Game = (function() {
             enemyposx:enemies[countajax].locationforupdate.x,
             enemyposy:enemies[countajax].location.y-100
           },
-          url: 'https://supermariothrones.netlify.com/updatePos',
+          url: 'http://localhost:5000/updatePos',
           success: function(result){
             console.log("we won");
             countajax++;
@@ -162,7 +162,7 @@ let Game = (function() {
                 player:playertoadd,
                 score:score
               },
-              url: 'https://supermariothrones.netlify.com/highscoreset',
+              url: 'http://localhost:5000/highscoreset',
               success: function(result){
                 // scores = result;
               }
@@ -179,7 +179,7 @@ let Game = (function() {
                 player:playertoadd,
                 score:score
               },
-              url: 'https://supermariothrones.netlify.com/highscoreset',
+              url: 'http://localhost:5000/highscoreset',
               success: function(result){
                 // scores = result;
               }
@@ -197,7 +197,7 @@ let Game = (function() {
                 player:playertoadd,
                 score:score
               },
-              url: 'https://supermariothrones.netlify.com/highscoreset',
+              url: 'http://localhost:5000/highscoreset',
               success: function(result){
                 // scores = result;
               }
@@ -213,7 +213,7 @@ let Game = (function() {
                 player:playertoadd,
                 score:score
               },
-              url: 'https://supermariothrones.netlify.com/highscoreset',
+              url: 'http://localhost:5000/highscoreset',
               success: function(result){
                 // scores = result;
               }
@@ -229,7 +229,7 @@ let Game = (function() {
                 player:playertoadd,
                 score:score
               },
-              url: 'https://supermariothrones.netlify.com/highscoreset',
+              url: 'http://localhost:5000/highscoreset',
               success: function(result){
                 // scores = result;
               }
@@ -244,7 +244,7 @@ let Game = (function() {
                 player:playertoadd,
                 score:score
               },
-              url: 'https://supermariothrones.netlify.com/highscoreset',
+              url: 'http://localhost:5000/highscoreset',
               success: function(result){
                 // scores = result;
               }
@@ -259,7 +259,7 @@ let Game = (function() {
                   player:playertoadd,
                   score:score
                 },
-                url: 'https://supermariothrones.netlify.com/highscoreset',
+                url: 'http://localhost:5000/highscoreset',
                 success: function(result){
                   // scores = result;
                 }
@@ -503,7 +503,7 @@ let Game = (function() {
      else{
      $.ajax({
          type: 'GET',
-         url: 'https://supermariothrones.netlify.com/getTime',
+         url: 'http://localhost:5000/getTime',
          success: function(result){
            totalTime = result[0].time;
            console.log("we got the time");
