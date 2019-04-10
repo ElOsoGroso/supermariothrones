@@ -43,7 +43,7 @@
   let spritepositions = [];
   $.ajax({
       type: 'GET',
-      url: 'http://localhost:5000/getspritepositions',
+      url: 'http://supermariothrones.netlify.com/getspritepositions',
       success: function(result){
         spritepositions = result;
         console.log(spritepositions);
@@ -51,7 +51,7 @@
   });
   $.ajax({
       type: 'GET',
-      url: 'http://localhost:5000/getScore',
+      url: 'http://supermariothrones.netlify.com/getScore',
       success: function(result){
         score = result[0].score;
         console.log("we got the score");
@@ -60,7 +60,7 @@
   });
   $.ajax({
       type: 'GET',
-      url: 'http://localhost:5000/getLives',
+      url: 'http://supermariothrones.netlify.com/getLives',
       success: function(result){
         livesLeft = result[0].lives;
         console.log("we got the lives");
