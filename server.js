@@ -9,6 +9,8 @@ app.use(bodyParser.urlencoded());
 
 app.use(express.static(__dirname))
 
+app.set('port',process.env.PORT || 3000)
+
 app.get('/', function(req, res){
   res.sendFile(__dirname + "/" + "index.html")
 })
@@ -301,9 +303,13 @@ app.post('/highscoreset', function(req,res){
 })
 
 
-
-let server = app.listen(5000, function(){
-  let port = server.address().port;
-  console.log('We are on this port:', port);
+const server = app.listen(process.env.PORT, function(){
+  const port = server.address().port;
+ console.log('We are on this port:', port);
 
 });
+// const server = app.listen(8080, function(){
+//    const port = server.address().port;
+//    console.log('We are on this port:', port);
+//
+//  });

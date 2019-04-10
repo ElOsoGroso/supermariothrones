@@ -116,7 +116,7 @@ let HighScores = (function(){
 
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:5000/highscores',
+        url: '/highscores',
         success: function(result){
           scores = result;
           function sortByKey(array, key) {
